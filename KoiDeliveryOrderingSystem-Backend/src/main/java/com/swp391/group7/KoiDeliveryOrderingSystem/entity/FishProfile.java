@@ -38,9 +38,6 @@ public class FishProfile {
     @Column(name = "origin", nullable = false)
     private String origin;
 
-    @Column(name = "price", nullable = false)
-    private Float price;
-
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
