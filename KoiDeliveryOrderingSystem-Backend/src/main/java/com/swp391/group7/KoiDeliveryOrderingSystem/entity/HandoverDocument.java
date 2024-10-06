@@ -28,7 +28,7 @@ public class HandoverDocument {
     private Orders orders;
 
     @OneToMany(mappedBy = "handoverDocument")
-    private List<HealCareDeliveryHistory> healCareDeliveryHistory;
+    private List<HealthCareDeliveryHistory> healthCareDeliveryHistory;
 
     @Column(name = "handover_no", nullable = false)
     private String handoverNo;

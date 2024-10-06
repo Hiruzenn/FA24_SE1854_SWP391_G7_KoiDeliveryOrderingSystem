@@ -30,7 +30,7 @@ public class Invoice {
     private List<Package> packages;
 
     @OneToMany(mappedBy = "invoice")
-    private List<HealCareDeliveryHistory> healCareDeliveryHistories;
+    private List<HealthCareDeliveryHistory> healCareDeliveryHistories;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)

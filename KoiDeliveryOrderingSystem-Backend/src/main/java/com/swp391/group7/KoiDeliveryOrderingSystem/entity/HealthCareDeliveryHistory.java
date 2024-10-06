@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 
-public class HealCareDeliveryHistory {
+public class HealthCareDeliveryHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
