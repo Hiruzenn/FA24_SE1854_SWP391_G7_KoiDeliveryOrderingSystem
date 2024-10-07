@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.UserStatusEnum;
 import jakarta.persistence.*;
@@ -21,6 +22,7 @@ public class Users {
 
     @ManyToOne
     @JoinColumn(name = "role", nullable = false)
+    @JsonManagedReference
     private Role role;
 
     @Column(name = "user_name")

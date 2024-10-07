@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.userdetails.User;
@@ -21,5 +22,6 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
+    @JsonBackReference
     private List<Users> user;
 }
