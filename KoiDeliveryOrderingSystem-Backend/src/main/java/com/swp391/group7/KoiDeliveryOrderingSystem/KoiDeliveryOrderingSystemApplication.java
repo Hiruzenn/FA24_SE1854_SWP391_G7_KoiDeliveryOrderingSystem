@@ -9,5 +9,4 @@ public class KoiDeliveryOrderingSystemApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(KoiDeliveryOrderingSystemApplication.class, args);
 	}
-
 }
