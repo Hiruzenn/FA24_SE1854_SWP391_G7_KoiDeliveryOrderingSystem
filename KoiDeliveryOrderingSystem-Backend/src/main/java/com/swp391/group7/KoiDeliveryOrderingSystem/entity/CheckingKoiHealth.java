@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,10 +20,12 @@ public class CheckingKoiHealth {
 
     @ManyToOne
     @JoinColumn(name = "order_detail_id")
+    @JsonManagedReference
     private OrderDetail orderDetail;
 
     @ManyToOne
     @JoinColumn(name = "package_id")
+    @JsonManagedReference
     private Package packages;
 
     @Column(name = "order_id", nullable = false)

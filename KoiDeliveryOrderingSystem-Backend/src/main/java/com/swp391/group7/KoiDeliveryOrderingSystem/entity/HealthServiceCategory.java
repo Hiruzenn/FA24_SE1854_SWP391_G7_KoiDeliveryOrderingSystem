@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,7 +22,9 @@ public class HealthServiceCategory {
     private Integer id;
 
     @OneToMany(mappedBy = "healthServiceCategory")
+    @JsonBackReference
     private List<HealthServiceOrder> healthServiceOrder;
+
     @Column(name = "service_name", nullable = false)
     private String serviceName;
 

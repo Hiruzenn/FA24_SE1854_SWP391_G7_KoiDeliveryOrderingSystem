@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,10 +21,12 @@ public class HealthCareDeliveryHistory {
 
     @ManyToOne
     @JoinColumn(name = "invoice_id")
+    @JsonManagedReference
     private Invoice invoice;
 
     @ManyToOne
     @JoinColumn(name = "handover_document_id")
+    @JsonManagedReference
     private HandoverDocument handoverDocument;
 
     @Column(name = "route", nullable = false)

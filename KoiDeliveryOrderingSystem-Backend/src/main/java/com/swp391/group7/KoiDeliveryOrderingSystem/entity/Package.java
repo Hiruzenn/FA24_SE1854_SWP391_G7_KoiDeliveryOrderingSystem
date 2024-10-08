@@ -1,5 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PackageStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
@@ -21,10 +23,12 @@ public class Package {
     private Integer id;
 
     @OneToMany(mappedBy = "packages")
+    @JsonBackReference
     private List<CheckingKoiHealth> checkingKoiHealth;
 
     @ManyToOne
     @JoinColumn(name = "invoice_id")
+    @JsonManagedReference
     private Invoice invoice;
 
     @Column(name = "package_no", nullable = false)

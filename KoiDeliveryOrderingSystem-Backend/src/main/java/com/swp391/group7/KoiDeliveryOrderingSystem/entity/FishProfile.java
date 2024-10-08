@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,10 +21,12 @@ public class FishProfile {
 
     @ManyToOne
     @JoinColumn(name = "type", nullable = false)
+    @JsonManagedReference
     private FishCategory type;
 
     @ManyToOne
     @JoinColumn(name = "order_detail_id")
+    @JsonManagedReference
     private OrderDetail orderDetail;
 
     @Column(name = "name", nullable = false)
