@@ -1,5 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,16 +26,20 @@ public class Invoice {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonManagedReference
     private Orders orders;
 
     @OneToMany(mappedBy = "invoice")
+    @JsonBackReference
     private List<Package> packages;
 
     @OneToMany(mappedBy = "invoice")
+    @JsonBackReference
     private List<HealthCareDeliveryHistory> healCareDeliveryHistories;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
+    @JsonManagedReference
     private Customers customers;
 
     @Column(name = "health_care_delivery_history_id")

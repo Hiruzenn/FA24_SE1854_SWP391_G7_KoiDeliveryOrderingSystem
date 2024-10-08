@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.cglib.core.Local;
@@ -20,6 +21,7 @@ public class CustomsDeclaration {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonManagedReference
     private Orders orders;
 
     @Column(name = "declaration_no", nullable = false)

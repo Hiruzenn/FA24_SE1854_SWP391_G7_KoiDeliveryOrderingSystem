@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class FishCategory {
     private String fishCategoryDescription;
 
     @OneToMany(mappedBy = "type")
+    @JsonBackReference
     private List<FishProfile> fishProfiles;
 
 }
