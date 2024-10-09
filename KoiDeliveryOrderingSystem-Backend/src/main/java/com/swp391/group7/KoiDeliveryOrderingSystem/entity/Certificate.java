@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class Certificate {
 
     @ManyToOne
     @JoinColumn(name = "orders_id", nullable = false)
+    @JsonManagedReference
     private Orders orders;
 
     @Column(name = "certificate_name",nullable = false)

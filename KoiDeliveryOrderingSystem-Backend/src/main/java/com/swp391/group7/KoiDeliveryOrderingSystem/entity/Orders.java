@@ -1,10 +1,11 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,32 +26,42 @@ public class Orders {
     @Column(name = "order_code", nullable = false, unique = true)
     private String orderCode;
 
-    @Column(name = "customer_id", nullable = false)
-    private Integer customerId;
-
     @OneToMany(mappedBy = "orders")
+    @JsonBackReference
     private List<Invoice> invoice;
 
     @OneToMany(mappedBy = "orders")
+    @JsonBackReference
     private List<HealthServiceOrder> healthServiceOrders;
 
     @OneToMany(mappedBy = "orders")
+    @JsonBackReference
     private List<OrderDetail> orderDetail;
 
     @OneToMany(mappedBy = "orders")
+    @JsonBackReference
     private List<HandoverDocument> handoverDocuments;
 
     @OneToMany(mappedBy = "orders")
+    @JsonBackReference
     private List<Certificate> certificate;
 
     @OneToMany(mappedBy = "orders")
+    @JsonBackReference
     private List<Payment> payments;
 
     @OneToMany(mappedBy = "orders")
+    @JsonBackReference
     private List<CustomsDeclaration> customsDeclarations;
 
     @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    @JsonManagedReference
+    private Customers customers;
+
+    @ManyToOne
     @JoinColumn(name = "delivery_method", nullable = false)
+    @JsonManagedReference
     private DeliveryMethod deliveryMethod;
 
     @Column(name = "order_date", nullable = false)
@@ -59,11 +70,14 @@ public class Orders {
     @Column(name = "estimate_delivery_date")
     private LocalDateTime estimateDeliveryDate;
 
+    @Column(name = "receiving_date")
+    private LocalDateTime receivingDate;
+
     @Column(name = "destination", nullable = false)
     private String destination;
 
-    @Column(name = "depature", nullable = false)
-    private String depature;
+    @Column(name = "departure", nullable = false)
+    private String departure;
 
     @Column(name = "distance", nullable = false)
     private float distance;

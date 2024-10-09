@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.UserStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,6 +21,7 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "customers_id", nullable = false)
+    @JsonManagedReference
     private Customers customers;
 
     @Column(name = "order_id", nullable = false)

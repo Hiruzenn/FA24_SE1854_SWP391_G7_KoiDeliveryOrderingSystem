@@ -2,9 +2,11 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.config;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.UserStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Role;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishCategoryRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.RoleRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UsersRepository;
 import jakarta.transaction.Transactional;
@@ -21,7 +23,7 @@ import java.time.LocalDateTime;
 public class DataLoader {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
     @Bean
-    CommandLineRunner initData(UsersRepository usersRepository, RoleRepository roleRepository, DeliveryMethodRepository deliveryMethodRepository) {
+    CommandLineRunner initData(UsersRepository usersRepository, RoleRepository roleRepository, DeliveryMethodRepository deliveryMethodRepository, FishCategoryRepository fishCategoryRepository) {
         return args -> {
             if (roleRepository.count() == 0) {
                 Role adminRole = Role.builder()
@@ -68,6 +70,23 @@ public class DataLoader {
                 deliveryMethodRepository.save(plane);
                 deliveryMethodRepository.save(boat);
                 deliveryMethodRepository.save(train);
+            }
+            if(fishCategoryRepository.count() == 0){
+                FishCategory fishA = FishCategory.builder()
+                        .fishCategoryName("Type A")
+                        .fishCategoryDescription("Super A")
+                        .build();
+                FishCategory fishB = FishCategory.builder()
+                        .fishCategoryName("Type B")
+                        .fishCategoryDescription("Super B")
+                        .build();
+                FishCategory fishC = FishCategory.builder()
+                        .fishCategoryName("Type C")
+                        .fishCategoryDescription("Super C")
+                        .build();
+                fishCategoryRepository.save(fishA);
+                fishCategoryRepository.save(fishB);
+                fishCategoryRepository.save(fishC);
             }
         };
     }

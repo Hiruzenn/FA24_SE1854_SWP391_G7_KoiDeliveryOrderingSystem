@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,16 +21,24 @@ public class Customers {
     private Integer id;
 
     @OneToMany(mappedBy = "customers")
+    @JsonBackReference
     private List<Invoice> invoices;
 
     @OneToMany(mappedBy = "customers")
+    @JsonBackReference
     private List<HandoverDocument> handoverDocuments;
 
     @OneToMany(mappedBy = "customers")
+    @JsonBackReference
     private List<Payment> payments;
 
     @OneToMany(mappedBy = "customers")
+    @JsonBackReference
     private List<Feedback> feedbacks;
+
+    @OneToMany(mappedBy = "customers")
+    @JsonBackReference
+    private List<Orders> orders ;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -40,7 +49,7 @@ public class Customers {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     private String address;
 
     @Column(name = "balance")
@@ -51,9 +60,6 @@ public class Customers {
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
-
-    @Column(name = "create_by")
-    private Integer createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
