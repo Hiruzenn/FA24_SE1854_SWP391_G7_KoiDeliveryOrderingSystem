@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FishCategoryRepository extends JpaRepository<FishCategory, Integer> {
+    FishCategory findByFishCategoryName(String fishCategoryName);
 }

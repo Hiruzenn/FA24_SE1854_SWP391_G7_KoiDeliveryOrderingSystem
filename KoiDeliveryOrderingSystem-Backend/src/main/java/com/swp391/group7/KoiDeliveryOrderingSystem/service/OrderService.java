@@ -4,13 +4,12 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.dto.request.CreateOrderReques
 import com.swp391.group7.KoiDeliveryOrderingSystem.dto.request.UpdateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.dto.response.OrderResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepository;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrdersRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +21,13 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderService {
     @Autowired
-    private OrdersRepository ordersRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
     private DeliveryMethodRepository deliveryMethodRepository;
@@ -60,13 +58,13 @@ public class OrderService {
                 .updateBy(customers.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
-        ordersRepository.save(orders);
+        orderRepository.save(orders);
         return convertOrderToResponse(orders);
     }
 
     public OrderResponse updateOrder(Integer OrderId, UpdateOrderRequest updateOrderRequest) {
         Customers customer = accountUtils.getCurrentCustomer();
-        Orders orders = ordersRepository.findByIdAndCustomers(OrderId, customer).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndCustomers(OrderId, customer).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         orders.setDeliveryMethod(deliveryMethodRepository.findByDeliveryName(updateOrderRequest.getDeliveryMethod()));
         orders.setDestination(updateOrderRequest.getDestination());
@@ -75,13 +73,13 @@ public class OrderService {
         orders.setPhone(updateOrderRequest.getPhone());
         orders.setUpdateAt(LocalDateTime.now());
         orders.setUpdateBy(customer.getId());
-        ordersRepository.save(orders);
+        orderRepository.save(orders);
 
         return convertOrderToResponse(orders);
     }
 
     public List<OrderResponse> getAllOrders() {
-        List<Orders> orders = ordersRepository.findByStatus(SystemStatusEnum.AVAILABLE);
+        List<Orders> orders = orderRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : orders) {
             orderResponses.add(convertOrderToResponse(order));
@@ -91,7 +89,7 @@ public class OrderService {
 
     public List<OrderResponse> getOrderByCustomerId() {
         Customers customers = accountUtils.getCurrentCustomer();
-        List<Orders> ordersList = ordersRepository.findByCustomers(customers);
+        List<Orders> ordersList = orderRepository.findByCustomers(customers);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : ordersList) {
             orderResponses.add(convertOrderToResponse(order));
@@ -101,12 +99,12 @@ public class OrderService {
 
     public String deleteOrder(Integer OrderId) {
         Customers customer = accountUtils.getCurrentCustomer();
-        Orders orders = ordersRepository.findById(OrderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findById(OrderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         if (orders.getStatus() == SystemStatusEnum.AVAILABLE) {
             orders.setStatus(SystemStatusEnum.NOT_AVAILABLE);
             orders.setUpdateAt(LocalDateTime.now());
             orders.setUpdateBy(customer.getId());
-            ordersRepository.save(orders);
+            orderRepository.save(orders);
             return "Order deleted successfully";
         }else{
             return  "Order is deleted before";
@@ -118,9 +116,12 @@ public class OrderService {
         return OrderResponse.builder()
                 .orderCode(orders.getOrderCode())
                 .orderDate(orders.getOrderDate())
+                .deliveryMethod(orders.getDeliveryMethod().getDeliveryName())
                 .destination(orders.getDestination())
                 .departure(orders.getDeparture())
                 .distance(orders.getDistance())
+                .estimateDeliveryDate(orders.getEstimateDeliveryDate())
+                .receivingDate(orders.getReceivingDate())
                 .phone(orders.getPhone())
                 .amount(orders.getAmount())
                 .createAt(orders.getCreateAt())
@@ -142,7 +143,7 @@ public class OrderService {
                 stringBuilder.append(RANDOM_STRING.charAt(randomIndex));
             }
             orderCode = stringBuilder.toString();
-        } while (ordersRepository.existsByOrderCode(orderCode));
+        } while (orderRepository.existsByOrderCode(orderCode));
         return orderCode;
     }
 }

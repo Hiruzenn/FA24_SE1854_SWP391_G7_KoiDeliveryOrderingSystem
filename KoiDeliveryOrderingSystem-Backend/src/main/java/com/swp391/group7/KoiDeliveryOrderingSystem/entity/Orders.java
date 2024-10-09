@@ -70,6 +70,9 @@ public class Orders {
     @Column(name = "estimate_delivery_date")
     private LocalDateTime estimateDeliveryDate;
 
+    @Column(name = "receiving_date")
+    private LocalDateTime receivingDate;
+
     @Column(name = "destination", nullable = false)
     private String destination;
 

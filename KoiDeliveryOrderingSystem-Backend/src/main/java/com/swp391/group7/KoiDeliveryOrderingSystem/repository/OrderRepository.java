@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrdersRepository extends JpaRepository<Orders, Integer> {
+public interface OrderRepository extends JpaRepository<Orders, Integer> {
     boolean existsByOrderCode(String orderCode);
     Optional<Orders> findByIdAndCustomers(int id, Customers customer);
     List<Orders> findByCustomers(Customers customer);
