@@ -21,7 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -75,6 +76,20 @@ public class OrderDetailService {
 
         orderDetailRepository.save(orderDetail);
         return convertToOrderDetailResponse(orderDetail);
+    }
+
+    public List<OrderDetailResponse> getOrderDetailsByOrderId(Integer orderId){
+        Customers customers = accountUtils.getCurrentCustomer();
+        if (customers == null ){
+            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+        }
+        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrders(orders);
+        List<OrderDetailResponse> orderDetailResponseList = new ArrayList<>();
+        for (OrderDetail orderDetail : orderDetailList) {
+            orderDetailResponseList.add(convertToOrderDetailResponse(orderDetail));
+        }
+        return orderDetailResponseList;
     }
 
     public OrderDetailResponse convertToOrderDetailResponse(OrderDetail orderDetail) {
