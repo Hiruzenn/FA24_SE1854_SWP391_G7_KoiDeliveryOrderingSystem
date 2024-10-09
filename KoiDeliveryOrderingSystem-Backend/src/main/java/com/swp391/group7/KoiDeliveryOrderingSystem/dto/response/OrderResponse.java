@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,10 +15,10 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderResponse {
    private String orderCode;
-   private Integer customers;
    private String deliveryMethod;
    private LocalDateTime orderDate;
    private LocalDateTime estimateDeliveryDate;
+   private LocalDateTime receivingDate;
    private String destination;
    private String departure;
    private float distance;

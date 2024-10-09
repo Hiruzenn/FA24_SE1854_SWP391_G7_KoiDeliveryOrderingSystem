@@ -15,8 +15,13 @@ public enum ErrorCode {
 
     //ORDER
     ORDER_NOT_FOUND(1100,"Order Not Found"),
-    ;
 
+    //ORDER_DETAIL
+    ORDER_DETAIL_NOT_FOUND(1200, "Order Detail Not Found"),
+
+    //FISH_PROFILE
+    FISH_PROFILE_NOT_FOUND(1300, "Fish Profile Not Found"),
+    ;
     private final int code;
     private final String message;
 }
