@@ -1,4 +1,4 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.dto.request;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

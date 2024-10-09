@@ -1,4 +1,4 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.dto.response;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,5 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.dto.request;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishCategory;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

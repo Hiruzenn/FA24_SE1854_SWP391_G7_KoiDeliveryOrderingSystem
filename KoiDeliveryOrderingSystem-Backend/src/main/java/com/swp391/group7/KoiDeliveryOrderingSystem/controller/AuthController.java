@@ -1,10 +1,10 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.dto.request.AuthRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.dto.request.ChangePasswordRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.dto.request.RegisterCustomerRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.dto.response.ApiResponse;
-import com.swp391.group7.KoiDeliveryOrderingSystem.dto.response.AuthResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.AuthRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.ChangePasswordRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.RegisterCustomerRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.AuthResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
