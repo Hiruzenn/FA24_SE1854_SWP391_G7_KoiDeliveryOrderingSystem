@@ -1,5 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,10 +22,11 @@ public class FishProfile {
 
     @ManyToOne
     @JoinColumn(name = "type", nullable = false)
+    @JsonManagedReference
     private FishCategory type;
 
-    @ManyToOne
-    @JoinColumn(name = "order_detail_id")
+    @OneToOne(mappedBy = "fishProfiles")
+    @JsonBackReference
     private OrderDetail orderDetail;
 
     @Column(name = "name", nullable = false)
@@ -37,12 +40,6 @@ public class FishProfile {
 
     @Column(name = "origin", nullable = false)
     private String origin;
-
-    @Column(name = "price", nullable = false)
-    private Float price;
-
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
 
     @Column(name = "image", nullable = false)
     private String image;
@@ -62,5 +59,4 @@ public class FishProfile {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private SystemStatusEnum status;
-
 }

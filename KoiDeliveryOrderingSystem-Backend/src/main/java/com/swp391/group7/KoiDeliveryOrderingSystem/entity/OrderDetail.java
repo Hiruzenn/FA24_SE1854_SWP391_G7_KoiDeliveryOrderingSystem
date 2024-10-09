@@ -1,9 +1,10 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.query.Order;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,25 +23,26 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonManagedReference
     private Orders orders;
 
-    @OneToMany(mappedBy = "orderDetail")
-    private List<FishProfile> fishProfiles;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fish_profile_id", referencedColumnName = "id")
+    @JsonManagedReference
+    private FishProfile fishProfiles;
 
     @OneToMany(mappedBy = "orderDetail")
+    @JsonBackReference
     private List<CheckingKoiHealth> checkingKoiHealth;
 
-    @Column(name = "quanity", nullable = false)
-    private Integer quanity;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 
     @Column(name = "unit_price", nullable = false)
     private Float unitPrice;
 
     @Column(name = "amount", nullable = false)
     private Float amount;
-
-    @Column(name = "receiving_date", nullable = false)
-    private LocalDateTime receivingDate;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
