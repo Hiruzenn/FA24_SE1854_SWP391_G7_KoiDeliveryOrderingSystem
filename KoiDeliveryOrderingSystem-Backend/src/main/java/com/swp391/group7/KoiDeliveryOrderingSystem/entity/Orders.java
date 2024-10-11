@@ -54,6 +54,10 @@ public class Orders {
     @JsonBackReference
     private List<CustomsDeclaration> customsDeclarations;
 
+    @OneToMany(mappedBy = "orders")
+    @JsonBackReference
+    private List<Feedback> feedbacks;
+
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonManagedReference
