@@ -29,6 +29,8 @@ public enum ErrorCode {
     //Package
     PACKAGE_NOT_EXISTED (1500,"Package not exsited"),
 
+    //HealthServiceCategory
+    HEALTH_CHECK_FAILED(1501,"Health Check Failed"),
     ;
     private final int code;
     private final String message;
