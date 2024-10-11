@@ -89,7 +89,7 @@ public class OrderService {
 
     public List<OrderResponse> getOrderByCustomerId() {
         Customers customers = accountUtils.getCurrentCustomer();
-        List<Orders> ordersList = orderRepository.findByCustomers(customers);
+        List<Orders> ordersList = orderRepository.findByCustomersAndStatus(customers, SystemStatusEnum.AVAILABLE);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : ordersList) {
             orderResponses.add(convertOrderToResponse(order));

@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentResponse {
     private String paymentCode;
-    private Customers customers;
-    private Orders orders;
+    private String customers;
+    private String orders;
     private Float amount;
     private String paymentMethod;
     private LocalDateTime createAt;
