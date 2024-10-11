@@ -1,7 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.CreateFishProfileRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.UpdateFishProfileRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.CreateFishProfileRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.UpdateFishProfileRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishProfileResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.FishProfileService;

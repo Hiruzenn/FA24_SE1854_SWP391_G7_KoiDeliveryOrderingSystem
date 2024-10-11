@@ -1,6 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.CreateCertificateRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.CreateCertificateRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CertificateDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Certificate;
@@ -26,8 +26,6 @@ public class CertificateService {
 
     @Autowired
     private ModelMapper modelMapper;
-
-
 
     public List<CertificateDTO> getListCertificate()
     {

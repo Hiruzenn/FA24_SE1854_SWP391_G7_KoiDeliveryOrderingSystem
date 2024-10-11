@@ -7,7 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerDTO {
-
     private Integer id;
     private String name;
     private String password;

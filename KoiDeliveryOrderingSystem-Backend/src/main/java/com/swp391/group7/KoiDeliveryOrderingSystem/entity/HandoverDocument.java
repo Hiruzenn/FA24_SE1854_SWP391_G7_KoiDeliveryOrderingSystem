@@ -26,6 +26,11 @@ public class HandoverDocument {
     @JsonManagedReference
     private Customers customers;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "package_id", referencedColumnName = "id")
+    @JsonManagedReference
+    private Package packages;
+
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     @JsonManagedReference
