@@ -27,10 +27,11 @@ public enum ErrorCode {
     CERTIFICAT_EXISTED(1401,"Certificate existed"),
 
     //Package
-    PACKAGE_NOT_EXISTED (1500,"Package not exsited"),
+    PACKAGE_NOT_EXISTED (1500,"Package not existed"),
 
     //HealthServiceCategory
     HEALTH_CHECK_FAILED(1501,"Health Check Failed"),
+
     ;
     private final int code;
     private final String message;
