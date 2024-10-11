@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,9 @@ public class HealthServiceOrderService {
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(heathServiceCategoryId)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_CHECK_FAILED));
+        if (healthServiceOrderRepository.existsHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(healthServiceCategory, orders, SystemStatusEnum.AVAILABLE)) {
+            throw new AppException(ErrorCode.HEALTH_SERVICE_ORDER_IS_EXISTED);
+        }
         HealthServiceOrder healthServiceOrder = HealthServiceOrder.builder()
                 .orders(orders)
                 .healthServiceCategory(healthServiceCategory)
@@ -55,7 +60,34 @@ public class HealthServiceOrderService {
         return convertToHealthServiceOrderResponse(healthServiceOrder);
     }
 
-
+    public List<HealthServiceOrderResponse> getHealthServiceOrderByOrderId(Integer orderId) {
+        Customers customers = accountUtils.getCurrentCustomer();
+        if (customers == null) {
+            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+        }
+        Orders orders = orderRepository.findById(orderId)
+                .orElseThrow(()-> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        List<HealthServiceOrderResponse> healthServiceOrderResponses = new ArrayList<>();
+        List<HealthServiceOrder> healthServiceOrders = healthServiceOrderRepository.findHealthServiceOrderByOrders(orders);
+        for (HealthServiceOrder healthServiceOrder : healthServiceOrders) {
+            if (healthServiceOrder.getStatus() == SystemStatusEnum.AVAILABLE) {
+                healthServiceOrderResponses.add(convertToHealthServiceOrderResponse(healthServiceOrder));
+            }
+        }
+        return healthServiceOrderResponses;
+    }
+    public void deleteHealthServiceOrder(Integer orderId, Integer heathServiceCategoryId) {
+        Customers customers = accountUtils.getCurrentCustomer();
+        if (customers == null) {
+            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+        }
+        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(heathServiceCategoryId)
+                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_CHECK_FAILED));
+        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        HealthServiceOrder healthServiceOrder = healthServiceOrderRepository
+                .findHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(healthServiceCategory, orders, SystemStatusEnum.AVAILABLE);
+        healthServiceOrder.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+    }
     public HealthServiceOrderResponse convertToHealthServiceOrderResponse(HealthServiceOrder healthServiceOrder) {
         return HealthServiceOrderResponse.builder()
                 .orders(healthServiceOrder.getOrders())

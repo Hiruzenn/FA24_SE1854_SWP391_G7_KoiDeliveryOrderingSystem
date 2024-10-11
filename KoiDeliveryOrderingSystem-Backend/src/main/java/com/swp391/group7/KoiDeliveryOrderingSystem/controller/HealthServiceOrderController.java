@@ -6,10 +6,9 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthServic
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.HealthServiceOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("health-service-order")
@@ -28,4 +27,25 @@ public class HealthServiceOrderController {
                 .result(result)
                 .build();
     }
+
+    @GetMapping("view-by-order-id/{orderId}")
+    public ApiResponse<List<HealthServiceOrderResponse>> getHealthServiceOrdersByOrderId(@PathVariable("orderId") Integer orderId){
+        var result = healthServiceOrderService.getHealthServiceOrderByOrderId(orderId);
+        return ApiResponse.<List<HealthServiceOrderResponse>>builder()
+                .code(200)
+                .message("Health Service Order View")
+                .result(result)
+                .build();
+    }
+
+    @PutMapping("delete/{orderId}/{healthServiceCategoryId}")
+    public ApiResponse<HealthServiceOrderResponse> deleteHealServiceOrder(@PathVariable("orderId") Integer orderId,
+                                                @PathVariable("healthServiceCategoryId") Integer healthServiceCategoryId){
+         healthServiceOrderService.deleteHealthServiceOrder(orderId, healthServiceCategoryId);
+        return ApiResponse.<HealthServiceOrderResponse>builder()
+                .code(200)
+                .message("Health Service Order Deleted")
+                .build();
+    }
+
 }
