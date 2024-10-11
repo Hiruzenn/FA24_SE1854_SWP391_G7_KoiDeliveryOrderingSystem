@@ -28,9 +28,6 @@ public class CheckingKoiHealth {
     @JsonManagedReference
     private Package packages;
 
-    @Column(name = "order_id", nullable = false)
-    private Integer orderId;
-
     @Column(name = "health_status_description", nullable = false)
     private String healthStatusDescription;
 

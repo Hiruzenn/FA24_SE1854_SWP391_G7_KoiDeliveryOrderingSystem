@@ -1,4 +1,4 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.packages;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +15,6 @@ public class CreatePackageRequest {
     private String packageDate;
     private String packageStatus;
     private String packageBy;
-    private int invoiceId;
+    private Integer invoiceId;
     private int checkingKoiHealthId;
 }

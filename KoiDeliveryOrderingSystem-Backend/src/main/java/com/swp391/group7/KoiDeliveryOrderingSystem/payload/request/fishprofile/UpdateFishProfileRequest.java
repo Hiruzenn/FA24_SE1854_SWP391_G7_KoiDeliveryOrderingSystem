@@ -1,4 +1,4 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateFishProfileRequest {
+public class UpdateFishProfileRequest {
     private String name;
     private String description;
     private String type;

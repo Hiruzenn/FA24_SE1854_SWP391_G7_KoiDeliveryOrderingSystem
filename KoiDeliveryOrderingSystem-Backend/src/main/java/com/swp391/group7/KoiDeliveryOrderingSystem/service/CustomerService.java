@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
+
 import java.util.List;
 
 @Service
@@ -23,13 +24,14 @@ import java.util.List;
 public class CustomerService {
     @Autowired
     private CustomersRepository customersRepository;
+
     @Autowired
     private ModelMapper modelMapper;
-    public List<CustomerDTO> getListCertificate()
-    {
 
-        List <Customers> customersList= customersRepository.findAll();
-        if (customersList.isEmpty()){
+    public List<CustomerDTO> getListCertificate() {
+
+        List<Customers> customersList = customersRepository.findAll();
+        if (customersList.isEmpty()) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         return customersList.stream().map(customers -> modelMapper.map(customers, CustomerDTO.class)).toList();
@@ -38,17 +40,18 @@ public class CustomerService {
     public CustomerDTO getCustomerById(int id) {
         // Fetch the customer by ID from the repository
         Customers existingCustomer = customersRepository.findById(id);
-        if(existingCustomer == null){
+        if (existingCustomer == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
 
         // Map the retrieved customer entity to CustomerDTO and return it
         return modelMapper.map(existingCustomer, CustomerDTO.class);
     }
+
     public CustomerDTO updateCustomer(int id, CustomerDTO customerDTO) {
         // Fetch the existing customer by ID
         Customers existingCustomer = customersRepository.findById(id);
-        if(existingCustomer == null){
+        if (existingCustomer == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
 
@@ -61,10 +64,11 @@ public class CustomerService {
         // Map the saved customer entity to CustomerDTO and return it
         return modelMapper.map(existingCustomer, CustomerDTO.class);
     }
+
     public void deleteCustomer(int id) {
         // Check if the customer exists before deletion
         Customers existingCustomer = customersRepository.findById(id);
-        if(existingCustomer == null){
+        if (existingCustomer == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
 
