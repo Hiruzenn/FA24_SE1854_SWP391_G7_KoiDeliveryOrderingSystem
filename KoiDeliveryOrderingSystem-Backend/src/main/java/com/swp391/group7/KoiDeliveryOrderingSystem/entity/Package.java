@@ -26,10 +26,9 @@ public class Package {
     @JsonBackReference
     private List<CheckingKoiHealth> checkingKoiHealth;
 
-    @ManyToOne
-    @JoinColumn(name = "invoice_id")
-    @JsonManagedReference
-    private Invoice invoice;
+    @OneToOne(mappedBy = "packages")
+    @JsonBackReference
+    private HandoverDocument handoverDocument;
 
     @Column(name = "package_no", nullable = false)
     private String packageNo;

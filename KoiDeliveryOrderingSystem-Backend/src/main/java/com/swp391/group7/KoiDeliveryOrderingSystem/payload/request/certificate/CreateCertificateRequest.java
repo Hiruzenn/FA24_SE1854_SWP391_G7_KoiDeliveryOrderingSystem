@@ -1,15 +1,14 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-@Getter
-@Setter
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateCertificateRequest {
-    private int id;
+public class CreateCertificateRequest {
     private String certificateName;
     private String certificateDescription;
     private int orderId;

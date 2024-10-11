@@ -1,8 +1,8 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.AuthRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.ChangePasswordRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.RegisterCustomerRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.AuthRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.ChangePasswordRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.RegisterCustomerRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.AuthResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.AuthService;

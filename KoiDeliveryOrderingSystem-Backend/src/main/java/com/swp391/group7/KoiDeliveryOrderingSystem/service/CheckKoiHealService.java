@@ -12,18 +12,5 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CheckKoiHealService {
-    @Autowired
-    CheckingKoiHealthRepository checkingKoiHealthRepository;
-    @Autowired
-    ModelMapper modelMapper;
 
-//    public List<CheckKoiHealthResponse> getListCheckHealKoi()
-//    {
-//
-//        List <CheckingKoiHealth> checkingKoiHealthList= checkingKoiHealthRepository.findAll();
-//        if (checkingKoiHealthList.isEmpty()){
-//            throw new AppException(ErrorCode.CERTIFICATE_NOT_FOUND);
-//        }
-//        return checkingKoiHealthList.stream().map(certificate -> modelMapper.map(ce, CertificateDTO.class)).toList();
-//    }
 }

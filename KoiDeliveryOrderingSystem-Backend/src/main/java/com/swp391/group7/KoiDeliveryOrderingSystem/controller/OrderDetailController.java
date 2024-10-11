@@ -1,7 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.CreateOrderDetailRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.UpdateOrderDetailRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.orderdetail.CreateOrderDetailRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.orderdetail.UpdateOrderDetailRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderDetailResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.OrderDetailService;

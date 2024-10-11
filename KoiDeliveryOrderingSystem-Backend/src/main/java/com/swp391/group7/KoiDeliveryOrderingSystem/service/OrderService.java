@@ -1,7 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.CreateOrderRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.UpdateOrderRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.CreateOrderRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
