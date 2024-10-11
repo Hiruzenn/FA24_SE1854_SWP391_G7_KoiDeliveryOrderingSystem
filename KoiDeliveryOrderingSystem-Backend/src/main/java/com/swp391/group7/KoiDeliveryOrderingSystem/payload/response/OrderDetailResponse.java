@@ -19,8 +19,8 @@ public class OrderDetailResponse {
     private Float amount;
     private LocalDateTime receivingDate;
     private LocalDateTime createAt;
-    private Integer createBy;
+    private String createBy;
     private LocalDateTime updateAt;
-    private Integer updateBy;
+    private String updateBy;
     private SystemStatusEnum status;
 }

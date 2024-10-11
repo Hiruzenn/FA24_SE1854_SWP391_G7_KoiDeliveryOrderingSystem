@@ -65,7 +65,7 @@ public class Customers {
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private Integer updateBy;
+    private String updateBy;
 
     @Column(name = "customer_status", nullable = false)
     @Enumerated(EnumType.STRING)

@@ -1,10 +1,8 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CustomerDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.PackageDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.PackageRepository;
 import lombok.AccessLevel;
