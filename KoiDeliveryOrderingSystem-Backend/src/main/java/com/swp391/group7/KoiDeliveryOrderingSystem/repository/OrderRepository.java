@@ -13,7 +13,8 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Orders, Integer> {
     boolean existsByOrderCode(String orderCode);
     Optional<Orders> findByIdAndCustomers(int id, Customers customer);
-    List<Orders> findByCustomers(Customers customer);
+    List<Orders> findByCustomersAndStatus(Customers customer, SystemStatusEnum status);
     List<Orders> findByStatus(SystemStatusEnum status);
+    Optional<Orders> findByCustomers(Customers customer);
 
 }
