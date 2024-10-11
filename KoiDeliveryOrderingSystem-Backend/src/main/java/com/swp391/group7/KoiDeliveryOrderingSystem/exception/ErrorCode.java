@@ -32,6 +32,9 @@ public enum ErrorCode {
     //HealthServiceCategory
     HEALTH_CHECK_FAILED(1501,"Health Check Failed"),
 
+    //HealthServiceOrder
+    HEALTH_SERVICE_ORDER_NOT_FOUND(1502,"Health Service Order Not Found"),
+    HEALTH_SERVICE_ORDER_IS_EXISTED(1503,"Health Service Order Existed"),
     ;
     private final int code;
     private final String message;
