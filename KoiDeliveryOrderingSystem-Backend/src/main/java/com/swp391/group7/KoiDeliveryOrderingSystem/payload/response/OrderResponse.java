@@ -20,15 +20,15 @@ public class OrderResponse {
    private LocalDateTime receivingDate;
    private String destination;
    private String departure;
-   private float distance;
+   private Float distance;
    private String phone;
-   private float amount;
-   private float vat;
-   private float vatAmount;
-   private float totalAmount;
+   private Float amount;
+   private Float vat;
+   private Float vatAmount;
+   private Float totalAmount;
    private LocalDateTime createAt;
-   private int createBy;
+   private String createBy;
    private LocalDateTime updateAt;
-   private int updateBy;
+   private String updateBy;
    private SystemStatusEnum status;
 }

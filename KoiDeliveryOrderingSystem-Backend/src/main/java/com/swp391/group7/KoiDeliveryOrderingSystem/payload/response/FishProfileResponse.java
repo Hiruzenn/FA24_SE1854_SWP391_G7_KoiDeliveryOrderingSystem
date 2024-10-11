@@ -19,8 +19,8 @@ public class FishProfileResponse {
     private String origin;
     private String image;
     private LocalDateTime createAt;
-    private  Integer createBy;
+    private  String createBy;
     private LocalDateTime updateAt;
-    private  Integer updateBy;
+    private  String updateBy;
     private SystemStatusEnum status;
 }

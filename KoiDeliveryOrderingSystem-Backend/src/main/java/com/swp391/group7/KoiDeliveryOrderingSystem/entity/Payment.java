@@ -31,26 +31,23 @@ public class Payment {
     @JsonManagedReference
     private Orders orders;
 
-    @Column(name = "total_float", nullable = false)
-    private Float totalFloat;
+    @Column(name = "amount", nullable = false)
+    private Float amount;
 
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
-
-    @Column(name = "package_by", nullable = false)
-    private String packageBy;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private Integer updateBy;
+    private String updateBy;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
