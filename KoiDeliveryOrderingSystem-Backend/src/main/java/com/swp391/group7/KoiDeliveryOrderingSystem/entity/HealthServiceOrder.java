@@ -29,9 +29,6 @@ public class HealthServiceOrder {
     @JsonManagedReference
     private Orders orders;
 
-    @Column(name = "total_price", nullable = false)
-    private Float totalPrice;
-
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
@@ -47,5 +44,4 @@ public class HealthServiceOrder {
     @Column(name = "health_service_order_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private SystemStatusEnum status;
-
 }
