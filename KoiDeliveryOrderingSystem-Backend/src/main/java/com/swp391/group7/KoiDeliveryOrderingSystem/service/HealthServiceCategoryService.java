@@ -32,7 +32,15 @@ public class HealthServiceCategoryService {
         if (users == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
-        HealthServiceCategory healthServiceCategory = HealthServiceCategory.builder().serviceName(createHealthServiceCategoryRequest.getServiceName()).serviceDescription(createHealthServiceCategoryRequest.getServiceDescription()).price(createHealthServiceCategoryRequest.getPrice()).createAt(LocalDateTime.now()).createBy(users.getId()).updateAt(LocalDateTime.now()).updateBy(users.getId()).status(SystemStatusEnum.AVAILABLE).build();
+        HealthServiceCategory healthServiceCategory = HealthServiceCategory.builder()
+                .serviceName(createHealthServiceCategoryRequest.getServiceName())
+                .serviceDescription(createHealthServiceCategoryRequest.getServiceDescription())
+                .price(createHealthServiceCategoryRequest.getPrice())
+                .createAt(LocalDateTime.now())
+                .createBy(users.getName())
+                .updateAt(LocalDateTime.now())
+                .updateBy(users.getName())
+                .status(SystemStatusEnum.AVAILABLE).build();
         healthServiceCategoryRepository.save(healthServiceCategory);
         return convertToHealthServiceCategoryResponse(healthServiceCategory);
     }
@@ -47,7 +55,7 @@ public class HealthServiceCategoryService {
         healthServiceCategory.setServiceDescription(updateHealthServiceCategoryRequest.getServiceDescription());
         healthServiceCategory.setPrice(updateHealthServiceCategoryRequest.getPrice());
         healthServiceCategory.setUpdateAt(LocalDateTime.now());
-        healthServiceCategory.setUpdateBy(users.getId());
+        healthServiceCategory.setUpdateBy(users.getName());
         healthServiceCategoryRepository.save(healthServiceCategory);
         return convertToHealthServiceCategoryResponse(healthServiceCategory);
     }
@@ -76,7 +84,7 @@ public class HealthServiceCategoryService {
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_CHECK_FAILED));
         healthServiceCategory.setUpdateAt(LocalDateTime.now());
-        healthServiceCategory.setUpdateBy(users.getId());
+        healthServiceCategory.setUpdateBy(users.getName());
         healthServiceCategory.setStatus(SystemStatusEnum.NOT_AVAILABLE);
         healthServiceCategoryRepository.save(healthServiceCategory);
     }

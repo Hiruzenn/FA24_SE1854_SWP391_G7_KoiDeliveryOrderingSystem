@@ -51,9 +51,9 @@ public class HealthServiceOrderService {
                 .orders(orders)
                 .healthServiceCategory(healthServiceCategory)
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getId())
+                .createBy(customers.getName())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getId())
+                .updateBy(customers.getName())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         healthServiceOrderRepository.save(healthServiceOrder);

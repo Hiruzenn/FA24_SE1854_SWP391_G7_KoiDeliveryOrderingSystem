@@ -48,9 +48,9 @@ public class FishProfileService {
                 .origin(createFishProfileRequest.getOrigin())
                 .image(createFishProfileRequest.getImage())
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getId())
+                .createBy(customers.getName())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getId())
+                .updateBy(customers.getName())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         fishProfileRepository.save(fishProfile);
@@ -70,7 +70,7 @@ public class FishProfileService {
         fishProfile.setOrigin(updateFishProfileRequest.getOrigin());
         fishProfile.setImage(updateFishProfileRequest.getImage());
         fishProfile.setUpdateAt(LocalDateTime.now());
-        fishProfile.setUpdateBy(customers.getId());
+        fishProfile.setUpdateBy(customers.getName());
         fishProfileRepository.save(fishProfile);
         return convertToFishProfileResponse(fishProfile);
     }

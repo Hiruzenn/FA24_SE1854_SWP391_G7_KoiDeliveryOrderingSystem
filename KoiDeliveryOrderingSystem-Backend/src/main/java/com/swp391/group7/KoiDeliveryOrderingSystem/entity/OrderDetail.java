@@ -48,13 +48,13 @@ public class OrderDetail {
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private Integer updateBy;
+    private String updateBy;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

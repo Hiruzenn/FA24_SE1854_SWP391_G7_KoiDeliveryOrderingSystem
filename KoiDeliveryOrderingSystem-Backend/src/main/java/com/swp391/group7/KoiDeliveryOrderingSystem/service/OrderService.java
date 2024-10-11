@@ -53,9 +53,9 @@ public class OrderService {
                 .phone(createOrderRequest.getPhone())
                 .amount(createOrderRequest.getAmount())
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getId())
+                .createBy(customers.getName())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getId())
+                .updateBy(customers.getName())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         orderRepository.save(orders);
@@ -72,7 +72,7 @@ public class OrderService {
         orders.setDistance(updateOrderRequest.getDistance());
         orders.setPhone(updateOrderRequest.getPhone());
         orders.setUpdateAt(LocalDateTime.now());
-        orders.setUpdateBy(customer.getId());
+        orders.setUpdateBy(customer.getName());
         orderRepository.save(orders);
 
         return convertOrderToResponse(orders);
@@ -103,7 +103,7 @@ public class OrderService {
         if (orders.getStatus() == SystemStatusEnum.AVAILABLE) {
             orders.setStatus(SystemStatusEnum.NOT_AVAILABLE);
             orders.setUpdateAt(LocalDateTime.now());
-            orders.setUpdateBy(customer.getId());
+            orders.setUpdateBy(customer.getName());
             orderRepository.save(orders);
             return "Order deleted successfully";
         }else{
