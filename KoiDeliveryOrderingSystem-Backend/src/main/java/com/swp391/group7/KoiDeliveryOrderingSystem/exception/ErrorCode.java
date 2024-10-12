@@ -29,12 +29,20 @@ public enum ErrorCode {
     //Package
     PACKAGE_NOT_EXISTED (1500,"Package not existed"),
 
-    //HealthServiceCategory
+
+
+    CUSTOMSDECALARATION_NOT_EXISTED(1600, "Customs Declaration not existed"),
+    INVOICE_NOT_FOUND(1700, "Invoice not existed"),
+    HANDOVER_DOCUMENT_NOT_FOUND(1800,"Handover Document not existed"),
+    HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND(1900, "History not existed" ),
+
+
     HEALTH_CHECK_FAILED(1501,"Health Check Failed"),
 
     //HealthServiceOrder
     HEALTH_SERVICE_ORDER_NOT_FOUND(1502,"Health Service Order Not Found"),
     HEALTH_SERVICE_ORDER_IS_EXISTED(1503,"Health Service Order Existed"),
+
     ;
     private final int code;
     private final String message;

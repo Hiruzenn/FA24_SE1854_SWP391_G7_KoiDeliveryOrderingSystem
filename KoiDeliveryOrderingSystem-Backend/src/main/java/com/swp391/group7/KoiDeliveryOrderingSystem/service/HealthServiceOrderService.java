@@ -43,9 +43,9 @@ public class HealthServiceOrderService {
         Orders orders = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(heathServiceCategoryId)
-                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_CHECK_FAILED));
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
         if (healthServiceOrderRepository.existsHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(healthServiceCategory, orders, SystemStatusEnum.AVAILABLE)) {
-            throw new AppException(ErrorCode.HEALTH_SERVICE_ORDER_IS_EXISTED);
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         HealthServiceOrder healthServiceOrder = HealthServiceOrder.builder()
                 .orders(orders)
@@ -82,7 +82,7 @@ public class HealthServiceOrderService {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(heathServiceCategoryId)
-                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_CHECK_FAILED));
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HealthServiceOrder healthServiceOrder = healthServiceOrderRepository
                 .findHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(healthServiceCategory, orders, SystemStatusEnum.AVAILABLE);
