@@ -23,7 +23,7 @@ public class HealthServiceCategoryController {
     public ApiResponse<HealthServiceCategoryResponse> createHealthyServiceCategory(@RequestBody CreateHealthServiceCategoryRequest createHealthServiceCategoryRequest) {
         var result = healthServiceCategoryService.createHealthyServiceCategory(createHealthServiceCategoryRequest);
         return ApiResponse.<HealthServiceCategoryResponse>builder()
-               .code(200)
+                .code(200)
                 .message("Healthy Service Category Created")
                 .result(result)
                 .build();
