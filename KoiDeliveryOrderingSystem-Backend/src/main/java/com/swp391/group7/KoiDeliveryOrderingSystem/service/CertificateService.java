@@ -52,7 +52,7 @@ public class CertificateService {
         // Map the CreateCertificateRequest to Certificate entity
         Certificate certificate = modelMapper.map(certificateRequest, Certificate.class);
 
-        // Save the certificate to the repository
+
         certificate = certificateRepository.save(certificate); // Update the reference with the saved entity
 
         // Map the saved Certificate back to CertificateDTO
