@@ -51,6 +51,7 @@ public class HealthServiceCategoryService {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.HEALTH_CHECK_FAILED));
+
         healthServiceCategory.setServiceName(updateHealthServiceCategoryRequest.getServiceName());
         healthServiceCategory.setServiceDescription(updateHealthServiceCategoryRequest.getServiceDescription());
         healthServiceCategory.setPrice(updateHealthServiceCategoryRequest.getPrice());
