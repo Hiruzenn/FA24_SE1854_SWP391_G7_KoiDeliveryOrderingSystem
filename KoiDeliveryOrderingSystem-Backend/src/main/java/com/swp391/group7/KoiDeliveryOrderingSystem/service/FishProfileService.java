@@ -1,7 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.CreateFishProfileRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.UpdateFishProfileRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.CreateFishProfileRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.UpdateFishProfileRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishProfileResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
@@ -48,9 +48,9 @@ public class FishProfileService {
                 .origin(createFishProfileRequest.getOrigin())
                 .image(createFishProfileRequest.getImage())
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getId())
+                .createBy(customers.getName())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getId())
+                .updateBy(customers.getName())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         fishProfileRepository.save(fishProfile);
@@ -70,7 +70,7 @@ public class FishProfileService {
         fishProfile.setOrigin(updateFishProfileRequest.getOrigin());
         fishProfile.setImage(updateFishProfileRequest.getImage());
         fishProfile.setUpdateAt(LocalDateTime.now());
-        fishProfile.setUpdateBy(customers.getId());
+        fishProfile.setUpdateBy(customers.getName());
         fishProfileRepository.save(fishProfile);
         return convertToFishProfileResponse(fishProfile);
     }

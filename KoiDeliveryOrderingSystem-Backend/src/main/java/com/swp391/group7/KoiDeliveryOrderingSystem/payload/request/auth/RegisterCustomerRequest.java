@@ -1,4 +1,4 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthRequest {
+public class RegisterCustomerRequest {
+    private String name;
     private String email;
     private String password;
 }

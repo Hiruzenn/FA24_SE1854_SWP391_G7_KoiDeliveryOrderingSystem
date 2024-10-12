@@ -54,6 +54,10 @@ public class Orders {
     @JsonBackReference
     private List<CustomsDeclaration> customsDeclarations;
 
+    @OneToMany(mappedBy = "orders")
+    @JsonBackReference
+    private List<Feedback> feedbacks;
+
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonManagedReference
@@ -101,13 +105,13 @@ public class Orders {
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private Integer updateBy;
+    private String updateBy;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

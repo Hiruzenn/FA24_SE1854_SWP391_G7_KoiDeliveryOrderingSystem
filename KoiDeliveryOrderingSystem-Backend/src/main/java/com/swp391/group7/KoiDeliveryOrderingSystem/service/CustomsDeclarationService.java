@@ -9,7 +9,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CertificateDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CustomsDeclarationDTO;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.CreateCertificateRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.customsdeclaration.CreateCustomsDeclarationRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.CustomsDeclarationRepository;

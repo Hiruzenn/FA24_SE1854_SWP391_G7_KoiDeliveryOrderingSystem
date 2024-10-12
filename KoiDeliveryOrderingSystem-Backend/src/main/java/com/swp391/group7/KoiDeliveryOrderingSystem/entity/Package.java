@@ -26,10 +26,9 @@ public class Package {
     @JsonBackReference
     private List<CheckingKoiHealth> checkingKoiHealth;
 
-    @ManyToOne
-    @JoinColumn(name = "invoice_id")
-    @JsonManagedReference
-    private Invoice invoice;
+    @OneToOne(mappedBy = "packages")
+    @JsonBackReference
+    private HandoverDocument handoverDocument;
 
     @Column(name = "package_no", nullable = false)
     private String packageNo;
@@ -38,26 +37,29 @@ public class Package {
     private String packageDescription;
 
     @Column(name = "package_date", nullable = false)
-    private String packageDate;
+    private LocalDateTime packageDate;
 
     @Column(name = "package_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private PackageStatusEnum packageStatusEnum;
+    private PackageStatusEnum packageStatus;
 
     @Column(name = "package_by", nullable = false)
     private String packageBy;
+
+    @Column(name = "image")
+    private String image;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private Integer updateBy;
+    private String updateBy;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

@@ -1,7 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.CreateOrderDetailRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.UpdateOrderDetailRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.orderdetail.CreateOrderDetailRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.orderdetail.UpdateOrderDetailRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderDetailResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
@@ -52,9 +52,9 @@ public class OrderDetailService {
                 .unitPrice(createOrderDetailRequest.getUnitPrice())
                 .amount(createOrderDetailRequest.getQuantity() * createOrderDetailRequest.getUnitPrice())
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getId())
+                .createBy(customers.getName())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getId())
+                .updateBy(customers.getName())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         orderDetailRepository.save(orderDetail);
@@ -72,7 +72,7 @@ public class OrderDetailService {
         orderDetail.setUnitPrice(updateOrderDetailRequest.getUnitPrice());
         orderDetail.setAmount(updateOrderDetailRequest.getQuantity() * updateOrderDetailRequest.getUnitPrice());
         orderDetail.setUpdateAt(LocalDateTime.now());
-        orderDetail.setUpdateBy(customers.getId());
+        orderDetail.setUpdateBy(customers.getName());
 
         orderDetailRepository.save(orderDetail);
         return convertToOrderDetailResponse(orderDetail);

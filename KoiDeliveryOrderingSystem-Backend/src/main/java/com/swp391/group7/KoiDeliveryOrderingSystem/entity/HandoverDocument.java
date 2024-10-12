@@ -26,6 +26,11 @@ public class HandoverDocument {
     @JsonManagedReference
     private Customers customers;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "package_id", referencedColumnName = "id")
+    @JsonManagedReference
+    private Package packages;
+
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     @JsonManagedReference
@@ -60,13 +65,13 @@ public class HandoverDocument {
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private Integer updateBy;
+    private String updateBy;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

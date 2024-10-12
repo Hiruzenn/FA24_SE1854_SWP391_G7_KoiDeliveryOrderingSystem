@@ -29,23 +29,19 @@ public class HealthServiceOrder {
     @JsonManagedReference
     private Orders orders;
 
-    @Column(name = "total_price", nullable = false)
-    private Float totalPrice;
-
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private Integer updateBy;
+    private String updateBy;
 
     @Column(name = "health_service_order_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private SystemStatusEnum status;
-
 }

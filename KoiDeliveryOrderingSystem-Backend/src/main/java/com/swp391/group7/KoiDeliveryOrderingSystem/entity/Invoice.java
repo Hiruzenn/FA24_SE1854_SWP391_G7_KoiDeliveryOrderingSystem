@@ -29,39 +29,32 @@ public class Invoice {
     @JsonManagedReference
     private Orders orders;
 
-    @OneToMany(mappedBy = "invoice")
-    @JsonBackReference
-    private List<Package> packages;
-
-    @OneToMany(mappedBy = "invoice")
-    @JsonBackReference
-    private List<HealthCareDeliveryHistory> healCareDeliveryHistories;
-
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonManagedReference
     private Customers customers;
 
-    @Column(name = "health_care_delivery_history_id")
-    private Integer healthCareDeliveryHistoryId;
+    @OneToMany(mappedBy = "invoice")
+    @JsonBackReference
+    private List<HealthCareDeliveryHistory> healCareDeliveryHistories;
 
-    @Column(name = "invoice_description")
-    private String invoiceDescription;
+    @Column(name = "date")
+    private LocalDateTime date;
 
-    @Column(name = "staff", nullable = false)
-    private String staff;
+    @Column(name = "address_ store")
+    private String addressStore;
 
-    @Column(name = "vehicle",nullable = false)
-    private String vehicle;
+    @Column(name = "address_customer")
+    private String addressCustomer;
 
-    @Column(name = "destination", nullable = false)
-    private String destination;
+    @Column(name = "vat")
+    private Float vat;
 
-    @Column(name = "depature", nullable = false)
-    private String depature;
+    @Column(name = "amount")
+    private Float amount;
 
-    @Column(name = "total_price", nullable = false)
-    private Float totalPrice;
+    @Column(name = "total_amount")
+    private Float totalAmount;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;

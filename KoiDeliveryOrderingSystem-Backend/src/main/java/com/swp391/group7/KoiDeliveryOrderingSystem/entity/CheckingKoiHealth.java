@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HealthStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,8 +29,9 @@ public class CheckingKoiHealth {
     @JsonManagedReference
     private Package packages;
 
-    @Column(name = "order_id", nullable = false)
-    private Integer orderId;
+    @Column(name = "heal_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private HealthStatusEnum healthStatus;
 
     @Column(name = "health_status_description", nullable = false)
     private String healthStatusDescription;
@@ -53,13 +55,13 @@ public class CheckingKoiHealth {
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private Integer updateBy;
+    private String updateBy;
 
     @Column(name = "checking_koi_health_status", nullable = false)
     @Enumerated(EnumType.STRING)
