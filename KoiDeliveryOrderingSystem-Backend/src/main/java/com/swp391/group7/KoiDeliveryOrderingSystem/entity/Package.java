@@ -37,14 +37,17 @@ public class Package {
     private String packageDescription;
 
     @Column(name = "package_date", nullable = false)
-    private String packageDate;
+    private LocalDateTime packageDate;
 
     @Column(name = "package_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private PackageStatusEnum packageStatusEnum;
+    private PackageStatusEnum packageStatus;
 
     @Column(name = "package_by", nullable = false)
     private String packageBy;
+
+    @Column(name = "image")
+    private String image;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
