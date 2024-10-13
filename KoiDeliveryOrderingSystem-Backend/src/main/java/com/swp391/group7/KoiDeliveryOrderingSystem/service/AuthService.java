@@ -82,6 +82,7 @@ public class AuthService {
         var token = generateUserToken(user);
         return AuthResponse.builder()
                 .token(token)
+                .role(user.getRole().getName())
                 .build();
     }
 
