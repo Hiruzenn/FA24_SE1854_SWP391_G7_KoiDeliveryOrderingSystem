@@ -90,8 +90,9 @@ public class HealthServiceOrderService {
     }
     public HealthServiceOrderResponse convertToHealthServiceOrderResponse(HealthServiceOrder healthServiceOrder) {
         return HealthServiceOrderResponse.builder()
-                .orders(healthServiceOrder.getOrders())
-                .healthServiceCategory(healthServiceOrder.getHealthServiceCategory())
+                .id(healthServiceOrder.getId())
+                .orderId(healthServiceOrder.getOrders().getId())
+                .healthServiceCategoryId(healthServiceOrder.getHealthServiceCategory().getId())
                 .createAt(healthServiceOrder.getCreateAt())
                 .createBy(healthServiceOrder.getCreateBy())
                 .updateAt(healthServiceOrder.getUpdateAt())

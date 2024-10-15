@@ -94,7 +94,9 @@ public class OrderDetailService {
 
     public OrderDetailResponse convertToOrderDetailResponse(OrderDetail orderDetail) {
         return OrderDetailResponse.builder()
-                .fishProfile(orderDetail.getFishProfiles())
+                .id(orderDetail.getId())
+                .fishProfileId(orderDetail.getFishProfiles().getId())
+                .orderId(orderDetail.getOrders().getId())
                 .unitPrice(orderDetail.getUnitPrice())
                 .amount(orderDetail.getAmount())
                 .createAt(orderDetail.getCreateAt())

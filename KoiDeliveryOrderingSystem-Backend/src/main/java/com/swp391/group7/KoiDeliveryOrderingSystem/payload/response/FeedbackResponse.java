@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class FeedbackResponse {
-    private String customer;
-    private String orderCode;
+    private Integer id;
+    private Integer customerId;
+    private Integer orderId;
     private String feedbackDescription;
     private LocalDateTime createAt;
     private Integer createBy;

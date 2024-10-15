@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FishProfileResponse {
+    private Integer id;
     private String name;
     private String description;
     private String type;

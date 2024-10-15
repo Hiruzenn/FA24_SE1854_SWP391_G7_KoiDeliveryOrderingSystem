@@ -89,6 +89,7 @@ public class FishProfileService {
     }
     public FishProfileResponse convertToFishProfileResponse(FishProfile fishProfile) {
         return FishProfileResponse.builder()
+                .id(fishProfile.getId())
                 .name(fishProfile.getName())
                 .description(fishProfile.getDescription())
                 .type(fishProfile.getType().getFishCategoryName())

@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HealthServiceOrderResponse {
-    private HealthServiceCategory healthServiceCategory;
-    private Orders orders;
+    private Integer id;
+    private Integer healthServiceCategoryId;
+    private Integer orderId;
     private LocalDateTime createAt;
     private Integer createBy;
     private LocalDateTime updateAt;

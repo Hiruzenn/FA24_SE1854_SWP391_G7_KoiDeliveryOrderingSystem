@@ -114,6 +114,7 @@ public class OrderService {
 
     private OrderResponse convertOrderToResponse(Orders orders) {
         return OrderResponse.builder()
+                .id(orders.getId())
                 .orderCode(orders.getOrderCode())
                 .orderDate(orders.getOrderDate())
                 .deliveryMethod(orders.getDeliveryMethod().getDeliveryName())

@@ -91,6 +91,7 @@ public class HealthServiceCategoryService {
     }
     public HealthServiceCategoryResponse convertToHealthServiceCategoryResponse(HealthServiceCategory healthServiceCategory) {
         return HealthServiceCategoryResponse.builder()
+                .id(healthServiceCategory.getId())
                 .serviceName(healthServiceCategory.getServiceName())
                 .serviceDescription(healthServiceCategory.getServiceDescription())
                 .price(healthServiceCategory.getPrice())

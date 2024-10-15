@@ -80,8 +80,9 @@ public class FeedbackService {
     }
     public FeedbackResponse convertToFeedbackResponse(Feedback feedback) {
         return FeedbackResponse.builder()
-                .customer(feedback.getUsers().getName())
-                .orderCode(feedback.getOrders().getOrderCode())
+                .id(feedback.getId())
+                .customerId(feedback.getUsers().getId())
+                .orderId(feedback.getOrders().getId())
                 .feedbackDescription(feedback.getFeedbackDescription())
                 .createAt(feedback.getCreateAt())
                 .createBy(feedback.getCreateBy())

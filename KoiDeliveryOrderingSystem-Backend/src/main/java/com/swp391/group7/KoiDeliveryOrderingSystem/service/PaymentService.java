@@ -97,9 +97,10 @@ public class PaymentService {
 
     private PaymentResponse convertToPaymentResponse(Payment payment) {
         return PaymentResponse.builder()
+                .id(payment.getId())
                 .paymentCode(payment.getPaymentCode())
-                .orders(payment.getOrders().getOrderCode())
-                .customers(payment.getUsers().getName())
+                .orderId(payment.getOrders().getId())
+                .customerId(payment.getUsers().getId())
                 .paymentMethod(payment.getPaymentMethod())
                 .amount(payment.getAmount())
                 .createAt(payment.getCreateAt())

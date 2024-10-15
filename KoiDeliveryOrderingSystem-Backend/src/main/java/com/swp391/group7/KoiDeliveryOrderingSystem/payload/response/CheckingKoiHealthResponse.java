@@ -15,8 +15,9 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CheckingKoiHealthResponse {
-    private OrderDetail orderDetail;
-    private Package packages;
+    private Integer id;
+    private Integer orderDetailId;
+    private Integer packageId;
     private HealthStatus healthStatus;
     private String healthStatusDescription;
     private Float weight;
