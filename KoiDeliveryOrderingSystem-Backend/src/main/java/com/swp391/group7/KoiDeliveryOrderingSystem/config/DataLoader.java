@@ -23,20 +23,23 @@ public class DataLoader {
         return args -> {
             if (roleRepository.count() == 0) {
                 Role adminRole = Role.builder()
-                        .id(1)
                         .name("ADMIN")
                         .build();
                 Role staffRole = Role.builder()
-                        .id(2)
                         .name("STAFF")
                         .build();
                 Role managerRole = Role.builder()
-                        .id(3)
                         .name("MANAGER")
                         .build();
+                Role customersRole = Role.builder()
+                        .name("CUSTOMERS")
+                        .build();
                 roleRepository.save(adminRole);
-                roleRepository.save(staffRole);
+                roleRepository.save(customersRole);
                 roleRepository.save(managerRole);
+                roleRepository.save(staffRole);
+
+
             }
             if(deliveryMethodRepository.count() == 0){
                 DeliveryMethod van = DeliveryMethod.builder()
