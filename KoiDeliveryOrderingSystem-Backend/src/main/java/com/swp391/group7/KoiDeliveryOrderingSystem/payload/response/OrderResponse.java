@@ -27,8 +27,8 @@ public class OrderResponse {
    private Float vatAmount;
    private Float totalAmount;
    private LocalDateTime createAt;
-   private String createBy;
+   private Integer createBy;
    private LocalDateTime updateAt;
-   private String updateBy;
+   private Integer updateBy;
    private SystemStatusEnum status;
 }

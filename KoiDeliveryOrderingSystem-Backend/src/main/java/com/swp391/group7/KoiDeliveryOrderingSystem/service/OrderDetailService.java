@@ -3,7 +3,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.orderdetail.CreateOrderDetailRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.orderdetail.UpdateOrderDetailRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderDetailResponse;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.OrderDetail;
@@ -39,9 +39,9 @@ public class OrderDetailService {
     private FishProfileRepository fishProfileRepository;
 
     public OrderDetailResponse createOrderDetail(Integer orderId, Integer fishProfileId, CreateOrderDetailRequest createOrderDetailRequest) {
-        Customers customers = accountUtils.getCurrentCustomer();
+        Users users = accountUtils.getCurrentUser();
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        if (customers == null) {
+        if (users == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         FishProfile fishProfile = fishProfileRepository.findById(fishProfileId).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
@@ -52,9 +52,9 @@ public class OrderDetailService {
                 .unitPrice(createOrderDetailRequest.getUnitPrice())
                 .amount(createOrderDetailRequest.getQuantity() * createOrderDetailRequest.getUnitPrice())
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getName())
+                .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getName())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         orderDetailRepository.save(orderDetail);
@@ -62,8 +62,8 @@ public class OrderDetailService {
     }
 
     public OrderDetailResponse updateOrderDetail(Integer orderDetailId, UpdateOrderDetailRequest updateOrderDetailRequest){
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null ){
+        Users users = accountUtils.getCurrentUser();
+        if (users == null ){
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND));
@@ -72,15 +72,15 @@ public class OrderDetailService {
         orderDetail.setUnitPrice(updateOrderDetailRequest.getUnitPrice());
         orderDetail.setAmount(updateOrderDetailRequest.getQuantity() * updateOrderDetailRequest.getUnitPrice());
         orderDetail.setUpdateAt(LocalDateTime.now());
-        orderDetail.setUpdateBy(customers.getName());
+        orderDetail.setUpdateBy(users.getId());
 
         orderDetailRepository.save(orderDetail);
         return convertToOrderDetailResponse(orderDetail);
     }
 
     public List<OrderDetailResponse> getOrderDetailsByOrderId(Integer orderId){
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null ){
+        Users users = accountUtils.getCurrentUser();
+        if (users == null ){
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));

@@ -61,7 +61,7 @@ public class Orders {
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonManagedReference
-    private Customers customers;
+    private Users users;
 
     @ManyToOne
     @JoinColumn(name = "delivery_method", nullable = false)
@@ -105,13 +105,13 @@ public class Orders {
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private String createBy;
+    private Integer createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private String updateBy;
+    private Integer updateBy;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

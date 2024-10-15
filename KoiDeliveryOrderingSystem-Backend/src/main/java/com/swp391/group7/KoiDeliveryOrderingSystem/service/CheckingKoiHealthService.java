@@ -59,9 +59,9 @@ public class CheckingKoiHealthService {
                 .age(request.getAge())
                 .price(request.getPrice())
                 .createAt(LocalDateTime.now())
-                .createBy(users.getName())
+                .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
-                .updateBy(users.getName())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         checkingKoiHealthRepository.save(checkingKoiHealth);

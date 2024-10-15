@@ -32,7 +32,7 @@ public class Invoice {
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonManagedReference
-    private Customers customers;
+    private Users users;
 
     @OneToMany(mappedBy = "invoice")
     @JsonBackReference

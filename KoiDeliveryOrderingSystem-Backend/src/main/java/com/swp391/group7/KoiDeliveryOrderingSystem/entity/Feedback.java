@@ -2,7 +2,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.UserStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,9 +20,9 @@ public class Feedback {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "customers_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonManagedReference
-    private Customers customers;
+    private Users users;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
@@ -36,13 +35,13 @@ public class Feedback {
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private String createBy;
+    private Integer createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private String updateBy;
+    private Integer updateBy;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

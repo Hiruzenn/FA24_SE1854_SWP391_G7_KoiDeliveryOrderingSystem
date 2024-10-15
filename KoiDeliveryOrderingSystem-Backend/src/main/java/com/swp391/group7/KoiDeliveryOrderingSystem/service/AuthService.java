@@ -7,13 +7,11 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.AuthRequ
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.ChangePasswordRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.RegisterCustomerRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.AuthResponse;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.CustomersRepository;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UsersRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UserRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -37,10 +35,10 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository usersRepository;
 
     @Autowired
-    private CustomersRepository customersRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private AccountUtils accountUtils;
@@ -49,29 +47,29 @@ public class AuthService {
     @Value("${jwt.signerKey}")
     protected String signerKey;
 
-    public AuthResponse registerCustomer(RegisterCustomerRequest registerCustomerRequest) {
-        var customer = customersRepository.findByEmail(registerCustomerRequest.getEmail());
+    public AuthResponse register(RegisterCustomerRequest registerCustomerRequest) {
+        var customer = userRepository.findByEmail(registerCustomerRequest.getEmail());
         if (customer.isPresent()) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         String encodedPassword = passwordEncoder.encode(registerCustomerRequest.getPassword());
-        new Customers();
-        Customers newCustomer = Customers.builder()
+        new Users();
+        Users newCustomer = Users.builder()
                 .email(registerCustomerRequest.getEmail())
                 .password(encodedPassword)
                 .name(registerCustomerRequest.getName())
                 .createAt(LocalDateTime.now())
                 .customerStatus(CustomerStatusEnum.UNVERIFIED)
                 .build();
-        customersRepository.save(newCustomer);
-        var token = generateCustomerToken(newCustomer);
+        userRepository.save(newCustomer);
+        var token = generateToken(newCustomer);
         return AuthResponse.builder()
                 .token(token)
                 .build();
     }
 
-    public AuthResponse authenticateUser(AuthRequest authRequest) {
+    public AuthResponse login(AuthRequest authRequest) {
         var user = usersRepository.findByEmail(authRequest.getEmail()).
                 orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -79,25 +77,13 @@ public class AuthService {
         if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-        var token = generateUserToken(user);
+        var token = generateToken(user);
         return AuthResponse.builder()
                 .token(token)
                 .role(user.getRole().getName())
                 .build();
     }
 
-    public AuthResponse authenticateCustomer(AuthRequest authRequest) {
-        var customer = customersRepository.findByEmail(authRequest.getEmail()).orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_EXISTED));
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean authenticated = passwordEncoder.matches(authRequest.getPassword(), customer.getPassword());
-        if (!authenticated) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
-        }
-        var token = generateCustomerToken(customer);
-        return AuthResponse.builder()
-                .token(token)
-                .build();
-    }
 
     public String changePassword(ChangePasswordRequest changePasswordRequest) {
         Users users = accountUtils.getCurrentUser();
@@ -118,7 +104,7 @@ public class AuthService {
         return "Password changed successfully";
     }
 
-    public String generateUserToken(Users user) {
+    public String generateToken(Users user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getId().toString())
@@ -139,23 +125,4 @@ public class AuthService {
         }
     }
 
-    public String generateCustomerToken(Customers customers) {
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
-        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(customers.getId().toString())
-                .issuer("KoiDeliveryOrderingSystem")
-                .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
-                .build();
-
-        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-        JWSObject jwsObject = new JWSObject(header, payload);
-
-        try {
-            jwsObject.sign(new MACSigner(signerKey.getBytes()));
-            return jwsObject.serialize();
-        } catch (JOSEException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

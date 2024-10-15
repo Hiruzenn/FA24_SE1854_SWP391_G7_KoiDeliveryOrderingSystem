@@ -19,16 +19,16 @@ public class AuthController {
 
     @PostMapping("register")
     ApiResponse<AuthResponse> register(@RequestBody RegisterCustomerRequest registerCustomerRequest) {
-        var result = authService.registerCustomer((registerCustomerRequest));
+        var result = authService.register((registerCustomerRequest));
         return ApiResponse.<AuthResponse>builder()
                 .code(200)
                 .message("Register Successful")
                 .result(result)
                 .build();
     }
-    @PostMapping("user-login")
+    @PostMapping("login")
     ApiResponse<AuthResponse> authenticateUser(@RequestBody AuthRequest authRequest) {
-        var result = authService.authenticateUser(authRequest);
+        var result = authService.login(authRequest);
         return ApiResponse.<AuthResponse>builder()
                 .code(200)
                 .message("Login Successful")
@@ -36,15 +36,6 @@ public class AuthController {
                 .build();
     }
 
-    @PostMapping("customer-login")
-    ApiResponse<AuthResponse> authenticateCustomer(@RequestBody AuthRequest authRequest) {
-        var result = authService.authenticateCustomer(authRequest);
-        return ApiResponse.<AuthResponse>builder()
-                .code(200)
-                .message("Login Successful")
-                .result(result)
-                .build();
-    }
 
     @PutMapping("change-password")
     ApiResponse<String> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {

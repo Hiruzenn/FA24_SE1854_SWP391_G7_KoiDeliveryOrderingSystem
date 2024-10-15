@@ -1,20 +1,16 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.config.ModerMapperConfig;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Certificate;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CertificateDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CustomerDTO;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.CustomersRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 
 import java.util.List;
 
@@ -23,23 +19,23 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomerService {
     @Autowired
-    private CustomersRepository customersRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
     public List<CustomerDTO> getListCertificate() {
 
-        List<Customers> customersList = customersRepository.findAll();
-        if (customersList.isEmpty()) {
+        List<Users> usersList = userRepository.findAll();
+        if (usersList.isEmpty()) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
-        return customersList.stream().map(customers -> modelMapper.map(customers, CustomerDTO.class)).toList();
+        return usersList.stream().map(customers -> modelMapper.map(customers, CustomerDTO.class)).toList();
     }
 
     public CustomerDTO getCustomerById(int id) {
         // Fetch the customer by ID from the repository
-        Customers existingCustomer = customersRepository.findById(id);
+        Users existingCustomer = userRepository.findById(id);
         if (existingCustomer == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
@@ -50,7 +46,7 @@ public class CustomerService {
 
     public CustomerDTO updateCustomer(int id, CustomerDTO customerDTO) {
         // Fetch the existing customer by ID
-        Customers existingCustomer = customersRepository.findById(id);
+        Users existingCustomer = userRepository.findById(id);
         if (existingCustomer == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
@@ -59,7 +55,7 @@ public class CustomerService {
         modelMapper.map(customerDTO, existingCustomer);
 
         // Save the updated customer back to the repository
-        existingCustomer = customersRepository.save(existingCustomer);
+        existingCustomer = userRepository.save(existingCustomer);
 
         // Map the saved customer entity to CustomerDTO and return it
         return modelMapper.map(existingCustomer, CustomerDTO.class);
@@ -67,12 +63,12 @@ public class CustomerService {
 
     public void deleteCustomer(int id) {
         // Check if the customer exists before deletion
-        Customers existingCustomer = customersRepository.findById(id);
+        Users existingCustomer = userRepository.findById(id);
         if (existingCustomer == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
 
         // Delete the customer from the repository
-        customersRepository.deleteById(id);
+        userRepository.deleteById(id);
     }
 }

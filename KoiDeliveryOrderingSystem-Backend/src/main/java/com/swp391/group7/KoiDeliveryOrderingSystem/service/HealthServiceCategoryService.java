@@ -37,9 +37,9 @@ public class HealthServiceCategoryService {
                 .serviceDescription(createHealthServiceCategoryRequest.getServiceDescription())
                 .price(createHealthServiceCategoryRequest.getPrice())
                 .createAt(LocalDateTime.now())
-                .createBy(users.getName())
+                .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
-                .updateBy(users.getName())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE).build();
         healthServiceCategoryRepository.save(healthServiceCategory);
         return convertToHealthServiceCategoryResponse(healthServiceCategory);
@@ -56,7 +56,7 @@ public class HealthServiceCategoryService {
         healthServiceCategory.setServiceDescription(updateHealthServiceCategoryRequest.getServiceDescription());
         healthServiceCategory.setPrice(updateHealthServiceCategoryRequest.getPrice());
         healthServiceCategory.setUpdateAt(LocalDateTime.now());
-        healthServiceCategory.setUpdateBy(users.getName());
+        healthServiceCategory.setUpdateBy(users.getId());
         healthServiceCategoryRepository.save(healthServiceCategory);
         return convertToHealthServiceCategoryResponse(healthServiceCategory);
     }
@@ -85,7 +85,7 @@ public class HealthServiceCategoryService {
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_CHECK_FAILED));
         healthServiceCategory.setUpdateAt(LocalDateTime.now());
-        healthServiceCategory.setUpdateBy(users.getName());
+        healthServiceCategory.setUpdateBy(users.getId());
         healthServiceCategory.setStatus(SystemStatusEnum.NOT_AVAILABLE);
         healthServiceCategoryRepository.save(healthServiceCategory);
     }

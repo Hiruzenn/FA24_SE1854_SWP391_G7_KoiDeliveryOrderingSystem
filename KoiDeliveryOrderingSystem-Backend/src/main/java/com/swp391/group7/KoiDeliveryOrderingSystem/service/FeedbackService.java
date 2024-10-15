@@ -1,7 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Feedback;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -31,20 +31,20 @@ public class FeedbackService {
     private AccountUtils accountUtils;
 
     public FeedbackResponse createFeedback(Integer orderId, CreateFeedbackRequest createFeedbackRequest) {
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         Feedback feedback = Feedback.builder()
-                .customers(customers)
+                .users(users)
                 .orders(orders)
                 .feedbackDescription(createFeedbackRequest.getFeedbackDescription())
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getName())
+                .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getName())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         feedbackRepository.save(feedback);
@@ -63,11 +63,11 @@ public class FeedbackService {
     }
 
     public List<FeedbackResponse> viewFeedbackByCustomer() {
-        Customers customers = accountUtils.getCurrentCustomer();
-        if(customers == null){
+        Users users = accountUtils.getCurrentUser();
+        if(users == null){
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
-        List<Feedback> feedbacks = feedbackRepository.findByCustomers(customers);
+        List<Feedback> feedbacks = feedbackRepository.findByUsers(users);
         return convertToListFeedbackResponse(feedbacks);
     }
 
@@ -80,7 +80,7 @@ public class FeedbackService {
     }
     public FeedbackResponse convertToFeedbackResponse(Feedback feedback) {
         return FeedbackResponse.builder()
-                .customer(feedback.getCustomers().getName())
+                .customer(feedback.getUsers().getName())
                 .orderCode(feedback.getOrders().getOrderCode())
                 .feedbackDescription(feedback.getFeedbackDescription())
                 .createAt(feedback.getCreateAt())

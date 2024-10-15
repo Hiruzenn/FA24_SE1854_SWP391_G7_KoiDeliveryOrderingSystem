@@ -1,14 +1,12 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.config;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.UserStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Role;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishCategoryRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.RoleRepository;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UsersRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,14 +14,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 @Transactional
 public class DataLoader {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
     @Bean
-    CommandLineRunner initData(UsersRepository usersRepository, RoleRepository roleRepository, DeliveryMethodRepository deliveryMethodRepository, FishCategoryRepository fishCategoryRepository) {
+    CommandLineRunner initData(UserRepository userRepository, RoleRepository roleRepository, DeliveryMethodRepository deliveryMethodRepository, FishCategoryRepository fishCategoryRepository) {
         return args -> {
             if (roleRepository.count() == 0) {
                 Role adminRole = Role.builder()
@@ -41,17 +37,6 @@ public class DataLoader {
                 roleRepository.save(adminRole);
                 roleRepository.save(staffRole);
                 roleRepository.save(managerRole);
-            }
-            if(usersRepository.count() == 0){
-                Users admin1 = Users.builder()
-                        .role(roleRepository.findByName("ADMIN"))
-                        .email("admin1@admin.com")
-                        .name("admin1")
-                        .password(passwordEncoder.encode("12345"))
-                        .createAt(LocalDateTime.now())
-                        .userStatus(UserStatusEnum.AVAILABLE)
-                        .build();
-                usersRepository.save(admin1);
             }
             if(deliveryMethodRepository.count() == 0){
                 DeliveryMethod van = DeliveryMethod.builder()

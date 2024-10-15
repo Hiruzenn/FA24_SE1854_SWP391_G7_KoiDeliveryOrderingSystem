@@ -1,12 +1,13 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.UserStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -20,33 +21,59 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @OneToMany(mappedBy = "users")
+    @JsonBackReference
+    private List<Invoice> invoices;
+
+    @OneToMany(mappedBy = "users")
+    @JsonBackReference
+    private List<HandoverDocument> handoverDocuments;
+
+    @OneToMany(mappedBy = "users")
+    @JsonBackReference
+    private List<Payment> payments;
+
+    @OneToMany(mappedBy = "users")
+    @JsonBackReference
+    private List<Feedback> feedbacks;
+
+    @OneToMany(mappedBy = "users")
+    @JsonBackReference
+    private List<Orders> orders ;
+
     @ManyToOne
     @JoinColumn(name = "role", nullable = false)
     @JsonManagedReference
     private Role role;
 
-    @Column(name = "user_name")
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "pasword", nullable = false)
+    private String password;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "balance")
+    private float balance;
+
+    @Column(name = "avatar", unique = true)
+    private String avatar;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
-
-    @Column(name = "create_by")
-    private String createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private String updateBy;
+    private Integer updateBy;
 
-    @Column(name = "user_status", nullable = false)
+    @Column(name = "customer_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserStatusEnum userStatus;
+    private CustomerStatusEnum customerStatus;
 }
