@@ -11,6 +11,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.RoleRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UserRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
@@ -43,9 +44,13 @@ public class AuthService {
     @Autowired
     private AccountUtils accountUtils;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String signerKey;
+
 
     public AuthResponse register(RegisterCustomerRequest registerCustomerRequest) {
         var customer = userRepository.findByEmail(registerCustomerRequest.getEmail());
@@ -59,6 +64,7 @@ public class AuthService {
                 .email(registerCustomerRequest.getEmail())
                 .password(encodedPassword)
                 .name(registerCustomerRequest.getName())
+                .role(roleRepository.findByName("CUSTOMERS"))
                 .createAt(LocalDateTime.now())
                 .customerStatus(CustomerStatusEnum.UNVERIFIED)
                 .build();
