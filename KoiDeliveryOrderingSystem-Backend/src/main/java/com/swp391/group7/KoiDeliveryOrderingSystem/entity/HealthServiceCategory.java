@@ -38,13 +38,13 @@ public class HealthServiceCategory {
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private String createBy;
+    private Integer createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private String updateBy;
+    private Integer updateBy;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

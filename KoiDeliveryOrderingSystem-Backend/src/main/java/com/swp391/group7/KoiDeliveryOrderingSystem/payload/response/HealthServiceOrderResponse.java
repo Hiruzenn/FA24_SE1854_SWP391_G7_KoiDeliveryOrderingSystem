@@ -16,8 +16,8 @@ public class HealthServiceOrderResponse {
     private HealthServiceCategory healthServiceCategory;
     private Orders orders;
     private LocalDateTime createAt;
-    private String createBy;
+    private Integer createBy;
     private LocalDateTime updateAt;
-    private String updateBy;
+    private Integer updateBy;
     private SystemStatusEnum status;
 }

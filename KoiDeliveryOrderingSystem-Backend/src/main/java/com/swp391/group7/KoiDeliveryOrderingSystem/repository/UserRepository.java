@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, Integer> {
-    Users findByIdAndRole(Integer id, Role role);
+public interface UserRepository extends JpaRepository<Users, Integer> {
     Optional<Users> findByEmail(String email);
+    Users findById(int id);
+    Users findByIdAndRole(int id, Role role);
 }

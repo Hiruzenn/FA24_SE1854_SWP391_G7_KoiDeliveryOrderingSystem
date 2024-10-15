@@ -1,6 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.invoice;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
@@ -24,7 +24,7 @@ public class CreateInvoiceRequest {
 
     private List<HealthCareDeliveryHistory> healCareDeliveryHistories;
 
-    private Customers customers;
+    private Users users;
 
     private Integer healthCareDeliveryHistoryId;
 

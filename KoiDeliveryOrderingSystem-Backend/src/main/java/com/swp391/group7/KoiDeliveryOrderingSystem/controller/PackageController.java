@@ -19,7 +19,7 @@ public class PackageController {
     private PackageService packageService;
 
     @PostMapping("create")
-    public ApiResponse<PackageResponse> createPackage(CreatePackageRequest createPackageRequest){
+    public ApiResponse<PackageResponse> createPackage(@RequestBody CreatePackageRequest createPackageRequest){
         var result = packageService.createPackage(createPackageRequest);
         return ApiResponse.<PackageResponse>builder()
                 .code(200)

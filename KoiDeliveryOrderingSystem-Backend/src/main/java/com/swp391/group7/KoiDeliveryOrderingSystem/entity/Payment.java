@@ -23,8 +23,8 @@ public class Payment {
     private String paymentCode;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customers customers;
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users users;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
@@ -41,13 +41,13 @@ public class Payment {
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private String createBy;
+    private Integer createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private String updateBy;
+    private Integer updateBy;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
