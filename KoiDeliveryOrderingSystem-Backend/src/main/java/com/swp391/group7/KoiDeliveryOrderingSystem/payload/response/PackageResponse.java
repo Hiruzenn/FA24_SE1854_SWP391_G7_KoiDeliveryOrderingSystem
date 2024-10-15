@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class PackageResponse {
+    private Integer id;
     private String packageNo;
     private String packageDescription;
     private LocalDateTime packageDate;

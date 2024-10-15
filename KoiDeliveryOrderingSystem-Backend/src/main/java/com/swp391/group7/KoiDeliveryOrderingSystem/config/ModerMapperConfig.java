@@ -22,8 +22,8 @@ public class ModerMapperConfig {
 
         modelMapper.typeMap(CheckingKoiHealth.class, CheckingKoiHealthResponse.class).addMappings(mapper ->
         {
-            mapper.map(src -> src.getOrderDetail().getId(), CheckingKoiHealthResponse::setOrderDetail);
-            mapper.map(src -> src.getPackages().getId(), CheckingKoiHealthResponse::setPackages);
+            mapper.map(src -> src.getOrderDetail().getId(), CheckingKoiHealthResponse::setOrderDetailId);
+            mapper.map(src -> src.getPackages().getId(), CheckingKoiHealthResponse::setPackageId);
         }
         );
 

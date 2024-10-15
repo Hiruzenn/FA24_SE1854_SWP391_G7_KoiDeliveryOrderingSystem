@@ -12,9 +12,10 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentResponse {
+    private Integer id;
     private String paymentCode;
-    private String customers;
-    private String orders;
+    private Integer customerId;
+    private Integer orderId;
     private Float amount;
     private String paymentMethod;
     private LocalDateTime createAt;

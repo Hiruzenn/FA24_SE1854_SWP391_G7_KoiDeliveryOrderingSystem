@@ -97,8 +97,9 @@ public class CheckingKoiHealthService {
 
     public CheckingKoiHealthResponse convertToCheckingKoiHealthResponse(CheckingKoiHealth checkingKoi) {
         return CheckingKoiHealthResponse.builder()
-                .orderDetail(checkingKoi.getOrderDetail())
-                .packages(checkingKoi.getPackages())
+                .id(checkingKoi.getId())
+                .orderDetailId(checkingKoi.getOrderDetail().getId())
+                .packageId(checkingKoi.getPackages().getId())
                 .weight(checkingKoi.getWeight())
                 .color(checkingKoi.getColor())
                 .type(checkingKoi.getType())
