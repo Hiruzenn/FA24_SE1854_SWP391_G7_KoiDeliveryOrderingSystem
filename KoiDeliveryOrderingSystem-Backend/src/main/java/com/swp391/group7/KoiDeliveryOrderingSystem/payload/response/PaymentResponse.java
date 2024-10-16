@@ -1,8 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,14 +12,15 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentResponse {
+    private Integer id;
     private String paymentCode;
-    private String customers;
-    private String orders;
+    private Integer customerId;
+    private Integer orderId;
     private Float amount;
     private String paymentMethod;
     private LocalDateTime createAt;
-    private String createBy;
+    private Integer createBy;
     private LocalDateTime updateAt;
-    private String updateBy;
+    private Integer updateBy;
     private SystemStatusEnum statusEnum;
 }

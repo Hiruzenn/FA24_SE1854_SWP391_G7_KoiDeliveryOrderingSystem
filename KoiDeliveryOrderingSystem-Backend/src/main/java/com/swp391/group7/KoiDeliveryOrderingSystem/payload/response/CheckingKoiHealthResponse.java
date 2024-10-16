@@ -15,8 +15,9 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CheckingKoiHealthResponse {
-    private OrderDetail orderDetail;
-    private Package packages;
+    private Integer id;
+    private Integer orderDetailId;
+    private Integer packageId;
     private HealthStatus healthStatus;
     private String healthStatusDescription;
     private Float weight;
@@ -25,8 +26,8 @@ public class CheckingKoiHealthResponse {
     private Integer age;
     private Float price;
     private LocalDateTime createAt;
-    private String createBy;
+    private Integer createBy;
     private LocalDateTime updateAt;
-    private String updateBy;
+    private Integer updateBy;
     private SystemStatusEnum status;
 }

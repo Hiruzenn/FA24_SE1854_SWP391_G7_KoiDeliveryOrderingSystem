@@ -12,12 +12,13 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HealthServiceCategoryResponse {
+    private Integer id;
     private String serviceName;
     private String serviceDescription;
     private Float price;
     private LocalDateTime createAt;
-    private String createBy;
+    private Integer createBy;
     private LocalDateTime updateAt;
-    private String updateBy;
+    private Integer updateBy;
     private SystemStatusEnum status;
 }

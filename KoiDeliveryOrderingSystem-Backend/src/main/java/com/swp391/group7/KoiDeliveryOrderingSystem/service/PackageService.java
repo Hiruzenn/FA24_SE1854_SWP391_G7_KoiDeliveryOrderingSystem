@@ -46,9 +46,9 @@ public class PackageService {
                 .packageBy(createPackageRequest.getPackageBy())
                 .image(createPackageRequest.getImage())
                 .createAt(LocalDateTime.now())
-                .createBy(users.getName())
+                .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
-                .updateBy(users.getName())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         packageRepository.save(packages);
@@ -66,7 +66,7 @@ public class PackageService {
         packages.setPackageStatus(updatePackageRequest.getPackageStatus());
         packages.setImage(updatePackageRequest.getImage());
         packages.setUpdateAt(LocalDateTime.now());
-        packages.setUpdateBy(users.getName());
+        packages.setUpdateBy(users.getId());
         packageRepository.save(packages);
         return convertToPackageResponse(packages);
     }
@@ -91,6 +91,7 @@ public class PackageService {
 
     public PackageResponse convertToPackageResponse(Package packages) {
         return PackageResponse.builder()
+                .id(packages.getId())
                 .packageNo(packages.getPackageNo())
                 .packageDescription(packages.getPackageDescription())
                 .packageDate(packages.getPackageDate())

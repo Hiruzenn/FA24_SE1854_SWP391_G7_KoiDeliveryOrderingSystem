@@ -14,8 +14,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateCheckingKoiHealthRequest {
-    private OrderDetail orderDetail;
-    private Package packages;
     private HealthStatusEnum healthStatus;
     private String healthStatusDescription;
     private Float weight;

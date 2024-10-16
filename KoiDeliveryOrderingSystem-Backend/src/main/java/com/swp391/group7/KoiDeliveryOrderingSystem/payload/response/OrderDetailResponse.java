@@ -13,14 +13,16 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDetailResponse {
-    private FishProfile fishProfile;
+    private Integer id;
+    private Integer fishProfileId;
+    private Integer orderId;
     private Integer quantity;
     private Float unitPrice;
     private Float amount;
     private LocalDateTime receivingDate;
     private LocalDateTime createAt;
-    private String createBy;
+    private Integer createBy;
     private LocalDateTime updateAt;
-    private String updateBy;
+    private Integer updateBy;
     private SystemStatusEnum status;
 }

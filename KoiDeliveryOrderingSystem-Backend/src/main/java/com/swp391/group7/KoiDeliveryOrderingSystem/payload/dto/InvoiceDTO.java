@@ -1,18 +1,10 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
-import jakarta.persistence.*;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -26,7 +18,7 @@ public class InvoiceDTO {
 
     private int orders;
 
-    private Customers customers;
+    private Users users;
 
     private Integer healthCareDeliveryHistoryId;
 

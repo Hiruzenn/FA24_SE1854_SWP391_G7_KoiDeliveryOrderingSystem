@@ -59,9 +59,9 @@ public class CheckingKoiHealthService {
                 .age(request.getAge())
                 .price(request.getPrice())
                 .createAt(LocalDateTime.now())
-                .createBy(users.getName())
+                .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
-                .updateBy(users.getName())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         checkingKoiHealthRepository.save(checkingKoiHealth);
@@ -97,8 +97,9 @@ public class CheckingKoiHealthService {
 
     public CheckingKoiHealthResponse convertToCheckingKoiHealthResponse(CheckingKoiHealth checkingKoi) {
         return CheckingKoiHealthResponse.builder()
-                .orderDetail(checkingKoi.getOrderDetail())
-                .packages(checkingKoi.getPackages())
+                .id(checkingKoi.getId())
+                .orderDetailId(checkingKoi.getOrderDetail().getId())
+                .packageId(checkingKoi.getPackages().getId())
                 .weight(checkingKoi.getWeight())
                 .color(checkingKoi.getColor())
                 .type(checkingKoi.getType())

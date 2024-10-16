@@ -1,6 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceOrder;
@@ -36,8 +36,8 @@ public class HealthServiceOrderService {
     private AccountUtils accountUtils;
 
     public HealthServiceOrderResponse createHealthServiceOrder(Integer orderId, Integer heathServiceCategoryId) {
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         Orders orders = orderRepository.findById(orderId)
@@ -51,9 +51,9 @@ public class HealthServiceOrderService {
                 .orders(orders)
                 .healthServiceCategory(healthServiceCategory)
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getName())
+                .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getName())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         healthServiceOrderRepository.save(healthServiceOrder);
@@ -61,8 +61,8 @@ public class HealthServiceOrderService {
     }
 
     public List<HealthServiceOrderResponse> getHealthServiceOrderByOrderId(Integer orderId) {
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         Orders orders = orderRepository.findById(orderId)
@@ -77,8 +77,8 @@ public class HealthServiceOrderService {
         return healthServiceOrderResponses;
     }
     public void deleteHealthServiceOrder(Integer orderId, Integer heathServiceCategoryId) {
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(heathServiceCategoryId)
@@ -90,8 +90,9 @@ public class HealthServiceOrderService {
     }
     public HealthServiceOrderResponse convertToHealthServiceOrderResponse(HealthServiceOrder healthServiceOrder) {
         return HealthServiceOrderResponse.builder()
-                .orders(healthServiceOrder.getOrders())
-                .healthServiceCategory(healthServiceOrder.getHealthServiceCategory())
+                .id(healthServiceOrder.getId())
+                .orderId(healthServiceOrder.getOrders().getId())
+                .healthServiceCategoryId(healthServiceOrder.getHealthServiceCategory().getId())
                 .createAt(healthServiceOrder.getCreateAt())
                 .createBy(healthServiceOrder.getCreateBy())
                 .updateAt(healthServiceOrder.getUpdateAt())

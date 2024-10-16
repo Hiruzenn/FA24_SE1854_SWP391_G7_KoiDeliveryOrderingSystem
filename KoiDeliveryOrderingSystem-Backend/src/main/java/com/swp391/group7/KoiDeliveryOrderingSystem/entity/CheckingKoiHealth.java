@@ -55,13 +55,13 @@ public class CheckingKoiHealth {
     private LocalDateTime createAt;
 
     @Column(name = "create_by")
-    private String createBy;
+    private Integer createBy;
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
     @Column(name = "update_by")
-    private String updateBy;
+    private Integer updateBy;
 
     @Column(name = "checking_koi_health_status", nullable = false)
     @Enumerated(EnumType.STRING)

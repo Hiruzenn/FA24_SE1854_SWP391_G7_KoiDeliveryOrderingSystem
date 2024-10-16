@@ -1,7 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Payment;
@@ -42,21 +42,21 @@ public class PaymentService {
     public static final String RANDOM_STRING = "0123456789";
 
     public PaymentResponse createPayment(Integer orderId, CreatePaymentRequest createPaymentRequest) {
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Payment payment = Payment.builder()
                 .paymentCode(generatePaymentCode())
-                .customers(customers)
+                .users(users)
                 .orders(orders)
                 .paymentMethod(createPaymentRequest.getPaymentMethod())
                 .amount(createPaymentRequest.getAmount())
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getName())
+                .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getName())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         paymentRepository.save(payment);
@@ -64,8 +64,8 @@ public class PaymentService {
     }
 
     public List<PaymentResponse> viewPaymentsByOrderId(Integer orderId) {
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
@@ -74,11 +74,11 @@ public class PaymentService {
     }
 
     public List<PaymentResponse> viewPaymentsByCustomer() {
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
-        List<Payment> paymentList = paymentRepository.findByCustomers(customers);
+        List<Payment> paymentList = paymentRepository.findByUsers(users);
         return convertToListPaymentResponse(paymentList);
     }
 
@@ -97,9 +97,10 @@ public class PaymentService {
 
     private PaymentResponse convertToPaymentResponse(Payment payment) {
         return PaymentResponse.builder()
+                .id(payment.getId())
                 .paymentCode(payment.getPaymentCode())
-                .orders(payment.getOrders().getOrderCode())
-                .customers(payment.getCustomers().getName())
+                .orderId(payment.getOrders().getId())
+                .customerId(payment.getUsers().getId())
                 .paymentMethod(payment.getPaymentMethod())
                 .amount(payment.getAmount())
                 .createAt(payment.getCreateAt())

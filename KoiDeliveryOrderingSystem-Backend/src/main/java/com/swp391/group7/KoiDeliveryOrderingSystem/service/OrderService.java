@@ -3,7 +3,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.CreateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
@@ -38,13 +38,13 @@ public class OrderService {
     private AccountUtils accountUtils;
 
     public OrderResponse createOrder(CreateOrderRequest createOrderRequest) {
-        Customers customers = accountUtils.getCurrentCustomer();
-        if (customers == null) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
         }
         Orders orders = Orders.builder()
                 .orderCode(generateOrderCode())
-                .customers(customers)
+                .users(users)
                 .deliveryMethod(deliveryMethodRepository.findByDeliveryName(createOrderRequest.getDeliveryMethod()))
                 .orderDate(LocalDateTime.now())
                 .destination(createOrderRequest.getDestination())
@@ -53,9 +53,9 @@ public class OrderService {
                 .phone(createOrderRequest.getPhone())
                 .amount(createOrderRequest.getAmount())
                 .createAt(LocalDateTime.now())
-                .createBy(customers.getName())
+                .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
-                .updateBy(customers.getName())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         orderRepository.save(orders);
@@ -63,8 +63,8 @@ public class OrderService {
     }
 
     public OrderResponse updateOrder(Integer OrderId, UpdateOrderRequest updateOrderRequest) {
-        Customers customer = accountUtils.getCurrentCustomer();
-        Orders orders = orderRepository.findByIdAndCustomers(OrderId, customer).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Users customer = accountUtils.getCurrentUser();
+        Orders orders = orderRepository.findByIdAndUsers(OrderId, customer).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         orders.setDeliveryMethod(deliveryMethodRepository.findByDeliveryName(updateOrderRequest.getDeliveryMethod()));
         orders.setDestination(updateOrderRequest.getDestination());
@@ -72,7 +72,7 @@ public class OrderService {
         orders.setDistance(updateOrderRequest.getDistance());
         orders.setPhone(updateOrderRequest.getPhone());
         orders.setUpdateAt(LocalDateTime.now());
-        orders.setUpdateBy(customer.getName());
+        orders.setUpdateBy(customer.getId());
         orderRepository.save(orders);
 
         return convertOrderToResponse(orders);
@@ -88,8 +88,8 @@ public class OrderService {
     }
 
     public List<OrderResponse> getOrderByCustomerId() {
-        Customers customers = accountUtils.getCurrentCustomer();
-        List<Orders> ordersList = orderRepository.findByCustomersAndStatus(customers, SystemStatusEnum.AVAILABLE);
+        Users users = accountUtils.getCurrentUser();
+        List<Orders> ordersList = orderRepository.findByUsersAndStatus(users, SystemStatusEnum.AVAILABLE);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : ordersList) {
             orderResponses.add(convertOrderToResponse(order));
@@ -98,12 +98,12 @@ public class OrderService {
     }
 
     public String deleteOrder(Integer OrderId) {
-        Customers customer = accountUtils.getCurrentCustomer();
+        Users customer = accountUtils.getCurrentUser();
         Orders orders = orderRepository.findById(OrderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         if (orders.getStatus() == SystemStatusEnum.AVAILABLE) {
             orders.setStatus(SystemStatusEnum.NOT_AVAILABLE);
             orders.setUpdateAt(LocalDateTime.now());
-            orders.setUpdateBy(customer.getName());
+            orders.setUpdateBy(customer.getId());
             orderRepository.save(orders);
             return "Order deleted successfully";
         }else{
@@ -114,6 +114,7 @@ public class OrderService {
 
     private OrderResponse convertOrderToResponse(Orders orders) {
         return OrderResponse.builder()
+                .id(orders.getId())
                 .orderCode(orders.getOrderCode())
                 .orderDate(orders.getOrderDate())
                 .deliveryMethod(orders.getDeliveryMethod().getDeliveryName())

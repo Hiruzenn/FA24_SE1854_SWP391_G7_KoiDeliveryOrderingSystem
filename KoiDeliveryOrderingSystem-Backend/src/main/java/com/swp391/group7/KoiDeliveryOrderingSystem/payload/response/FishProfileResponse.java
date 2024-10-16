@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FishProfileResponse {
+    private Integer id;
     private String name;
     private String description;
     private String type;
@@ -19,8 +20,8 @@ public class FishProfileResponse {
     private String origin;
     private String image;
     private LocalDateTime createAt;
-    private  String createBy;
+    private  Integer createBy;
     private LocalDateTime updateAt;
-    private  String updateBy;
+    private  Integer updateBy;
     private SystemStatusEnum status;
 }

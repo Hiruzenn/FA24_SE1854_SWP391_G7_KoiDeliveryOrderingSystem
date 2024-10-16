@@ -1,13 +1,8 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Certificate;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Customers;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.CustomsDeclaration;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CertificateDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CustomsDeclarationDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.customsdeclaration.CreateCustomsDeclarationRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
@@ -20,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service

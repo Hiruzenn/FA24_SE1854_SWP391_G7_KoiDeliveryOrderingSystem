@@ -11,12 +11,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class FeedbackResponse {
-    private String customer;
-    private String orderCode;
+    private Integer id;
+    private Integer customerId;
+    private Integer orderId;
     private String feedbackDescription;
     private LocalDateTime createAt;
-    private String createBy;
+    private Integer createBy;
     private LocalDateTime updateAt;
-    private String updateBy;
+    private Integer updateBy;
     private SystemStatusEnum status;
 }

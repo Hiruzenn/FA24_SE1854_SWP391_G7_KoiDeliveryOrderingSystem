@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class PackageResponse {
+    private Integer id;
     private String packageNo;
     private String packageDescription;
     private LocalDateTime packageDate;
@@ -21,8 +22,8 @@ public class PackageResponse {
     private String packagedBy;
     private String image;
     private LocalDateTime createAt;
-    private String createBy;
+    private Integer createBy;
     private LocalDateTime updateAt;
-    private String updateBy;
+    private Integer updateBy;
     private SystemStatusEnum status;
 }
