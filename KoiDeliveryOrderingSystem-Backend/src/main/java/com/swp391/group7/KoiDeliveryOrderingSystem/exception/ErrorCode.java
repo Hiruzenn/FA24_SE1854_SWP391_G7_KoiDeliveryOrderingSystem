@@ -25,6 +25,8 @@ public enum ErrorCode {
     //Certificate
     CERTIFICATE_NOT_FOUND(1400,"Certificate not found"),
     CERTIFICAT_EXISTED(1401,"Certificate existed"),
+    //DeliveryMethod
+    DELIVERYMETHOD_NOT_FOUND(2000,"Delivery Method Not Found"),
 
     //Package
     PACKAGE_NOT_EXISTED (1500,"Package not existed"),

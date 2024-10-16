@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="ec0b3a82-878f-4f35-b029-aa02500373db" name="FA24_SE1854_SWP391_G7_KoiDeliveryOrderingSystem@localhost Mapping">
+      <data-sources db="1997b846-1250-4539-8324-e6c5dbc666c1" ddl="610dd179-d49c-4592-8e0d-95bf80de6434" />
+      <scope>
+        <node kind="database" qname="FA24_SE1854_SWP391_G7_KoiDeliveryOrderingSystem" />
+      </scope>
+    </mapping>
+  </component>
+</project>

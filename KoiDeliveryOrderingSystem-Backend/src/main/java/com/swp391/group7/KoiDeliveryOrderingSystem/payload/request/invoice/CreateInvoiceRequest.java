@@ -21,7 +21,6 @@ public class CreateInvoiceRequest {
 
     private List<Package> packages;
 
-
     private List<HealthCareDeliveryHistory> healCareDeliveryHistories;
 
     private Customers customers;
