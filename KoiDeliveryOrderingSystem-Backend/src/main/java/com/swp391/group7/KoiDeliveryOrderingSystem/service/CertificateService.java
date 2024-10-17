@@ -1,12 +1,18 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Feedback;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.CreateCertificateRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CertificateDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Certificate;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CertificateRespone;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FeedbackResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.CertificateRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,64 +34,70 @@ public class CertificateService {
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private OrderRepository orderRepository;
 
-    public List<CertificateDTO> getListCertificate()
+    public List<CertificateRespone> getListCertificate()
     {
 
         List <Certificate> certificateList= certificateRepository.findAll();
         if (certificateList.isEmpty()){
             throw new AppException(ErrorCode.CERTIFICATE_NOT_FOUND);
         }
-        return certificateList.stream().map(certificate -> modelMapper.map(certificate, CertificateDTO.class)).toList();
+        return convertToListCertificateResponse(certificateList);
     }
 
-    public CertificateDTO getCertificateById(int id){
+    public CertificateRespone getCertificateById(int id){
         Certificate certificate= certificateRepository.findById(id)
                 .orElseThrow(()-> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
-        return modelMapper.map(certificate, CertificateDTO.class);
+        return covertToCertificateRespone(certificate);
 
     }
 
-    public ApiResponse<CertificateDTO> creatCertificate(CreateCertificateRequest certificateRequest) {
+    public CertificateRespone creatCertificate(CreateCertificateRequest certificateRequest,Integer orderId) {
 
-
+        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         // Map the CreateCertificateRequest to Certificate entity
-        Certificate certificate = modelMapper.map(certificateRequest, Certificate.class);
 
 
-        certificate = certificateRepository.save(certificate); // Update the reference with the saved entity
+        Certificate certificate = Certificate.builder()
+                .certificateName(certificateRequest.getCertificateName())
+                .certificateDescription(certificateRequest.getCertificateDescription())
+                .orders(orders)
+                .health(certificateRequest.getHealth())
+                .origin(certificateRequest.getOrigin())
+                .award(certificateRequest.getAward())
+                .image(certificateRequest.getImage())
+                .status(SystemStatusEnum.AVAILABLE)
+                .build();
 
-        // Map the saved Certificate back to CertificateDTO
-        CertificateDTO createdCertificateDTO = modelMapper.map(certificate, CertificateDTO.class);
+
+
+        certificateRepository.save(certificate); // Update the reference with the saved entity
+
 
         // Build and return the ApiResponse with the created CertificateDTO
-        return ApiResponse.<CertificateDTO>builder()
-                .code(HttpStatus.CREATED.value()) // HTTP status code for created
-                .message("Certificate created successfully")
-                .result(createdCertificateDTO)
-                .build();
+        return covertToCertificateRespone(certificate);
     }
 
-    public ApiResponse<CertificateDTO> updateCertificate(Integer id, CreateCertificateRequest certificateRequest) {
+    public CertificateRespone updateCertificate(Integer id, CreateCertificateRequest certificateRequest) {
         // Check if the certificate exists
-        Certificate existingCertificate = certificateRepository.findById(id)
+        Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
 
         // Map the CreateCertificateRequest to the existing Certificate entity
-        modelMapper.map(certificateRequest, existingCertificate); // Update the existing entity with new values
 
+        certificate.setCertificateName(certificateRequest.getCertificateName());
+        certificate.setCertificateDescription(certificateRequest.getCertificateDescription());
+        certificate.setImage(certificateRequest.getImage());
+        certificate.setOrigin(certificateRequest.getOrigin());
+        certificate.setAward(certificateRequest.getAward());
+        certificate.setHealth(certificateRequest.getHealth());
         // Save the updated certificate to the repository
-        existingCertificate = certificateRepository.save(existingCertificate); // Update the reference with the saved entity
+        certificate = certificateRepository.save(certificate); // Update the reference with the saved entity
 
-        // Map the saved Certificate back to CertificateDTO
-        CertificateDTO updatedCertificateDTO = modelMapper.map(existingCertificate, CertificateDTO.class);
+        return covertToCertificateRespone(certificate);
 
-        // Build and return the ApiResponse with the updated CertificateDTO
-        return ApiResponse.<CertificateDTO>builder()
-                .code(HttpStatus.OK.value()) // HTTP status code for success
-                .message("Certificate updated successfully")
-                .result(updatedCertificateDTO)
-                .build();
     }
     public ApiResponse<Void> deleteCertificate(Integer id) {
         // Check if the certificate exists
@@ -100,6 +114,27 @@ public class CertificateService {
                 .message("Certificate deleted successfully")
                 .result(null) // No result for deletion
                 .build();
+    }
+    public List<CertificateRespone> convertToListCertificateResponse(List<Certificate> certificateList) {
+        List<CertificateRespone> certificateRespones = new ArrayList<>();
+        for (Certificate certificate : certificateList) {
+            certificateRespones.add(covertToCertificateRespone(certificate));
+        }
+        return certificateRespones;
+    }
+
+    public CertificateRespone covertToCertificateRespone(Certificate certificate){
+        return CertificateRespone.builder()
+                .id(certificate.getId())
+                .certificateName(certificate.getCertificateName())
+                .certificateDescription(certificate.getCertificateDescription())
+                .orderId(certificate.getOrders().getId())
+                .health(certificate.getHealth())
+                .origin(certificate.getOrigin())
+                .award(certificate.getAward())
+                .image(certificate.getImage())
+                .build();
+
     }
 
 

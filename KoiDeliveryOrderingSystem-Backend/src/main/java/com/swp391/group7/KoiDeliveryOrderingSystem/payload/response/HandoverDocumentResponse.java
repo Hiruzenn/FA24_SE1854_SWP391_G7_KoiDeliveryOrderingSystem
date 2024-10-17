@@ -1,27 +1,22 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.handovedocument;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateHandoverDocumentRequest {
-
-
-
+@Builder
+public class HandoverDocumentResponse {
+    private int id;
     private Users users;
 
 
@@ -54,4 +49,17 @@ public class CreateHandoverDocumentRequest {
 
     private String totalPrice;
 
+    private LocalDateTime createAt;
+
+
+    private Integer createBy;
+
+
+    private LocalDateTime updateAt;
+
+
+    private Integer updateBy;
+
+
+    private SystemStatusEnum status;
 }
