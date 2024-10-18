@@ -65,7 +65,7 @@ public class HealthCareDeliveryHistoryController {
     }
 
     // Update an existing healthcare delivery history by ID
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> updateHealthCareDeliveryHistory(
             @PathVariable Integer id,
             @RequestBody CreateHealthCareDeliveryHistoryRequest request) {
@@ -81,7 +81,7 @@ public class HealthCareDeliveryHistoryController {
     }
 
     // Delete a healthcare delivery history by ID
-    @PutMapping("/{id}")
+    @PutMapping("delete/{id}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> removeHealthCareDeliveryHistory(@PathVariable Integer id) {
         HealthCareDeliveryHistoryResponse deletedHistory = healthCareDeliveryHistoryService.removeHealthCareDeliveryHistory(id);
 
