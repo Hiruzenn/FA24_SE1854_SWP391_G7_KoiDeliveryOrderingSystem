@@ -24,6 +24,9 @@ public class Invoice {
     @Column(name = "invoice_no", nullable = false, unique = true)
     private String invoiceNo;
 
+    @Column(name = "staff")
+    private String staff;
+
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     @JsonManagedReference

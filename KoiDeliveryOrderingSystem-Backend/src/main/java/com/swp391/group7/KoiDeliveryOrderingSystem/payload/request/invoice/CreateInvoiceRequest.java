@@ -9,34 +9,44 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateInvoiceRequest {
+
+
     private String invoiceNo;
 
-    private Orders orders;
-
-    private List<Package> packages;
-
-
-    private List<HealthCareDeliveryHistory> healCareDeliveryHistories;
-
-    private Users users;
-
-    private Integer healthCareDeliveryHistoryId;
-
-    private String invoiceDescription;
 
     private String staff;
 
-    private String vehicle;
 
-    private String destination;
+    private int orders;
 
-    private String depature;
 
-    private Float totalPrice;
+    private int users;
+
+
+    private int healCareDeliveryHistories;
+
+    private LocalDateTime date;
+
+
+    private String addressStore;
+
+
+    private String addressCustomer;
+
+
+    private Float vat;
+
+
+    private Float amount;
+
+
+    private Float totalAmount;
+
 }

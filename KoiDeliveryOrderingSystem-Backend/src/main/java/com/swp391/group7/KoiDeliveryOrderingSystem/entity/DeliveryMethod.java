@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,4 +24,6 @@ public class DeliveryMethod {
     @OneToMany(mappedBy = "deliveryMethod")
     @JsonBackReference
     private List<Orders> orders;
+
+
 }

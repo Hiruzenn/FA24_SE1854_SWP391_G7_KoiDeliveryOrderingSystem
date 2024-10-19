@@ -3,6 +3,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.HandoverDocumentDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.handovedocument.CreateHandoverDocumentRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HandoverDocumentResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.HandoverDocumentService;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import lombok.RequiredArgsConstructor;
@@ -35,93 +36,67 @@ public class HandoverDocumentController {
 
     // GET: Retrieve a specific handover document by ID
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<HandoverDocumentDTO>> getHandoverDocumentById(@PathVariable int id) {
+    public ResponseEntity<ApiResponse<HandoverDocumentResponse>> getHandoverDocumentById(@PathVariable int id) {
         try {
-            HandoverDocumentDTO documentDTO = handoverDocumentService.getHandoverDocumentById(id);
-            ApiResponse<HandoverDocumentDTO> response = ApiResponse.<HandoverDocumentDTO>builder()
-                    .code(200)
+            HandoverDocumentResponse documentResponse = handoverDocumentService.getHandoverDocumentById(id);
+
+            // Create the successful response
+            ApiResponse<HandoverDocumentResponse> response = ApiResponse.<HandoverDocumentResponse>builder()
+                    .code(HttpStatus.OK.value()) // Use HttpStatus.OK for clarity
                     .message("Handover document retrieved successfully")
-                    .result(documentDTO)
+                    .result(documentResponse)
                     .build();
+
             return ResponseEntity.ok(response);
         } catch (AppException e) {
-            ApiResponse<HandoverDocumentDTO> response = ApiResponse.<HandoverDocumentDTO>builder()
+            // Create the error response
+            ApiResponse<HandoverDocumentResponse> response = ApiResponse.<HandoverDocumentResponse>builder()
                     .code(e.getErrorCode().getCode())
                     .message(e.getMessage())
-                    .result(null)
+                    .result(null) // Keep the result as null for errors
                     .build();
+
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
     // POST: Create a new handover document
-    @PostMapping("/create")
-    public ResponseEntity<ApiResponse<HandoverDocumentDTO>> createHandoverDocument(@RequestBody CreateHandoverDocumentRequest handoverDocumentRequest) {
-        try {
-            ApiResponse<HandoverDocumentDTO> createdDocumentResponse = handoverDocumentService.createHandoverDocument(handoverDocumentRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdDocumentResponse);
-        } catch (AppException e) {
-            ApiResponse<HandoverDocumentDTO> response = ApiResponse.<HandoverDocumentDTO>builder()
-                    .code(e.getErrorCode().getCode())
-                    .message(e.getMessage())
-                    .result(null)
+    @PostMapping("/create/{orderid}/{packageid}")
+    public ApiResponse<HandoverDocumentResponse> createHandoverDocument(
+            @RequestBody CreateHandoverDocumentRequest handoverDocumentRequest,
+            @PathVariable("orderid") int orderId,
+            @PathVariable ("packageid")int packageId) {
+
+            HandoverDocumentResponse createdDocumentResponse = handoverDocumentService.createHandoverDocument(handoverDocumentRequest, orderId, packageId);
+            return ApiResponse.<HandoverDocumentResponse>builder()
+                    .code(200)
+                    .message("Handover Document created successfully")
+                    .result(createdDocumentResponse)
                     .build();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } catch (Exception e) {
-            ApiResponse<HandoverDocumentDTO> response = ApiResponse.<HandoverDocumentDTO>builder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("An unexpected error occurred")
-                    .result(null)
-                    .build();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+
     }
 
     // PUT: Update an existing handover document by ID
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<HandoverDocumentDTO>> updateHandoverDocument(
+    public ApiResponse<HandoverDocumentResponse> updateHandoverDocument(
             @PathVariable Integer id,
             @RequestBody CreateHandoverDocumentRequest handoverDocumentRequest) {
-        try {
-            ApiResponse<HandoverDocumentDTO> updatedDocument = handoverDocumentService.updateHandoverDocument(id, handoverDocumentRequest);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedDocument);
-        } catch (AppException e) {
-            ApiResponse<HandoverDocumentDTO> response = ApiResponse.<HandoverDocumentDTO>builder()
-                    .code(e.getErrorCode().getCode())
-                    .message(e.getMessage())
-                    .result(null)
-                    .build();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } catch (Exception e) {
-            ApiResponse<HandoverDocumentDTO> response = ApiResponse.<HandoverDocumentDTO>builder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("An unexpected error occurred")
-                    .result(null)
-                    .build();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+        HandoverDocumentResponse updatedDocumentResponse = handoverDocumentService.updateHandoverDocument(id , handoverDocumentRequest);
+        return ApiResponse.<HandoverDocumentResponse>builder()
+                .code(200)
+                .message("Handover Document updated successfully")
+                .result(updatedDocumentResponse)
+                .build();
     }
 
     // DELETE: Delete a handover document by ID
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteHandoverDocument(@PathVariable Integer id) {
-        try {
-            ApiResponse<Void> response = handoverDocumentService.deleteHandoverDocument(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
-        } catch (AppException e) {
-            ApiResponse<Void> response = ApiResponse.<Void>builder()
-                    .code(e.getErrorCode().getCode())
-                    .message(e.getMessage())
-                    .result(null)
-                    .build();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } catch (Exception e) {
-            ApiResponse<Void> response = ApiResponse.<Void>builder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("An unexpected error occurred")
-                    .result(null)
-                    .build();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+    @PutMapping("/delete/{id}")
+    public ApiResponse<HandoverDocumentResponse> deleteHandoverDocument(@PathVariable Integer id) {
+        HandoverDocumentResponse documentResponse= handoverDocumentService.removeHandoverDocument(id);
+        return ApiResponse.<HandoverDocumentResponse>builder()
+                .code(200)
+                .message("Handover Document removed successfully")
+                .result(documentResponse)
+                .build();
     }
 }

@@ -1,12 +1,17 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.CustomsDeclaration;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CustomsDeclarationDTO;
+
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.customsdeclaration.CreateCustomsDeclarationRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CustomerRespone;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CustomsDeclarationRespone;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.CustomsDeclarationRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,76 +31,92 @@ public class CustomsDeclarationService {
     CustomsDeclarationRepository customsDeclarationRepository;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    OrderRepository orderRepository;
 
-    public List<CustomsDeclarationDTO> getListCustomDeclaration(){
+    public List<CustomsDeclarationRespone> getListCustomDeclaration(){
         List<CustomsDeclaration> customsDeclarationList= customsDeclarationRepository.findAll();
         if (customsDeclarationList.isEmpty()){
             throw new AppException(ErrorCode.CUSTOMSDECALARATION_NOT_EXISTED);
         }
-        return customsDeclarationList.stream().map(customsDeclaration -> modelMapper.map(customsDeclaration, CustomsDeclarationDTO.class)).toList();
+        return convertToListCustomsDeclarationRespone(customsDeclarationList);
     }
 
-    public CustomsDeclarationDTO getCustomsDeclaration(int id){
+    public CustomsDeclarationRespone getCustomsDeclaration(int id){
         CustomsDeclaration customsDeclaration= customsDeclarationRepository.findById(id).
                 orElseThrow(() -> new AppException(ErrorCode.CUSTOMSDECALARATION_NOT_EXISTED));
-        return modelMapper.map(customsDeclaration, CustomsDeclarationDTO.class);
+        return covertToCustomsDeclarationRespone(customsDeclaration);
     }
 
-    public ApiResponse<CustomsDeclarationDTO> creatCustomsDeclaration(CreateCustomsDeclarationRequest createCustomsDeclarationRequest) {
+    public CustomsDeclarationRespone creatCustomsDeclaration(CreateCustomsDeclarationRequest createCustomsDeclarationRequest, Integer orderId) {
 
-        // Map the CreateCustomsDeclarationRequest to CustomsDeclaration entity
-        CustomsDeclaration customsDeclaration = modelMapper.map(createCustomsDeclarationRequest, CustomsDeclaration.class);
+        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
-        // Save the CustomsDeclaration entity to the repository
-        customsDeclaration = customsDeclarationRepository.save(customsDeclaration); // Update the reference with the saved entity
-
-        // Map the saved CustomsDeclaration entity to CustomsDeclarationDTO
-        CustomsDeclarationDTO createdCustomsDeclarationDTO = modelMapper.map(customsDeclaration, CustomsDeclarationDTO.class);
-
-        // Build and return the ApiResponse with the created CustomsDeclarationDTO
-        return ApiResponse.<CustomsDeclarationDTO>builder()
-                .code(HttpStatus.CREATED.value()) // HTTP status code for created (201)
-                .message("Customs Declaration created successfully")
-                .result(createdCustomsDeclarationDTO) // Use DTO here
-                .build();
+        CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
+                    .customsName(createCustomsDeclarationRequest.getCustomsName())
+                    .declarationDate(createCustomsDeclarationRequest.getDeclarationDate())
+                    .declarationNo(createCustomsDeclarationRequest.getDeclarationNo())
+                    .declaratonBy(createCustomsDeclarationRequest.getDeclaratonBy())
+                    .orders(orders)
+                    .referenceeDate(createCustomsDeclarationRequest.getReferenceeDate())
+                    .image(createCustomsDeclarationRequest.getImage())
+                    .referenceNo(createCustomsDeclarationRequest.getReferenceNo())
+                    .status(SystemStatusEnum.AVAILABLE)
+                    .build();
+        customsDeclarationRepository.save(customsDeclaration);
+        return covertToCustomsDeclarationRespone(customsDeclaration);
     }
-    public ApiResponse<CustomsDeclarationDTO> updateCertificate(Integer id, CreateCustomsDeclarationRequest customsDeclarationRequest) {
+    public CustomsDeclarationRespone updateCustomsDeclaration(Integer id, CreateCustomsDeclarationRequest customsDeclarationRequest) {
 
         // Check if the customs declaration exists
         CustomsDeclaration customsDeclaration = customsDeclarationRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOMSDECALARATION_NOT_EXISTED));
 
-        // Map the CreateCustomsDeclarationRequest to the existing CustomsDeclaration entity (update existing entity)
-        modelMapper.map(customsDeclarationRequest, customsDeclaration);
+       customsDeclaration.setDeclarationNo(customsDeclarationRequest.getDeclarationNo());
+       customsDeclaration.setCustomsName(customsDeclarationRequest.getCustomsName());
+       customsDeclaration.setDeclarationDate(customsDeclarationRequest.getDeclarationDate());
+       customsDeclaration.setImage(customsDeclarationRequest.getImage());
+       customsDeclaration.setDeclaratonBy(customsDeclarationRequest.getDeclaratonBy());
+       customsDeclaration.setReferenceeDate(customsDeclarationRequest.getReferenceeDate());
+       customsDeclaration.setReferenceNo(customsDeclarationRequest.getReferenceNo());
 
-        // Save the updated customs declaration to the repository
-        customsDeclaration = customsDeclarationRepository.save(customsDeclaration); // Save and update entity
 
-        // Map the updated CustomsDeclaration entity to CustomsDeclarationDTO
-        CustomsDeclarationDTO customsDeclarationDTO = modelMapper.map(customsDeclaration, CustomsDeclarationDTO.class);
+         customsDeclarationRepository.save(customsDeclaration); // Save and update entity
 
-        // Build and return the ApiResponse with the updated CustomsDeclarationDTO
-        return ApiResponse.<CustomsDeclarationDTO>builder()
-                .code(HttpStatus.OK.value()) // HTTP status code for success (200)
-                .message("Customs Declaration updated successfully")
-                .result(customsDeclarationDTO) // Use the DTO here, not the request
-                .build();
+        return covertToCustomsDeclarationRespone(customsDeclaration);
     }
 
-    public ApiResponse<Void> deleteCertificate(Integer id) {
-        // Check if the certificate exists
-        if (!customsDeclarationRepository.existsById(id)) {
-            throw new AppException(ErrorCode.CERTIFICATE_NOT_FOUND);
+
+    public CustomsDeclarationRespone removeCustomDeclaration(int id){
+        CustomsDeclaration customsDeclaration = customsDeclarationRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CUSTOMSDECALARATION_NOT_EXISTED));
+        customsDeclaration.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        customsDeclarationRepository.save(customsDeclaration);
+        return covertToCustomsDeclarationRespone(customsDeclaration);
+
+    }
+
+
+    public List<CustomsDeclarationRespone> convertToListCustomsDeclarationRespone(List<CustomsDeclaration> customsDeclarationList) {
+        List<CustomsDeclarationRespone> customsDeclarationResponses = new ArrayList<>();
+        for (CustomsDeclaration customsDeclaration : customsDeclarationList) {
+            customsDeclarationResponses.add(covertToCustomsDeclarationRespone(customsDeclaration));
         }
+        return customsDeclarationResponses;
+    }
 
-        // Delete the certificate from the repository
-        customsDeclarationRepository.deleteById(id);
-
-        // Build and return the ApiResponse indicating success
-        return ApiResponse.<Void>builder()
-                .code(HttpStatus.NO_CONTENT.value()) // HTTP status code for no content (successful deletion)
-                .message("CustomsDeclaration deleted successfully")
-                .result(null) // No result for deletion
+    public CustomsDeclarationRespone covertToCustomsDeclarationRespone(CustomsDeclaration customsDeclaration){
+        return CustomsDeclarationRespone.builder()
+                .declarationNo(customsDeclaration.getDeclarationNo())
+                .customsName(customsDeclaration.getCustomsName())
+                .referenceNo(customsDeclaration.getReferenceNo())
+                .declarationDate(customsDeclaration.getDeclarationDate())
+                .declaratonBy(customsDeclaration.getDeclaratonBy())
+                .image(customsDeclaration.getImage())
+                .orders(customsDeclaration.getOrders())
+                .referenceeDate(customsDeclaration.getReferenceeDate())
+                .id(customsDeclaration.getId())
+                .stautus(customsDeclaration.getStatus())
                 .build();
     }
 }
