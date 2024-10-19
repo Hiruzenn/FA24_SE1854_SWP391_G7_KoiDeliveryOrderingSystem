@@ -110,10 +110,6 @@ public class HandoverDocumentService {
 
         // Update the fields with the request data
         handoverDocument.setHandoverNo(handoverDocumentRequest.getHandoverNo());
-        handoverDocument.setUsers(handoverDocumentRequest.getUsers());
-        handoverDocument.setPackages(handoverDocumentRequest.getPackages());
-        handoverDocument.setOrders(handoverDocumentRequest.getOrders());
-        handoverDocument.setHealthCareDeliveryHistory(handoverDocumentRequest.getHealthCareDeliveryHistory());
         handoverDocument.setStaff(handoverDocumentRequest.getStaff());
         handoverDocument.setHandoverDescription(handoverDocumentRequest.getHandoverDescription());
         handoverDocument.setVehicle(handoverDocumentRequest.getVehicle());

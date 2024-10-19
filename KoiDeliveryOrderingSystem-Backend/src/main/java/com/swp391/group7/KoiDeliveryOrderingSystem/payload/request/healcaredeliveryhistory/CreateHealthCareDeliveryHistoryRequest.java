@@ -17,9 +17,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateHealthCareDeliveryHistoryRequest {
 
-    private Invoice invoice;
+    private int invoice;
 
-    private HandoverDocument handoverDocument;
+    private int handoverDocument;
 
     private String route;
 

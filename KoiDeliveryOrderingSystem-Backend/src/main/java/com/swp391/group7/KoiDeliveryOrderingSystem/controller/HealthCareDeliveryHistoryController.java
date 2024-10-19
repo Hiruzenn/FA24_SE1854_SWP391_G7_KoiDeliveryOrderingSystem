@@ -48,11 +48,11 @@ public class HealthCareDeliveryHistoryController {
     }
 
     // Create a new healthcare delivery history
-    @PostMapping
+    @PostMapping("create/{invoiceid}/{handoverDocumentId}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> createHealthCareDeliveryHistory(
             @RequestBody CreateHealthCareDeliveryHistoryRequest request,
-            @RequestParam int handoverDocumentId,
-            @RequestParam int invoiceId) {
+            @RequestParam("handoverDocumentId") int handoverDocumentId,
+            @RequestParam("invoiceid") int invoiceId) {
 
         HealthCareDeliveryHistoryResponse createdHistory = healthCareDeliveryHistoryService.createHealthCareDeliveryHistory(request, handoverDocumentId, invoiceId);
 

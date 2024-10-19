@@ -24,13 +24,13 @@ public class CreateInvoiceRequest {
     private String staff;
 
 
-    private Orders orders;
+    private int orders;
 
 
-    private Users users;
+    private int users;
 
 
-    private List<HealthCareDeliveryHistory> healCareDeliveryHistories;
+    private int healCareDeliveryHistories;
 
     private LocalDateTime date;
 

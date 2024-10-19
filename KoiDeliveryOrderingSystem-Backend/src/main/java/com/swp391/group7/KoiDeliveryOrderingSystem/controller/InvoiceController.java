@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/invoice")
-@RequiredArgsConstructor
+
 public class InvoiceController {
 
     @Autowired
@@ -53,18 +53,24 @@ public class InvoiceController {
     }
 
     // Endpoint to create a new invoice
-    @PostMapping("/create")
-    public ApiResponse<InvoiceRespone> createInvoice(
+    @PostMapping("/create/{orderId}") // Ensure the orderId is part of the path variable
+    public ResponseEntity<ApiResponse<InvoiceRespone>> createInvoice(
             @RequestBody CreateInvoiceRequest createInvoiceRequest,
             @PathVariable int orderId) {
+
+        // Call the service to create the invoice
         var result = invoiceService.createInvoice(createInvoiceRequest, orderId);
-        return ApiResponse.<InvoiceRespone>builder()
+
+        // Build the ApiResponse
+        ApiResponse<InvoiceRespone> response = ApiResponse.<InvoiceRespone>builder()
                 .code(200)
                 .message("Invoice created successfully")
                 .result(result)
                 .build();
-    }
 
+        // Return the response wrapped in ResponseEntity
+        return ResponseEntity.ok(response);
+    }
 
 
     // Endpoint to update an existing invoice by ID

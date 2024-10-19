@@ -78,13 +78,14 @@ public class InvoiceService {
                 .staff(createInvoiceRequest.getStaff()) // Add staff
                 .orders(orders) // Link the existing order
                 .users(users) // Link the current user
-                .healCareDeliveryHistories(createInvoiceRequest.getHealCareDeliveryHistories()) // Add healthcare delivery history
+                 // Add healthcare delivery history
                 .date(createInvoiceRequest.getDate()) // Add date
                 .addressStore(createInvoiceRequest.getAddressStore()) // Add store address
                 .addressCustomer(createInvoiceRequest.getAddressCustomer()) // Add customer address
                 .vat(createInvoiceRequest.getVat()) // Add VAT
                 .amount(createInvoiceRequest.getAmount()) // Add amount
                 .totalAmount(createInvoiceRequest.getTotalAmount()) // Add total amount
+                .status(SystemStatusEnum.AVAILABLE)
                 .build();
 
 
@@ -103,7 +104,7 @@ public class InvoiceService {
 
         invoice.setInvoiceNo(createInvoiceRequest.getInvoiceNo());
         invoice.setStaff(createInvoiceRequest.getStaff());
-        invoice.setHealCareDeliveryHistories(createInvoiceRequest.getHealCareDeliveryHistories());
+
         invoice.setDate(createInvoiceRequest.getDate());
         invoice.setAddressStore(createInvoiceRequest.getAddressStore());
         invoice.setAddressCustomer(createInvoiceRequest.getAddressCustomer());

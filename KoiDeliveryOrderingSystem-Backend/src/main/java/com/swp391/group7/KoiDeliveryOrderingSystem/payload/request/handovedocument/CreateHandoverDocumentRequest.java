@@ -22,16 +22,16 @@ public class CreateHandoverDocumentRequest {
 
 
 
-    private Users users;
+    private int users;
 
 
-    private Package packages;
+    private int packages;
 
 
-    private Orders orders;
+    private int orders;
 
 
-    private List<HealthCareDeliveryHistory> healthCareDeliveryHistory;
+    private int healthCareDeliveryHistory;
 
 
     private String handoverNo;

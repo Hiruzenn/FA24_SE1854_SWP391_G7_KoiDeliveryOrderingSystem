@@ -61,11 +61,11 @@ public class HandoverDocumentController {
     }
 
     // POST: Create a new handover document
-    @PostMapping("/create")
+    @PostMapping("/create/{orderid}/{packageid}")
     public ApiResponse<HandoverDocumentResponse> createHandoverDocument(
             @RequestBody CreateHandoverDocumentRequest handoverDocumentRequest,
-            @PathVariable int orderId,
-            @PathVariable int packageId) {
+            @PathVariable("orderid") int orderId,
+            @PathVariable ("packageid")int packageId) {
 
             HandoverDocumentResponse createdDocumentResponse = handoverDocumentService.createHandoverDocument(handoverDocumentRequest, orderId, packageId);
             return ApiResponse.<HandoverDocumentResponse>builder()
