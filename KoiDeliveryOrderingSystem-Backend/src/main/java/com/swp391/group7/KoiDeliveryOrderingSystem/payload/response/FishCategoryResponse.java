@@ -1,20 +1,20 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
+import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-
-@Data
+import java.util.List;
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class FishCategoryResponse {
-    private Integer id;
+
+    private int id;
     private String fish_category_name;
     private String fish_category_description;
-
 }

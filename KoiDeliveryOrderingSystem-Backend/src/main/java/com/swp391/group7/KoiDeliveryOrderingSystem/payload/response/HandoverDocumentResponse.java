@@ -47,7 +47,7 @@ public class HandoverDocumentResponse {
     private String departure;
 
 
-    private String totalPrice;
+    private Float totalPrice;
 
     private LocalDateTime createAt;
 

@@ -1,7 +1,9 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.CreateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateOrderRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishProfileResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
@@ -11,6 +13,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
+import jakarta.persistence.criteria.Order;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +115,32 @@ public class OrderService {
         }
 
     }
+
+    public List<OrderResponse> orderIn7days(){
+        LocalDateTime sevenDayAgo= LocalDateTime.now().minusDays(7);
+        List<Orders> recentOrders = orderRepository.findByOrderDateAfter(sevenDayAgo);
+        List<OrderResponse> orderResponseList= new ArrayList<>();
+        for(Orders orders : recentOrders){
+            orderResponseList.add(convertOrderToResponse(orders));
+        }
+        return orderResponseList;
+
+    }
+
+    public List<OrderResponse> orderIn30days(){
+        LocalDateTime sevenDayAgo= LocalDateTime.now().minusDays(30);
+        List<Orders> recentOrders = orderRepository.findByOrderDateAfter(sevenDayAgo);
+        List<OrderResponse> orderResponseList= new ArrayList<>();
+        for(Orders orders : recentOrders){
+            orderResponseList.add(convertOrderToResponse(orders));
+        }
+        return orderResponseList;
+
+    }
+
+
+
+
 
     private OrderResponse convertOrderToResponse(Orders orders) {
         return OrderResponse.builder()

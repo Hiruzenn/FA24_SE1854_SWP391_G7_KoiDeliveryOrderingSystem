@@ -30,6 +30,6 @@ public class HandoverDocumentDTO {
 
     private String departure;
 
-    private String totalPrice;
+    private Float totalPrice;
 
 }

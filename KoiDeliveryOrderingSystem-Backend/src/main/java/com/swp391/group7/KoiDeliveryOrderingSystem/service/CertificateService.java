@@ -99,22 +99,17 @@ public class CertificateService {
         return covertToCertificateRespone(certificate);
 
     }
-    public ApiResponse<Void> deleteCertificate(Integer id) {
-        // Check if the certificate exists
-        if (!certificateRepository.existsById(id)) {
-            throw new AppException(ErrorCode.CERTIFICATE_NOT_FOUND);
-        }
+    public CertificateRespone  deleteCertificate(Integer id) {
+        Certificate certificate = certificateRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
 
-        // Delete the certificate from the repository
-        certificateRepository.deleteById(id);
+        certificate.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        certificateRepository.save(certificate);
+        return covertToCertificateRespone(certificate);
 
-        // Build and return the ApiResponse indicating success
-        return ApiResponse.<Void>builder()
-                .code(HttpStatus.NO_CONTENT.value()) // HTTP status code for no content (successful deletion)
-                .message("Certificate deleted successfully")
-                .result(null) // No result for deletion
-                .build();
     }
+
+
     public List<CertificateRespone> convertToListCertificateResponse(List<Certificate> certificateList) {
         List<CertificateRespone> certificateRespones = new ArrayList<>();
         for (Certificate certificate : certificateList) {
@@ -133,6 +128,7 @@ public class CertificateService {
                 .origin(certificate.getOrigin())
                 .award(certificate.getAward())
                 .image(certificate.getImage())
+                .stautus(certificate.getStatus())
                 .build();
 
     }

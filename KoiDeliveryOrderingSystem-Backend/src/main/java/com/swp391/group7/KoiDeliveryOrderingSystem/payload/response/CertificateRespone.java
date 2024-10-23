@@ -21,5 +21,5 @@ public class CertificateRespone {
     private String origin;
     private String award;
     private String image;
-    private String stautus;
+    private SystemStatusEnum  stautus;
 }
