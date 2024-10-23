@@ -2,10 +2,9 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.deliverymeth
 
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
 import java.time.LocalDateTime;
 
 
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateDeliveryMethodRequest {
 
     private String delivery_name;

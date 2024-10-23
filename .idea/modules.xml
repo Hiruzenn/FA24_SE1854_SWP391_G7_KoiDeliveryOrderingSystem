@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/FA24_SE1854_SWP391_G7_KoiDeliveryOrderingSystem.iml" filepath="$PROJECT_DIR$/.idea/FA24_SE1854_SWP391_G7_KoiDeliveryOrderingSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KoiDeliveryOrderingSystem-Backend/KoiDeliveryOrderingSystem.iml" filepath="$PROJECT_DIR$/KoiDeliveryOrderingSystem-Backend/KoiDeliveryOrderingSystem.iml" />
     </modules>
   </component>
 </project>

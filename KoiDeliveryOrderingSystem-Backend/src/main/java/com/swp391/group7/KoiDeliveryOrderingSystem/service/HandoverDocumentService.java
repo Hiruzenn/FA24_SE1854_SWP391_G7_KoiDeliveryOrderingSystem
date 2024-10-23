@@ -1,21 +1,28 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.handovedocument.CreateHandoverDocumentRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.HandoverDocumentDTO;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.handovedocument.UpdateHandoverDocumentRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HandoverDocumentResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.HandoverDocumentRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.PackageRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,9 +31,137 @@ import java.util.List;
 public class HandoverDocumentService {
 
     @Autowired
-    private HandoverDocumentRepository handoverDocumentRepository;
+    private final HandoverDocumentRepository handoverDocumentRepository;
 
     @Autowired
+    private AccountUtils accountUtils;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private PackageRepository packageRepository;
+
+    public static final String RANDOM_STRING = "0123456789";
+
+    public HandoverDocumentResponse createHandoverDocument(Integer orderId, Integer packageId, CreateHandoverDocumentRequest createHandoverDocumentRequest) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Package packages = packageRepository.findById(packageId).orElseThrow(()-> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
+
+        HandoverDocument handoverDocument = HandoverDocument.builder()
+                .handoverNo(genarateHandoverNo())
+                .users(users)
+                .orders(orders)
+                .packages(packages)
+                .staff(createHandoverDocumentRequest.getStaff())
+                .handoverDescription(createHandoverDocumentRequest.getHandoverDescription())
+                .vehicle(createHandoverDocumentRequest.getVehicle())
+                .destination(createHandoverDocumentRequest.getDestination())
+                .departure(createHandoverDocumentRequest.getDeparture())
+                .totalPrice(createHandoverDocumentRequest.getTotalPrice())
+                .createAt(LocalDateTime.now())
+                .createBy(users.getId())
+                .updateAt(LocalDateTime.now())
+                .updateBy(users.getId())
+                .status(SystemStatusEnum.AVAILABLE)
+                .build();
+        handoverDocumentRepository.save(handoverDocument);
+        return convertToHandoverDocumentResponse(handoverDocument);
+    }
+
+    public HandoverDocumentResponse updateHandoverDocument(Integer id, UpdateHandoverDocumentRequest updateHandoverDocumentRequest) {
+        HandoverDocument handoverDocument = handoverDocumentRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+
+        handoverDocument.setUsers(updateHandoverDocumentRequest.getUsers());
+        handoverDocument.setOrders(updateHandoverDocumentRequest.getOrders());
+        handoverDocument.setHandoverNo(updateHandoverDocumentRequest.getHandoverNo());
+        handoverDocument.setStaff(updateHandoverDocumentRequest.getStaff());
+        handoverDocument.setHandoverDescription(updateHandoverDocumentRequest.getHandoverDescription());
+        handoverDocument.setVehicle(updateHandoverDocumentRequest.getVehicle());
+        handoverDocument.setDestination(updateHandoverDocumentRequest.getDestination());
+        handoverDocument.setDeparture(updateHandoverDocumentRequest.getDeparture());
+        handoverDocument.setTotalPrice(updateHandoverDocumentRequest.getTotalPrice());
+
+        handoverDocumentRepository.save(handoverDocument);
+
+        return convertToHandoverDocumentResponse(handoverDocument);
+    }
+
+    public List<HandoverDocumentResponse> viewAllHandoverDocuments() {
+        List<HandoverDocument> handoverDocuments = handoverDocumentRepository.findAll();
+        List<HandoverDocumentResponse> handoverDocumentResponses = new ArrayList<>();
+
+        for (HandoverDocument handoverDocument : handoverDocuments) {
+            HandoverDocumentResponse response = convertToHandoverDocumentResponse(handoverDocument);
+            handoverDocumentResponses.add(response);
+        }
+
+        return handoverDocumentResponses;
+    }
+
+    public HandoverDocumentResponse deleteHandoverDocument(Integer id) {
+        HandoverDocument handoverDocument = handoverDocumentRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+
+        HandoverDocumentResponse response = convertToHandoverDocumentResponse(handoverDocument);
+        handoverDocumentRepository.deleteById(id);
+
+        return response;
+    }
+
+    public HandoverDocumentResponse getHandoverDocumentById(Integer id) {
+        HandoverDocument handoverDocument = handoverDocumentRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+        HandoverDocumentResponse response = convertToHandoverDocumentResponse(handoverDocument);
+        handoverDocumentRepository.getHandoverDocumentById(id);
+        return convertToHandoverDocumentResponse(handoverDocument);
+    }
+
+    private HandoverDocumentResponse convertToHandoverDocumentResponse(HandoverDocument handoverDocument) {
+        return HandoverDocumentResponse.builder()
+                .userId(handoverDocument.getUsers().getId())
+                .orderId(handoverDocument.getOrders().getId())
+                .handoverNo(handoverDocument.getHandoverNo())
+                .staff(handoverDocument.getStaff())
+                .handoverDescription(handoverDocument.getHandoverDescription())
+                .vehicle(handoverDocument.getVehicle())
+                .destination(handoverDocument.getDestination())
+                .departure(handoverDocument.getDeparture())
+                .totalPrice(handoverDocument.getTotalPrice())
+                .createAt(handoverDocument.getCreateAt())
+                .createBy(handoverDocument.getCreateBy())
+                .updateAt(handoverDocument.getUpdateAt())
+                .updateBy(handoverDocument.getUpdateBy())
+                .status(handoverDocument.getStatus())
+                .build();
+    }
+    private String genarateHandoverNo() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder stringBuilder;
+        String handoverNo = "";
+        do {
+            stringBuilder = new StringBuilder("ORD");
+            for (int i = 0; i < 5; i++) {
+                int randomIndex = random.nextInt(5);
+                stringBuilder.append(RANDOM_STRING.charAt(randomIndex));
+            }
+            handoverNo = stringBuilder.toString();
+        } while (orderRepository.existsByOrderCode(handoverNo));
+        return handoverNo;
+    }
+}
+
+
+
+
+
+
+    /*@Autowired
     private ModelMapper modelMapper;
 
     // Retrieve the list of all handover documents
@@ -106,4 +241,4 @@ public class HandoverDocumentService {
                 .result(null) // No result for deletion
                 .build();
     }
-}
+}*/

@@ -3,31 +3,75 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.DeliveryMethodDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.deliverymethod.CreateDeliveryMethodRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.deliverymethod.UpdateDeliveryMethodRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.DeliveryMethodResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepository;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 
 public class DeliveryMethodService {
     @Autowired
-    DeliveryMethodRepository deliveryMethodRepository;
+    private final DeliveryMethodRepository deliveryMethodRepository;
 
-    @Autowired
-    ModelMapper modelMapper;
 
+    public DeliveryMethodResponse createDeliveryMethod(CreateDeliveryMethodRequest createDeliveryMethodRequest) {
+        DeliveryMethod deliveryMethod = DeliveryMethod.builder()
+                .deliveryName(createDeliveryMethodRequest.getDelivery_name())
+                .build();
+        deliveryMethodRepository.save(deliveryMethod);
+        return convertToDeliveryMethodResponse(deliveryMethod);
+    }
+
+    public DeliveryMethodResponse updateDeliveryMethod(Integer id, UpdateDeliveryMethodRequest updateDeliveryMethodRequest){
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
+
+        deliveryMethod.setDeliveryName(updateDeliveryMethodRequest.getDelivery_name());
+        deliveryMethodRepository.save(deliveryMethod);
+
+        return convertToDeliveryMethodResponse(deliveryMethod);
+
+
+}
+
+    public List<DeliveryMethodResponse> viewAllDeliveryMethods(){
+        List<DeliveryMethod> deliveryMethods = deliveryMethodRepository.findAll();
+        List<DeliveryMethodResponse> deliveryMethodResponses = new ArrayList<>();
+
+        for (DeliveryMethod deliveryMethod : deliveryMethods) {
+            DeliveryMethodResponse response = convertToDeliveryMethodResponse(deliveryMethod);
+            deliveryMethodResponses.add(response);
+        }
+
+        return deliveryMethodResponses;
+    }
+
+    public DeliveryMethodResponse deleteDeliveryMethod(Integer id) {
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
+
+        DeliveryMethodResponse response = convertToDeliveryMethodResponse(deliveryMethod);
+        deliveryMethodRepository.deleteById(id);
+
+        return response;
+    }
+
+    public DeliveryMethodResponse convertToDeliveryMethodResponse(DeliveryMethod deliveryMethod){
+        return DeliveryMethodResponse.builder()
+                .id(deliveryMethod.getId())
+                .delivery_name(deliveryMethod.getDeliveryName())
+                .build();
+    }
+/*
     // Method to retrieve all DeliveryMethods
     public List<DeliveryMethodDTO> getListDeliveryMethods() {
         List<DeliveryMethod> deliveryMethodList = deliveryMethodRepository.findAll();
@@ -111,5 +155,7 @@ public class DeliveryMethodService {
                 .result(null) // No result for deletion
                 .build();
     }
+
+ */
 }
 

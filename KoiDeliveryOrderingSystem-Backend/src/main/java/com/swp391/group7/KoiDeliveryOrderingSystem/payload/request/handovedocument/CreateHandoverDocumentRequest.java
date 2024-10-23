@@ -12,26 +12,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateHandoverDocumentRequest {
-
-
-    private Users users;
-
-
-    private Orders orders;
-
-
-
-
-    private String handoverNo;
-
     private String staff;
 
     private String handoverDescription;
 
     private String vehicle;
+
     private String destination;
 
     private String departure;
 
-    private String totalPrice;
+    private Float totalPrice;
 }

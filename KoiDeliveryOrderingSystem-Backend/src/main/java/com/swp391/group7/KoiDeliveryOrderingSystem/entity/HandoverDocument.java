@@ -59,7 +59,7 @@ public class HandoverDocument {
     private String departure;
 
     @Column(name = "total_price", nullable = false)
-    private String totalPrice;
+    private Float totalPrice;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
