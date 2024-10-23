@@ -1,4 +1,4 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.handovedocument;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -11,8 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class HandoverDocumentDTO {
-
+public class UpdateHandoverDocumentRequest {
     private Integer id;
 
     private Users users;
@@ -26,10 +25,10 @@ public class HandoverDocumentDTO {
     private String handoverDescription;
 
     private String vehicle;
+
     private String destination;
 
     private String departure;
 
-    private String totalPrice;
-
+    private Float totalPrice;
 }
