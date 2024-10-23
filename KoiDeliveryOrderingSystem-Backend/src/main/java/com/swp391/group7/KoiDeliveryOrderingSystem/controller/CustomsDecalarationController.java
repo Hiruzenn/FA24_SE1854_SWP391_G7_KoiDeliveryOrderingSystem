@@ -1,9 +1,12 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CustomsDeclarationDTO;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.CreateCertificateRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.customsdeclaration.CreateCustomsDeclarationRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CertificateRespone;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CustomsDeclarationRespone;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthServiceOrderResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.CustomsDeclarationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +21,14 @@ import java.util.List;
 public class CustomsDecalarationController {
     @Autowired
     CustomsDeclarationService customsDeclarationService;
-    @Autowired
-    ModelMapper modelMapper;
+
 
     @GetMapping // GET request to retrieve the list of customs declarations
-    public ResponseEntity<ApiResponse<List<CustomsDeclarationDTO>>> getAllCustomDeclarations() {
-        List<CustomsDeclarationDTO> customsDeclarations = customsDeclarationService.getListCustomDeclaration();
+    public ResponseEntity<ApiResponse<List<CustomsDeclarationRespone>>> getAllCustomDeclarations() {
+        List<CustomsDeclarationRespone> customsDeclarations = customsDeclarationService.getListCustomDeclaration();
 
         // Build and return the ApiResponse
-        ApiResponse<List<CustomsDeclarationDTO>> response = ApiResponse.<List<CustomsDeclarationDTO>>builder()
+        ApiResponse<List<CustomsDeclarationRespone>> response = ApiResponse.<List<CustomsDeclarationRespone>>builder()
                 .code(HttpStatus.OK.value()) // HTTP 200 OK
                 .message("Customs declarations retrieved successfully")
                 .result(customsDeclarations)
@@ -35,24 +37,23 @@ public class CustomsDecalarationController {
         return ResponseEntity.ok(response); // Return the response with HTTP 200 OK
     }
 
-    @GetMapping("/{id}") // Mapping for GET request to retrieve a customs declaration by ID
-    public ResponseEntity<ApiResponse<CustomsDeclarationDTO>> getCustomDeclarationById(@PathVariable Integer id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<CustomsDeclarationRespone>> getCustomDeclarationById(@PathVariable Integer id) {
         try {
             // Retrieve the customs declaration by ID
-            CustomsDeclarationDTO customsDeclarationDTO = customsDeclarationService.getCustomsDeclaration(id);
+            CustomsDeclarationRespone CustomsDeclarationRespone = customsDeclarationService.getCustomsDeclaration(id);
 
             // Build and return the ApiResponse with the found customs declaration
-            ApiResponse<CustomsDeclarationDTO> response = ApiResponse.<CustomsDeclarationDTO>builder()
+            ApiResponse<CustomsDeclarationRespone> response = ApiResponse.<CustomsDeclarationRespone>builder()
                     .code(HttpStatus.OK.value()) // HTTP 200 OK
                     .message("Customs declaration retrieved successfully")
-                    .result(customsDeclarationDTO)
+                    .result(CustomsDeclarationRespone)
                     .build();
 
             return ResponseEntity.ok(response); // Return HTTP 200 OK
-
         } catch (AppException e) {
-            // Handle not found exception
-            ApiResponse<CustomsDeclarationDTO> response = ApiResponse.<CustomsDeclarationDTO>builder()
+            // Handle exception and build error response
+            ApiResponse<CustomsDeclarationRespone> response = ApiResponse.<CustomsDeclarationRespone>builder()
                     .code(e.getErrorCode().getCode()) // Error code from exception
                     .message(e.getMessage()) // Error message from exception
                     .result(null)
@@ -62,46 +63,53 @@ public class CustomsDecalarationController {
         }
     }
 
-    @PostMapping("/create") // Endpoint to create a new customs declaration
-    public ResponseEntity<ApiResponse<CustomsDeclarationDTO>> createCustomDeclaration(@RequestBody CreateCustomsDeclarationRequest request) {
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<CustomsDeclarationRespone>> createCertificate(
+            @RequestBody CreateCustomsDeclarationRequest customsDeclarationRequest,
+            @RequestParam Integer orderId) {
         try {
-            // Call service to create the customs declaration
-            ApiResponse<CustomsDeclarationDTO> response = customsDeclarationService.creatCustomsDeclaration(request);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(response); // Return HTTP 201 Created
+            CustomsDeclarationRespone customsDeclarationRespone = customsDeclarationService.creatCustomsDeclaration(customsDeclarationRequest, orderId);
+            ApiResponse<CustomsDeclarationRespone> response = ApiResponse.<CustomsDeclarationRespone>builder()
+                    .code(200)
+                    .message("Customs declaration created successfully")
+                    .result(customsDeclarationRespone)
+                    .build();
+            return ResponseEntity.ok(response);
         } catch (AppException e) {
-            // Handle specific application exceptions
-            ApiResponse<CustomsDeclarationDTO> response = ApiResponse.<CustomsDeclarationDTO>builder()
-                    .code(e.getErrorCode().getCode()) // Error code from exception
-                    .message(e.getMessage()) // Error message from exception
+            ApiResponse<CustomsDeclarationRespone> response = ApiResponse.<CustomsDeclarationRespone>builder()
+                    .code(e.getErrorCode().getCode())
+                    .message(e.getMessage())
                     .result(null)
                     .build();
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response); // Return HTTP 400 Bad Request
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
-            // Handle general exceptions
-            ApiResponse<CustomsDeclarationDTO> response = ApiResponse.<CustomsDeclarationDTO>builder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value()) // HTTP 500
+            ApiResponse<CustomsDeclarationRespone> response = ApiResponse.<CustomsDeclarationRespone>builder()
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                     .message("An unexpected error occurred")
                     .result(null)
                     .build();
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response); // Return HTTP 500 Internal Server Error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
+
     @PutMapping("/update/{id}") // Endpoint to update a customs declaration by ID
-    public ResponseEntity<ApiResponse<CustomsDeclarationDTO>> updateCustomDeclaration(
+    public ResponseEntity<ApiResponse<CustomsDeclarationRespone>> updateCustomDeclaration(
             @PathVariable Integer id,
             @RequestBody CreateCustomsDeclarationRequest request) {
         try {
             // Call service to update the customs declaration
-            ApiResponse<CustomsDeclarationDTO> response = customsDeclarationService.updateCertificate(id, request);
+            CustomsDeclarationRespone updatedCustomsDeclarationRespone = customsDeclarationService.updateCustomsDeclaration(id, request);
 
-            return ResponseEntity.status(HttpStatus.OK).body(response); // Return HTTP 200 OK
+            ApiResponse<CustomsDeclarationRespone> response = ApiResponse.<CustomsDeclarationRespone>builder()
+                    .code(200)
+                    .message("Customs declaration updated successfully")
+                    .result(updatedCustomsDeclarationRespone)
+                    .build();
+            return ResponseEntity.ok(response);
         } catch (AppException e) {
             // Handle specific application exceptions
-            ApiResponse<CustomsDeclarationDTO> response = ApiResponse.<CustomsDeclarationDTO>builder()
+            ApiResponse<CustomsDeclarationRespone> response = ApiResponse.<CustomsDeclarationRespone>builder()
                     .code(e.getErrorCode().getCode()) // Error code from exception
                     .message(e.getMessage()) // Error message from exception
                     .result(null)
@@ -110,7 +118,7 @@ public class CustomsDecalarationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response); // Return HTTP 400 Bad Request
         } catch (Exception e) {
             // Handle general exceptions
-            ApiResponse<CustomsDeclarationDTO> response = ApiResponse.<CustomsDeclarationDTO>builder()
+            ApiResponse<CustomsDeclarationRespone> response = ApiResponse.<CustomsDeclarationRespone>builder()
                     .code(HttpStatus.INTERNAL_SERVER_ERROR.value()) // HTTP 500
                     .message("An unexpected error occurred")
                     .result(null)
@@ -120,32 +128,13 @@ public class CustomsDecalarationController {
         }
     }
 
-    @DeleteMapping("/delete/{id}") // Endpoint to delete a customs declaration by ID
-    public ResponseEntity<ApiResponse<Void>> deleteCustomDeclaration(@PathVariable Integer id) {
-        try {
-            // Call service to delete the customs declaration
-            ApiResponse<Void> response = customsDeclarationService.deleteCertificate(id);
-
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response); // Return HTTP 204 No Content
-        } catch (AppException e) {
-            // Handle specific application exceptions
-            ApiResponse<Void> response = ApiResponse.<Void>builder()
-                    .code(e.getErrorCode().getCode()) // Error code from exception
-                    .message(e.getMessage()) // Error message from exception
-                    .result(null)
-                    .build();
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response); // Return HTTP 400 Bad Request
-        } catch (Exception e) {
-            // Handle general exceptions
-            ApiResponse<Void> response = ApiResponse.<Void>builder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value()) // HTTP 500
-                    .message("An unexpected error occurred")
-                    .result(null)
-                    .build();
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response); // Return HTTP 500 Internal Server Error
-        }
+    @PutMapping("/delete/{id}") // Endpoint to delete a customs declaration by ID
+    public ApiResponse<CustomsDeclarationRespone> deleteCustomDeclaration(@PathVariable Integer id) {
+        customsDeclarationService.removeCustomDeclaration(id);
+        return ApiResponse.<CustomsDeclarationRespone>builder()
+                .code(200)
+                .message("Health Service Order Deleted")
+                .build();
     }
 
 

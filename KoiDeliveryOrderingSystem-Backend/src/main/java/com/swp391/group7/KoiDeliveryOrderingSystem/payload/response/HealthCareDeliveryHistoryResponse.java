@@ -1,25 +1,28 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.DeliveryStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Invoice;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateHealthCareDeliveryHistoryRequest {
+@Builder
+public class HealthCareDeliveryHistoryResponse {
 
-    private int invoice;
+    private Integer id;
 
-    private int handoverDocument;
+
+    private Invoice invoice;
+
+
+    private HandoverDocument handoverDocument;
+
 
     private String route;
 
@@ -32,4 +35,18 @@ public class CreateHealthCareDeliveryHistoryRequest {
 
     private DeliveryStatusEnum deliveryStatus;
 
+
+    private LocalDateTime createAt;
+
+
+    private Integer createBy;
+
+
+    private LocalDateTime updateAt;
+
+
+    private Integer updateBy;
+
+
+    private SystemStatusEnum status;
 }
