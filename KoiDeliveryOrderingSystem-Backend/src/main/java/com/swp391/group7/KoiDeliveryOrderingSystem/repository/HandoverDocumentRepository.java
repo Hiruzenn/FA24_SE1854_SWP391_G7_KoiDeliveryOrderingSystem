@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HandoverDocumentRepository extends JpaRepository<HandoverDocument, Integer> {
 
+    void getHandoverDocumentById(Integer id);
 }

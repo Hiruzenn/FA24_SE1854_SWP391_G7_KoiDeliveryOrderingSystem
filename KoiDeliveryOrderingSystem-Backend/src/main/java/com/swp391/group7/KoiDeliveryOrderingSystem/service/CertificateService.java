@@ -128,6 +128,7 @@ public class CertificateService {
                 .origin(certificate.getOrigin())
                 .award(certificate.getAward())
                 .image(certificate.getImage())
+                .stautus(certificate.getStatus())
                 .build();
 
     }
