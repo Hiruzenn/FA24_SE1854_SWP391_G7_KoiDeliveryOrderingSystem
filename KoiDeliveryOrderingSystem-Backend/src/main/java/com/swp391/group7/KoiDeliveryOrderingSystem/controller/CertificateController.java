@@ -67,7 +67,7 @@ public class CertificateController {
             CertificateRespone createdCertificateResponse = certificateService.creatCertificate(certificateRequest, orderId);
             ApiResponse<CertificateRespone> response = ApiResponse.<CertificateRespone>builder()
                     .code(200)
-                    .message("Fish profile created successfully")
+                    .message("Certificate created successfully")
                     .result(createdCertificateResponse)
                     .build();
             return ResponseEntity.ok(response);
@@ -97,7 +97,7 @@ public class CertificateController {
 
             ApiResponse<CertificateRespone> response = ApiResponse.<CertificateRespone>builder()
                     .code(200)
-                    .message("Fish profile created successfully")
+                    .message("Certificate created successfully")
                     .result(updatedCertificate)
                     .build();
             return ResponseEntity.ok(response);
@@ -121,25 +121,35 @@ public class CertificateController {
         }
     }
 
-    @DeleteMapping("delete/{id}")
+    @PutMapping("delete/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteCertificate(@PathVariable Integer id) {
         try {
-            ApiResponse<Void> response = certificateService.deleteCertificate(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
-        } catch (AppException e) {
+            // Call the service method to delete the certificate
+            certificateService.deleteCertificate(id); // Assuming it returns void or similar
+
             ApiResponse<Void> response = ApiResponse.<Void>builder()
-                    .code(e.getErrorCode().getCode())
-                    .message(e.getMessage())
+                    .code(200)
+                    .message("Certificate deleted successfully")
+                    .result(null) // No content, as the certificate is deleted
+                    .build();
+            return ResponseEntity.ok(response);
+
+        } catch (AppException e) {
+            // Handle specific application exceptions
+            ApiResponse<Void> response = ApiResponse.<Void>builder()
+                    .code(e.getErrorCode().getCode()) // Set the specific error code
+                    .message(e.getMessage()) // Set the error message from exception
                     .result(null)
                     .build();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response); // Return HTTP 400 Bad Request
         } catch (Exception e) {
+            // Handle general exceptions
             ApiResponse<Void> response = ApiResponse.<Void>builder()
                     .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                     .message("An unexpected error occurred")
                     .result(null)
                     .build();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response); // Return HTTP 500 Internal Server Error
         }
     }
 

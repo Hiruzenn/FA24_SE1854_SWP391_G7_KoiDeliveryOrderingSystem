@@ -7,6 +7,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderRespons
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,5 +67,20 @@ public class OrderController {
                 .message("Order Deleted")
                 .result(result)
                 .build();
+    }
+    @GetMapping("/last-7-days")
+    public ResponseEntity<List<OrderResponse>> getOrdersIn7Days() {
+        List<OrderResponse> orderResponses = orderService.orderIn7days();
+
+        // Return the list of orders with an HTTP 200 OK status
+        return ResponseEntity.ok(orderResponses);
+    }
+
+    @GetMapping("/last-1-month")
+    public ResponseEntity<List<OrderResponse>> getOrdersIn1Month() {
+        List<OrderResponse> orderResponses = orderService.orderIn30days();
+
+        // Return the list of orders with an HTTP 200 OK status
+        return ResponseEntity.ok(orderResponses);
     }
 }

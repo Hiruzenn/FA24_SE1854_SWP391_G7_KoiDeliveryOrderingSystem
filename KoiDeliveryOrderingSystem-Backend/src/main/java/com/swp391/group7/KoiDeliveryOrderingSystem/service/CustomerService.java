@@ -4,6 +4,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CustomerDTO;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CustomerRespone;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -71,4 +74,6 @@ public class CustomerService {
         // Delete the customer from the repository
         userRepository.deleteById(id);
     }
+
+
 }
