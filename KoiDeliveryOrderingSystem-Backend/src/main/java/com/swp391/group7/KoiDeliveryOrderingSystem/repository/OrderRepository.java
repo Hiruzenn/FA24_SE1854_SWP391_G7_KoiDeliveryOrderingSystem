@@ -5,6 +5,8 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -20,4 +22,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
     Optional<Orders> findByUsers(Users users);
 
     List<Orders> findByOrderDateAfter (LocalDateTime date);
+    @Query(value= "SELECT o.orders_id, o.total_amount FROM orders o " +
+            " where o.orders_id= :orderId", nativeQuery= true )
+    Object findTotalAmount(@Param("orderId") int orderId);
 }
