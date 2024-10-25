@@ -13,4 +13,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
     List<Payment> findByUsers(Users users);
     List<Payment> findByOrders(Orders orders);
     List<Payment> findByUsersAndOrders(Users users, Orders orders);
+
+    Payment getPaymentByPaymentCode(String paymentCode);
 }

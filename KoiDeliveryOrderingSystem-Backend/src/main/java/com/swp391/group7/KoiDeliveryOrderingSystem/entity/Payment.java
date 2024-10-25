@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -21,6 +22,12 @@ public class Payment {
 
     @Column(name = "payment_code", nullable = false)
     private String paymentCode;
+
+    @Column(name = "payment_date")
+    private LocalDate paymentDate;
+
+    @Column(name="payment_status")
+    private String paymentStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
