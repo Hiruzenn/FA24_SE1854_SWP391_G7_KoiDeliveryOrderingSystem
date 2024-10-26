@@ -124,7 +124,8 @@ public class PaymentService {
         float amount = paymentRequest2.getTotalAmount()*100;
         String bankCode = paymentRequest2.getBankCode();
         String transactionId = "1";
-        Map<String, String> vnpParamsMap;
+
+         Map<String, String> vnpParamsMap;
         if (transactionId != null) {
             int id = Integer.parseInt(transactionId);
             vnpParamsMap = vnPayConfig.getVNPayConfig(orderId, username, id);
