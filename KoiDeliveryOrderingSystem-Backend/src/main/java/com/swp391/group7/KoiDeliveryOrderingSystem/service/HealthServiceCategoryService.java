@@ -30,7 +30,7 @@ public class HealthServiceCategoryService {
     public HealthServiceCategoryResponse createHealthyServiceCategory(CreateHealthServiceCategoryRequest createHealthServiceCategoryRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
         HealthServiceCategory healthServiceCategory = HealthServiceCategory.builder()
                 .serviceName(createHealthServiceCategoryRequest.getServiceName())
@@ -48,9 +48,10 @@ public class HealthServiceCategoryService {
     public HealthServiceCategoryResponse updateHealthServiceCategory(Integer id, UpdateHealthServiceCategoryRequest updateHealthServiceCategoryRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.HEALTH_CHECK_FAILED));
+        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
 
         healthServiceCategory.setServiceName(updateHealthServiceCategoryRequest.getServiceName());
         healthServiceCategory.setServiceDescription(updateHealthServiceCategoryRequest.getServiceDescription());
@@ -64,31 +65,31 @@ public class HealthServiceCategoryService {
     public List<HealthServiceCategoryResponse> getAllHealthServiceCategory() {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        List<HealthServiceCategory> healthServiceCategories = healthServiceCategoryRepository.findAll();
+        List<HealthServiceCategory> healthServiceCategories = healthServiceCategoryRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         List<HealthServiceCategoryResponse> healthServiceCategoryResponses = new ArrayList<>();
         for (HealthServiceCategory healthServiceCategory : healthServiceCategories) {
-            if (healthServiceCategory.getStatus() == SystemStatusEnum.AVAILABLE) {
-                healthServiceCategoryResponses.add(convertToHealthServiceCategoryResponse(healthServiceCategory));
-            }
+            healthServiceCategoryResponses.add(convertToHealthServiceCategoryResponse(healthServiceCategory));
         }
         return healthServiceCategoryResponses;
 
     }
 
-    public void deleteHealthServiceCategory(Integer id) {
+    public HealthServiceCategoryResponse deleteHealthServiceCategory(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
-        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_CHECK_FAILED));
+        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
         healthServiceCategory.setUpdateAt(LocalDateTime.now());
         healthServiceCategory.setUpdateBy(users.getId());
         healthServiceCategory.setStatus(SystemStatusEnum.NOT_AVAILABLE);
         healthServiceCategoryRepository.save(healthServiceCategory);
+        return convertToHealthServiceCategoryResponse(healthServiceCategory);
     }
+
     public HealthServiceCategoryResponse convertToHealthServiceCategoryResponse(HealthServiceCategory healthServiceCategory) {
         return HealthServiceCategoryResponse.builder()
                 .id(healthServiceCategory.getId())

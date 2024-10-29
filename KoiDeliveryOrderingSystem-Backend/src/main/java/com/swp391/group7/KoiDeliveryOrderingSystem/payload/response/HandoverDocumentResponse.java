@@ -16,50 +16,20 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class HandoverDocumentResponse {
-    private int id;
-    private Users users;
-
-
-    private Package packages;
-
-
-    private Orders orders;
-
-
-    private List<HealthCareDeliveryHistory> healthCareDeliveryHistory;
-
-
+    private Integer id;
+    private Integer userId;
+    private Integer packageId;
+    private Integer orderId;
     private String handoverNo;
-
-
     private String staff;
-
-
     private String handoverDescription;
-
-
     private String vehicle;
-
-
     private String destination;
-
-
     private String departure;
-
-
     private Float totalPrice;
-
     private LocalDateTime createAt;
-
-
     private Integer createBy;
-
-
     private LocalDateTime updateAt;
-
-
     private Integer updateBy;
-
-
     private SystemStatusEnum status;
 }

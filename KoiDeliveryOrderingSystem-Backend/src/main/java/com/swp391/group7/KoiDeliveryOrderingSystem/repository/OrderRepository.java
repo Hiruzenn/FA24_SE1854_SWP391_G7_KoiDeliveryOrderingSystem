@@ -16,10 +16,9 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Orders, Integer> {
     boolean existsByOrderCode(String orderCode);
-    Optional<Orders> findByIdAndUsers(int id, Users users);
     List<Orders> findByUsersAndStatus(Users users, SystemStatusEnum status);
     List<Orders> findByStatus(SystemStatusEnum status);
-    Optional<Orders> findByUsers(Users users);
+    Optional<Orders> findByIdAndStatus(Integer id, SystemStatusEnum status);
 
     List<Orders> findByOrderDateAfter (LocalDateTime date);
     @Query(value= "SELECT o.orders_id, o.total_amount FROM orders o " +

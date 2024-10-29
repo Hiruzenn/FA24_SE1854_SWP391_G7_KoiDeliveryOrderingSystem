@@ -1,7 +1,9 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.CreateFishProfileRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.UpdateFishProfileRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishCategoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishProfileResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
@@ -10,7 +12,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishCategoryRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishProfileRepository;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderDetailRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,19 +32,21 @@ public class FishProfileService {
     @Autowired
     private AccountUtils accountUtils;
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
-    @Autowired
     private FishCategoryRepository fishCategoryRepository;
 
     public FishProfileResponse createFishProfile(CreateFishProfileRequest createFishProfileRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        FishCategory fishCategory = fishCategoryRepository.findByFishCategoryName(createFishProfileRequest.getType());
+        if (fishCategory == null) {
+            throw new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND);
         }
         FishProfile fishProfile = FishProfile.builder()
                 .name(createFishProfileRequest.getName())
                 .description(createFishProfileRequest.getDescription())
-                .type(fishCategoryRepository.findByFishCategoryName(createFishProfileRequest.getType()))
+                .type(fishCategory)
                 .size(createFishProfileRequest.getSize())
                 .origin(createFishProfileRequest.getOrigin())
                 .image(createFishProfileRequest.getImage())
@@ -59,13 +62,17 @@ public class FishProfileService {
 
     public FishProfileResponse updateFishProfile(Integer fishProfileId, UpdateFishProfileRequest updateFishProfileRequest) {
         Users users = accountUtils.getCurrentUser();
-        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId).orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE).orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        FishCategory fishCategory = fishCategoryRepository.findByFishCategoryName(updateFishProfileRequest.getType());
+        if (fishCategory == null) {
+            throw new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND);
         }
         fishProfile.setName(updateFishProfileRequest.getName());
         fishProfile.setDescription(updateFishProfileRequest.getDescription());
-        fishProfile.setType(fishCategoryRepository.findByFishCategoryName(updateFishProfileRequest.getType()));
+        fishProfile.setType(fishCategory);
         fishProfile.setSize(updateFishProfileRequest.getSize());
         fishProfile.setOrigin(updateFishProfileRequest.getOrigin());
         fishProfile.setImage(updateFishProfileRequest.getImage());
@@ -78,15 +85,30 @@ public class FishProfileService {
     public List<FishProfileResponse> getAllFishProfiles() {
         Users users = accountUtils.getCurrentUser();
         if (users == null){
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        List<FishProfile> fishProfiles = fishProfileRepository.findAll();
+        List<FishProfile> fishProfiles = fishProfileRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         List<FishProfileResponse> fishProfileResponses = new ArrayList<>();
         for(FishProfile fishProfile : fishProfiles){
             fishProfileResponses.add(convertToFishProfileResponse(fishProfile));
         }
         return fishProfileResponses;
     }
+
+    public FishProfileResponse deleteFishProfile(Integer fishProfileId) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        fishProfile.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        fishProfile.setUpdateAt(LocalDateTime.now());
+        fishProfile.setUpdateBy(users.getId());
+        fishProfileRepository.save(fishProfile);
+        return convertToFishProfileResponse(fishProfile);
+    }
+
     public FishProfileResponse convertToFishProfileResponse(FishProfile fishProfile) {
         return FishProfileResponse.builder()
                 .id(fishProfile.getId())

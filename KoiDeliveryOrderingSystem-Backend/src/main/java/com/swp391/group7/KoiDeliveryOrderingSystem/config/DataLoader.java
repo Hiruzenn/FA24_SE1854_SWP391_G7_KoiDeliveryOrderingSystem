@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.config;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Role;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepository;
@@ -43,16 +44,20 @@ public class DataLoader {
             }
             if(deliveryMethodRepository.count() == 0){
                 DeliveryMethod van = DeliveryMethod.builder()
-                        .deliveryName("VAN")
+                        .deliveryMethodName("VAN")
+                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod plane = DeliveryMethod.builder()
-                        .deliveryName("PLANE")
+                        .deliveryMethodName("PLANE")
+                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod boat = DeliveryMethod.builder()
-                        .deliveryName("BOAT")
+                        .deliveryMethodName("BOAT")
+                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod train = DeliveryMethod.builder()
-                        .deliveryName("TRAIN")
+                        .deliveryMethodName("TRAIN")
+                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 deliveryMethodRepository.save(van);
                 deliveryMethodRepository.save(plane);
@@ -63,14 +68,17 @@ public class DataLoader {
                 FishCategory fishA = FishCategory.builder()
                         .fishCategoryName("Type A")
                         .fishCategoryDescription("Super A")
+                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fishB = FishCategory.builder()
                         .fishCategoryName("Type B")
                         .fishCategoryDescription("Super B")
+                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fishC = FishCategory.builder()
                         .fishCategoryName("Type C")
                         .fishCategoryDescription("Super C")
+                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 fishCategoryRepository.save(fishA);
                 fishCategoryRepository.save(fishB);

@@ -31,19 +31,4 @@ public class Feedback {
     @Column(name = "feedback_description", nullable = false)
     private String feedbackDescription;
 
-    @Column(name = "create_at")
-    private LocalDateTime createAt;
-
-    @Column(name = "create_by")
-    private Integer createBy;
-
-    @Column(name = "update_at")
-    private LocalDateTime updateAt;
-
-    @Column(name = "update_by")
-    private Integer updateBy;
-
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SystemStatusEnum status;
 }

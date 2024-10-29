@@ -61,9 +61,10 @@ public class PaymentService {
     public PaymentResponse createPayment(Integer orderId, CreatePaymentRequest createPaymentRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Payment payment = Payment.builder()
                 .paymentCode(generatePaymentCode())
                 .users(users)
@@ -83,24 +84,24 @@ public class PaymentService {
     public List<PaymentResponse> viewPaymentsByOrderId(Integer orderId) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        List<Payment> paymentList = paymentRepository.findByOrders(orders);
+        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        List<Payment> paymentList = paymentRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
         return convertToListPaymentResponse(paymentList);
     }
 
     public List<PaymentResponse> viewPaymentsByCustomer() {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        List<Payment> paymentList = paymentRepository.findByUsers(users);
+        List<Payment> paymentList = paymentRepository.findByUsersAndStatus(users, SystemStatusEnum.AVAILABLE);
         return convertToListPaymentResponse(paymentList);
     }
 
     public List<PaymentResponse> viewAllPayment(){
-        List<Payment> paymentList = paymentRepository.findAll();
+        List<Payment> paymentList = paymentRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         return convertToListPaymentResponse(paymentList);
     }
 
@@ -110,7 +111,7 @@ public class PaymentService {
 
         Users user = userRepository.findById(orders.getUsers().getId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
         if (user == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Object result = orderRepository.findTotalAmount(paymentRequest2.getOrderId());
         // Ensure the result is not null and is an array of Object
@@ -163,7 +164,6 @@ public class PaymentService {
 
 
     }
-
 
     public PaymentResponse2 handleCallback(HttpServletRequest request) {
         String status = request.getParameter("vnp_ResponseCode");

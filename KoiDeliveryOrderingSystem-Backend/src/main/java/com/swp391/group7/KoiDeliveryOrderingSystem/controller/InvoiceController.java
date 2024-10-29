@@ -1,97 +1,75 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.invoice.CreateInvoiceRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.invoice.UpdateInvoiceRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.InvoiceRespone;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderDetailResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.InvoiceResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.InvoiceService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/invoice")
+@RequestMapping("invoice")
 
 public class InvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
 
-    // Endpoint to retrieve the list of all invoices
     @GetMapping
-    public ResponseEntity<ApiResponse<List<InvoiceRespone>>> getAllInvoices() {
-        List<InvoiceRespone> invoices = invoiceService.getListInvoices();
-
-        // Build and return the ApiResponse
-        ApiResponse<List<InvoiceRespone>> response = ApiResponse.<List<InvoiceRespone>>builder()
+    public ResponseEntity<ApiResponse<List<InvoiceResponse>>> getAllInvoices() {
+        List<InvoiceResponse> invoices = invoiceService.getListInvoices();
+        return ResponseEntity.ok(ApiResponse.<List<InvoiceResponse>>builder()
                 .code(200) // HTTP OK
                 .message("Invoices retrieved successfully")
                 .result(invoices)
-                .build();
-
-        return ResponseEntity.ok(response); // Return HTTP 200 OK
+                .build());
     }
 
-    // Endpoint to retrieve an invoice by its ID
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<InvoiceRespone>> getInvoiceById(@PathVariable int id) {
-        InvoiceRespone InvoiceRespone = invoiceService.getInvoiceById(id);
-
-        // Build and return the ApiResponse if the invoice is found
-        ApiResponse<InvoiceRespone> response = ApiResponse.<InvoiceRespone>builder()
+    public ResponseEntity<ApiResponse<InvoiceResponse>> getInvoiceById(@PathVariable int id) {
+        InvoiceResponse InvoiceResponse = invoiceService.getInvoiceById(id);
+        return ResponseEntity.ok(ApiResponse.<InvoiceResponse>builder()
                 .code(200) // HTTP OK
                 .message("Invoice retrieved successfully")
-                .result(InvoiceRespone)
-                .build();
-
-        return ResponseEntity.ok(response); // Return HTTP 200 OK
+                .result(InvoiceResponse)
+                .build());
     }
 
     // Endpoint to create a new invoice
-    @PostMapping("/create/{orderId}") // Ensure the orderId is part of the path variable
-    public ResponseEntity<ApiResponse<InvoiceRespone>> createInvoice(
-            @RequestBody CreateInvoiceRequest createInvoiceRequest,
-            @PathVariable int orderId) {
-
-        // Call the service to create the invoice
-        var result = invoiceService.createInvoice(createInvoiceRequest, orderId);
-
-        // Build the ApiResponse
-        ApiResponse<InvoiceRespone> response = ApiResponse.<InvoiceRespone>builder()
+    @PostMapping("/create/") // Ensure the orderId is part of the path variable
+    public ResponseEntity<ApiResponse<InvoiceResponse>> createInvoice(@RequestBody CreateInvoiceRequest createInvoiceRequest) {
+        var result = invoiceService.createInvoice(createInvoiceRequest);
+        return ResponseEntity.ok(ApiResponse.<InvoiceResponse>builder()
                 .code(200)
                 .message("Invoice created successfully")
                 .result(result)
-                .build();
-
-        // Return the response wrapped in ResponseEntity
-        return ResponseEntity.ok(response);
+                .build());
     }
 
 
     // Endpoint to update an existing invoice by ID
     @PutMapping("/update/{id}")
-    public ApiResponse<InvoiceRespone> updateInvoice(@PathVariable Integer id, @RequestBody CreateInvoiceRequest createInvoiceRequest) {
-        var result = invoiceService.updateInvoice(id , createInvoiceRequest);
-        return  ApiResponse.<InvoiceRespone>builder()
+    public ResponseEntity<ApiResponse<InvoiceResponse>> updateInvoice(@PathVariable Integer id, @RequestBody UpdateInvoiceRequest updateInvoiceRequest) {
+        var result = invoiceService.updateInvoice(id, updateInvoiceRequest);
+        return ResponseEntity.ok(ApiResponse.<InvoiceResponse>builder()
                 .code(200)
                 .message("Invoice updated successfully")
                 .result(result)
-                .build();
+                .build());
     }
 
     // Endpoint to delete an invoice by ID
     @PutMapping("/delete/{id}")
-    public ApiResponse<InvoiceRespone> deleteInvoice(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<InvoiceResponse>> deleteInvoice(@PathVariable Integer id) {
         var result = invoiceService.removeInvoice(id);
-        return  ApiResponse.<InvoiceRespone>builder()
+        return ResponseEntity.ok(ApiResponse.<InvoiceResponse>builder()
                 .code(200)
                 .message("Invoice removed successfully")
                 .result(result)
-                .build();
+                .build());
     }
 }

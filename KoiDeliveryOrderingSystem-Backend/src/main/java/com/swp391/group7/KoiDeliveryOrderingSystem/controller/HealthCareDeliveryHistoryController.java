@@ -1,9 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CreateHealthCareDeliveryHistoryRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.HealthCareDeliveryHistoryDTO;
-
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthCareDeliveryHistoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.HealthCareDeliveryHistoryService;
@@ -16,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/healthcare-delivery-histories")
+@RequestMapping("healthcare-delivery-histories")
 @RequiredArgsConstructor
 public class HealthCareDeliveryHistoryController {
 
@@ -24,7 +21,7 @@ public class HealthCareDeliveryHistoryController {
     HealthCareDeliveryHistoryService healthCareDeliveryHistoryService;
 
     // GET: Retrieve the list of healthcare delivery histories
-    @GetMapping
+    @GetMapping("view-all")
     public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getAllHealthCareDeliveryHistories() {
         List<HealthCareDeliveryHistoryResponse> histories = healthCareDeliveryHistoryService.getListHealthCareDeliveryHistories();
         ApiResponse<List<HealthCareDeliveryHistoryResponse>> response = ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
@@ -48,18 +45,16 @@ public class HealthCareDeliveryHistoryController {
     }
 
     // Create a new healthcare delivery history
-    @PostMapping("create/{invoiceid}/{handoverDocumentId}")
+    @PostMapping("create")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> createHealthCareDeliveryHistory(
-            @RequestBody CreateHealthCareDeliveryHistoryRequest request,
-            @RequestParam("handoverDocumentId") int handoverDocumentId,
-            @RequestParam("invoiceid") int invoiceId) {
+            @RequestBody CreateHealthCareDeliveryHistoryRequest request){
 
-        HealthCareDeliveryHistoryResponse createdHistory = healthCareDeliveryHistoryService.createHealthCareDeliveryHistory(request, handoverDocumentId, invoiceId);
+        var result = healthCareDeliveryHistoryService.createHealthCareDeliveryHistory(request);
 
         ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
                 .code(HttpStatus.CREATED.value())
                 .message("Healthcare delivery history created successfully")
-                .result(createdHistory)
+                .result(result)
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

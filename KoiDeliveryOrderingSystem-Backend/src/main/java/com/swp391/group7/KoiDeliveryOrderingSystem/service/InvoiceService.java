@@ -8,21 +8,21 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.invoice.CreateInvoiceRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.InvoiceRespone;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishProfileRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.invoice.UpdateInvoiceRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.InvoiceResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.InvoiceRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UserRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,129 +36,138 @@ public class InvoiceService {
 
     @Autowired
     private OrderRepository orderRepository;
+
     @Autowired
     private AccountUtils accountUtils;
-    @Autowired
-    private FishProfileRepository fishProfileRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    public static final String RANDOM_STRING = "0123456789";
 
     // Method to retrieve all invoices
-    public List<InvoiceRespone> getListInvoices() {
-        List<Invoice> invoiceList = invoiceRepository.findAll();
-
-        // Check if the list is empty and throw an exception if no invoices are found
+    public List<InvoiceResponse> getListInvoices() {
+        List<Invoice> invoiceList = invoiceRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         if (invoiceList.isEmpty()) {
             throw new AppException(ErrorCode.INVOICE_NOT_FOUND);
         }
-
-        // Map the list of Invoice entities to InvoiceRespones
-        return covertToListInvoiceRespone(invoiceList);
+        return covertToListInvoiceResponse(invoiceList);
     }
 
     // Method to retrieve an invoice by ID
-    public InvoiceRespone getInvoiceById(int id) {
-        Invoice invoice = invoiceRepository.findById(id)
+    public InvoiceResponse getInvoiceById(Integer id) {
+        Invoice invoice = invoiceRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
 
-        // Map the Invoice entity to InvoiceRespone
-        return covertToInvoiceRespone(invoice);
+        return covertToInvoiceResponse(invoice);
     }
 
     // Method to create a new invoice
-    public InvoiceRespone createInvoice(
-            CreateInvoiceRequest createInvoiceRequest,
-            int orderId) {
+    public InvoiceResponse createInvoice(CreateInvoiceRequest request) {
         Users users = accountUtils.getCurrentUser();
-        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Users customer = userRepository.findById(users.getId())
+                .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Invoice invoice = Invoice.builder()
-                .invoiceNo(createInvoiceRequest.getInvoiceNo()) // Add invoice number
-                .staff(createInvoiceRequest.getStaff()) // Add staff
-                .orders(orders) // Link the existing order
-                .users(users) // Link the current user
-                 // Add healthcare delivery history
-                .date(createInvoiceRequest.getDate()) // Add date
-                .addressStore(createInvoiceRequest.getAddressStore()) // Add store address
-                .addressCustomer(createInvoiceRequest.getAddressCustomer()) // Add customer address
-                .vat(createInvoiceRequest.getVat()) // Add VAT
-                .amount(createInvoiceRequest.getAmount()) // Add amount
-                .totalAmount(createInvoiceRequest.getTotalAmount()) // Add total amount
+                .invoiceNo(generateInvoiceNo())
+                .staff(request.getStaff())
+                .orders(orders)
+                .users(customer)
+                .date(request.getDate())
+                .addressStore(request.getAddressStore())
+                .addressCustomer(request.getAddressCustomer())
+                .vat(request.getVat())
+                .amount(request.getAmount())
+                .totalAmount(request.getTotalAmount())
+                .createAt(LocalDateTime.now())
+                .createBy(users.getId())
+                .updateAt(LocalDateTime.now())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
-
-
         invoice = invoiceRepository.save(invoice);
-
-
-        return covertToInvoiceRespone(invoice);
+        return covertToInvoiceResponse(invoice);
     }
 
     // Method to update an existing invoice by ID
-    public InvoiceRespone updateInvoice(Integer id, CreateInvoiceRequest createInvoiceRequest) {
+    public InvoiceResponse updateInvoice(Integer id, UpdateInvoiceRequest request) {
         Users users = accountUtils.getCurrentUser();
-
-        Invoice invoice = invoiceRepository.findById(id)
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        Invoice invoice = invoiceRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
 
-        invoice.setInvoiceNo(createInvoiceRequest.getInvoiceNo());
-        invoice.setStaff(createInvoiceRequest.getStaff());
-
-        invoice.setDate(createInvoiceRequest.getDate());
-        invoice.setAddressStore(createInvoiceRequest.getAddressStore());
-        invoice.setAddressCustomer(createInvoiceRequest.getAddressCustomer());
-        invoice.setVat(createInvoiceRequest.getVat());
-        invoice.setAmount(createInvoiceRequest.getAmount());
-        invoice.setTotalAmount(createInvoiceRequest.getTotalAmount());
+        invoice.setDate(request.getDate());
+        invoice.setAddressStore(request.getAddressStore());
+        invoice.setAddressCustomer(request.getAddressCustomer());
+        invoice.setVat(request.getVat());
+        invoice.setAmount(request.getAmount());
+        invoice.setTotalAmount(request.getTotalAmount());
+        invoice.setUpdateAt(LocalDateTime.now());
+        invoice.setUpdateBy(users.getId());
         invoice = invoiceRepository.save(invoice);
-        return covertToInvoiceRespone(invoice);
+        return covertToInvoiceResponse(invoice);
     }
 
-    // Method to delete an invoice by ID
 
-    public InvoiceRespone removeInvoice(Integer id) {
+    public InvoiceResponse removeInvoice(Integer id) {
         Users users = accountUtils.getCurrentUser();
-
-        Invoice invoice = invoiceRepository.findById(id)
+        Invoice invoice = invoiceRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
-
         invoice.setStatus(SystemStatusEnum.NOT_AVAILABLE);
         invoice = invoiceRepository.save(invoice);
-        return covertToInvoiceRespone(invoice);
-    }
-    public List<InvoiceRespone> covertToListInvoiceRespone(List<Invoice> invoiceList)
-    {
-        List<InvoiceRespone> invoiceResponeList= new ArrayList<>();
-        for (Invoice invoices : invoiceList)
-        {
-            invoiceResponeList.add(covertToInvoiceRespone(invoices));
-        }
-        return invoiceResponeList;
+        invoice.setUpdateAt(LocalDateTime.now());
+        invoice.setUpdateBy(users.getId());
+        return covertToInvoiceResponse(invoice);
     }
 
-    public InvoiceRespone covertToInvoiceRespone(Invoice invoice){
-        return InvoiceRespone.builder()
+    public List<InvoiceResponse> covertToListInvoiceResponse(List<Invoice> invoiceList) {
+        List<InvoiceResponse> invoiceResponseList = new ArrayList<>();
+        for (Invoice invoices : invoiceList) {
+            invoiceResponseList.add(covertToInvoiceResponse(invoices));
+        }
+        return invoiceResponseList;
+    }
+
+    public InvoiceResponse covertToInvoiceResponse(Invoice invoice) {
+        return InvoiceResponse.builder()
                 .id(invoice.getId())
                 .invoiceNo(invoice.getInvoiceNo())
                 .staff(invoice.getStaff())
-                .orders(invoice.getOrders())
-                .users(invoice.getUsers())
+                .orderId(invoice.getOrders().getId())
+                .userId(invoice.getUsers().getId())
                 .vat(invoice.getVat())
                 .addressCustomer(invoice.getAddressCustomer())
                 .totalAmount(invoice.getTotalAmount())
                 .addressStore(invoice.getAddressStore())
                 .date(invoice.getDate())
                 .amount(invoice.getAmount())
-                .healCareDeliveryHistories(invoice.getHealCareDeliveryHistories())
-                .createBy(invoice.getCreateBy())
                 .createAt(invoice.getCreateAt())
-                .updateBy(invoice.getUpdateBy())
+                .createBy(invoice.getCreateBy())
                 .updateAt(invoice.getUpdateAt())
+                .updateBy(invoice.getUpdateBy())
                 .status(invoice.getStatus())
                 .build();
     }
-    
-    
+
+    private String generateInvoiceNo() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder stringBuilder;
+        String invoiceNo = "";
+        do {
+            stringBuilder = new StringBuilder("INV");
+            for (int i = 0; i < 5; i++) {
+                int randomIndex = random.nextInt(5);
+                stringBuilder.append(RANDOM_STRING.charAt(randomIndex));
+            }
+            invoiceNo = stringBuilder.toString();
+        } while (orderRepository.existsByOrderCode(invoiceNo));
+        return invoiceNo;
+    }
 }
 

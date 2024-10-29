@@ -11,31 +11,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomsDeclarationRespone {
+public class CustomsDeclarationResponse {
     private Integer id;
-
-
-    private Orders orders;
-
-
+    private Integer orderId;
     private String declarationNo;
-
-
     private LocalDateTime declarationDate;
-
-
-    private String declaratonBy;
-
-
+    private String declarationBy;
     private String referenceNo;
-
-
-    private LocalDateTime referenceeDate;
-
-
+    private LocalDateTime referenceDate;
     private String customsName;
-
-
     private String image;
-    private SystemStatusEnum stautus;
+    private LocalDateTime createAt;
+    private Integer createBy;
+    private LocalDateTime updateAt;
+    private Integer updateBy;
+    private SystemStatusEnum status;
 }

@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.CreateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateOrderRequest;
@@ -44,18 +45,25 @@ public class OrderService {
     public OrderResponse createOrder(CreateOrderRequest createOrderRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByDeliveryMethodName(createOrderRequest.getDeliveryMethod());
+        if (deliveryMethod == null) {
+            throw new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND);
         }
         Orders orders = Orders.builder()
                 .orderCode(generateOrderCode())
                 .users(users)
-                .deliveryMethod(deliveryMethodRepository.findByDeliveryName(createOrderRequest.getDeliveryMethod()))
+                .deliveryMethod(deliveryMethod)
                 .orderDate(LocalDateTime.now())
                 .destination(createOrderRequest.getDestination())
                 .departure(createOrderRequest.getDeparture())
                 .distance(createOrderRequest.getDistance())
                 .phone(createOrderRequest.getPhone())
                 .amount(createOrderRequest.getAmount())
+                .vat(createOrderRequest.getVat())
+                .vatAmount(createOrderRequest.getVatAmount())
+                .totalAmount((createOrderRequest.getTotalAmount()))
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -67,16 +75,28 @@ public class OrderService {
     }
 
     public OrderResponse updateOrder(Integer OrderId, UpdateOrderRequest updateOrderRequest) {
-        Users customer = accountUtils.getCurrentUser();
-        Orders orders = orderRepository.findByIdAndUsers(OrderId, customer).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-
-        orders.setDeliveryMethod(deliveryMethodRepository.findByDeliveryName(updateOrderRequest.getDeliveryMethod()));
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        Orders orders = orderRepository.findById(OrderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByDeliveryMethodName(updateOrderRequest.getDeliveryMethod());
+        if (deliveryMethod == null) {
+            throw new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND);
+        }
+        orders.setDeliveryMethod(deliveryMethod);
         orders.setDestination(updateOrderRequest.getDestination());
         orders.setDeparture(updateOrderRequest.getDeparture());
         orders.setDistance(updateOrderRequest.getDistance());
         orders.setPhone(updateOrderRequest.getPhone());
+        orders.setAmount(updateOrderRequest.getAmount());
+        orders.setVat(updateOrderRequest.getVat());
+        orders.setVatAmount(updateOrderRequest.getVatAmount());
+        orders.setTotalAmount(updateOrderRequest.getTotalAmount());
+        orders.setReceivingDate(updateOrderRequest.getReceivingDate());
+        orders.setEstimateDeliveryDate(updateOrderRequest.getEstimateDeliveryDate());
         orders.setUpdateAt(LocalDateTime.now());
-        orders.setUpdateBy(customer.getId());
+        orders.setUpdateBy(users.getId());
         orderRepository.save(orders);
 
         return convertOrderToResponse(orders);
@@ -93,6 +113,9 @@ public class OrderService {
 
     public List<OrderResponse> getOrderByCustomerId() {
         Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
         List<Orders> ordersList = orderRepository.findByUsersAndStatus(users, SystemStatusEnum.AVAILABLE);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : ordersList) {
@@ -101,53 +124,48 @@ public class OrderService {
         return orderResponses;
     }
 
-    public String deleteOrder(Integer OrderId) {
-        Users customer = accountUtils.getCurrentUser();
-        Orders orders = orderRepository.findById(OrderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        if (orders.getStatus() == SystemStatusEnum.AVAILABLE) {
-            orders.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-            orders.setUpdateAt(LocalDateTime.now());
-            orders.setUpdateBy(customer.getId());
-            orderRepository.save(orders);
-            return "Order deleted successfully";
-        }else{
-            return  "Order is deleted before";
+    public OrderResponse deleteOrder(Integer OrderId) {
+        Users users = accountUtils.getCurrentUser();
+        if(users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-
+        Orders orders = orderRepository.findByIdAndStatus(OrderId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        orders.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        orders.setUpdateAt(LocalDateTime.now());
+        orders.setUpdateBy(users.getId());
+        orderRepository.save(orders);
+        return convertOrderToResponse(orders);
     }
 
-    public List<OrderResponse> orderIn7days(){
-        LocalDateTime sevenDayAgo= LocalDateTime.now().minusDays(7);
+    public List<OrderResponse> orderIn7days() {
+        LocalDateTime sevenDayAgo = LocalDateTime.now().minusDays(7);
         List<Orders> recentOrders = orderRepository.findByOrderDateAfter(sevenDayAgo);
-        List<OrderResponse> orderResponseList= new ArrayList<>();
-        for(Orders orders : recentOrders){
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for (Orders orders : recentOrders) {
             orderResponseList.add(convertOrderToResponse(orders));
         }
         return orderResponseList;
 
     }
 
-    public List<OrderResponse> orderIn30days(){
-        LocalDateTime sevenDayAgo= LocalDateTime.now().minusDays(30);
+    public List<OrderResponse> orderIn30days() {
+        LocalDateTime sevenDayAgo = LocalDateTime.now().minusDays(30);
         List<Orders> recentOrders = orderRepository.findByOrderDateAfter(sevenDayAgo);
-        List<OrderResponse> orderResponseList= new ArrayList<>();
-        for(Orders orders : recentOrders){
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for (Orders orders : recentOrders) {
             orderResponseList.add(convertOrderToResponse(orders));
         }
         return orderResponseList;
 
     }
-
-
-
-
 
     private OrderResponse convertOrderToResponse(Orders orders) {
         return OrderResponse.builder()
                 .id(orders.getId())
                 .orderCode(orders.getOrderCode())
                 .orderDate(orders.getOrderDate())
-                .deliveryMethod(orders.getDeliveryMethod().getDeliveryName())
+                .deliveryMethod(orders.getDeliveryMethod().getDeliveryMethodName())
                 .destination(orders.getDestination())
                 .departure(orders.getDeparture())
                 .distance(orders.getDistance())
@@ -155,6 +173,9 @@ public class OrderService {
                 .receivingDate(orders.getReceivingDate())
                 .phone(orders.getPhone())
                 .amount(orders.getAmount())
+                .vat(orders.getVat())
+                .vatAmount(orders.getVatAmount())
+                .totalAmount(orders.getTotalAmount())
                 .createAt(orders.getCreateAt())
                 .createBy(orders.getCreateBy())
                 .updateAt(orders.getUpdateAt())

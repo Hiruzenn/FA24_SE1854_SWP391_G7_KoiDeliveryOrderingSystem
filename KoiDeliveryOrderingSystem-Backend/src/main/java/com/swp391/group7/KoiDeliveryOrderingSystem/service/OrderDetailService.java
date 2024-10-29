@@ -38,19 +38,19 @@ public class OrderDetailService {
     @Autowired
     private FishProfileRepository fishProfileRepository;
 
-    public OrderDetailResponse createOrderDetail(Integer orderId, Integer fishProfileId, CreateOrderDetailRequest createOrderDetailRequest) {
+    public OrderDetailResponse createOrderDetail(CreateOrderDetailRequest request) {
         Users users = accountUtils.getCurrentUser();
-        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(request.getFishProfileId(), SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         OrderDetail orderDetail = OrderDetail.builder()
                 .orders(orders)
                 .fishProfiles(fishProfile)
-                .quantity(createOrderDetailRequest.getQuantity())
-                .unitPrice(createOrderDetailRequest.getUnitPrice())
-                .amount(createOrderDetailRequest.getQuantity() * createOrderDetailRequest.getUnitPrice())
+                .quantity(request.getQuantity())
+                .unitPrice(request.getUnitPrice())
+                .amount(request.getQuantity() * request.getUnitPrice())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -61,35 +61,49 @@ public class OrderDetailService {
         return convertToOrderDetailResponse(orderDetail);
     }
 
-    public OrderDetailResponse updateOrderDetail(Integer orderDetailId, UpdateOrderDetailRequest updateOrderDetailRequest){
+    public OrderDetailResponse updateOrderDetail(Integer orderDetailId, UpdateOrderDetailRequest updateOrderDetailRequest) {
         Users users = accountUtils.getCurrentUser();
-        if (users == null ){
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId).orElseThrow(() -> new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND));
-
+        OrderDetail orderDetail = orderDetailRepository.findByIdAndStatus(orderDetailId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND));
         orderDetail.setQuantity(updateOrderDetailRequest.getQuantity());
         orderDetail.setUnitPrice(updateOrderDetailRequest.getUnitPrice());
         orderDetail.setAmount(updateOrderDetailRequest.getQuantity() * updateOrderDetailRequest.getUnitPrice());
         orderDetail.setUpdateAt(LocalDateTime.now());
         orderDetail.setUpdateBy(users.getId());
-
         orderDetailRepository.save(orderDetail);
         return convertToOrderDetailResponse(orderDetail);
     }
 
-    public List<OrderDetailResponse> getOrderDetailsByOrderId(Integer orderId){
+    public List<OrderDetailResponse> getOrderDetailsByOrderId(Integer orderId) {
         Users users = accountUtils.getCurrentUser();
-        if (users == null ){
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         List<OrderDetail> orderDetailList = orderDetailRepository.findByOrders(orders);
         List<OrderDetailResponse> orderDetailResponseList = new ArrayList<>();
         for (OrderDetail orderDetail : orderDetailList) {
             orderDetailResponseList.add(convertToOrderDetailResponse(orderDetail));
         }
         return orderDetailResponseList;
+    }
+
+    public OrderDetailResponse deleteOrderDetail(Integer orderDetailId) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        OrderDetail orderDetail = orderDetailRepository.findByIdAndStatus(orderDetailId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND));
+        orderDetail.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        orderDetail.setUpdateAt(LocalDateTime.now());
+        orderDetail.setUpdateBy(users.getId());
+        orderDetailRepository.save(orderDetail);
+        return convertToOrderDetailResponse(orderDetail);
     }
 
     public OrderDetailResponse convertToOrderDetailResponse(OrderDetail orderDetail) {
