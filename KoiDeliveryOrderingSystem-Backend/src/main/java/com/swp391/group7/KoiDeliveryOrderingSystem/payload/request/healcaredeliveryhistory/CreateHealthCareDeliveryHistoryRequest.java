@@ -16,20 +16,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateHealthCareDeliveryHistoryRequest {
-
-    private int invoice;
-
-    private int handoverDocument;
-
+    private Integer invoiceId;
+    private Integer handoverDocumentId;
     private String route;
-
-
     private String healthDescription;
-
-
     private String eatingDescription;
-
-
     private DeliveryStatusEnum deliveryStatus;
 
 }

@@ -1,25 +1,22 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Feedback;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.CreateCertificateRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CertificateDTO;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Certificate;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CertificateRespone;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FeedbackResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CertificateResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.CertificateRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,33 +30,32 @@ public class CertificateService {
     private CertificateRepository certificateRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
     private OrderRepository orderRepository;
 
-    public List<CertificateRespone> getListCertificate()
-    {
+    @Autowired
+    private AccountUtils accountUtils;
 
-        List <Certificate> certificateList= certificateRepository.findAll();
-        if (certificateList.isEmpty()){
+    public List<CertificateResponse> getListCertificate() {
+        List<Certificate> certificateList = certificateRepository.findCertificateByStatus(SystemStatusEnum.AVAILABLE);
+        if (certificateList.isEmpty()) {
             throw new AppException(ErrorCode.CERTIFICATE_NOT_FOUND);
         }
         return convertToListCertificateResponse(certificateList);
     }
 
-    public CertificateRespone getCertificateById(int id){
-        Certificate certificate= certificateRepository.findById(id)
-                .orElseThrow(()-> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
-        return covertToCertificateRespone(certificate);
+    public CertificateResponse getCertificateById(int id) {
+        Certificate certificate = certificateRepository.findCertificateByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
+        return covertToCertificateResponse(certificate);
 
     }
 
-    public CertificateRespone creatCertificate(CreateCertificateRequest certificateRequest,Integer orderId) {
-
-        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        // Map the CreateCertificateRequest to Certificate entity
-
-
+    public CertificateResponse creatCertificate(Integer orderId, CreateCertificateRequest certificateRequest) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Certificate certificate = Certificate.builder()
                 .certificateName(certificateRequest.getCertificateName())
                 .certificateDescription(certificateRequest.getCertificateDescription())
@@ -68,24 +64,23 @@ public class CertificateService {
                 .origin(certificateRequest.getOrigin())
                 .award(certificateRequest.getAward())
                 .image(certificateRequest.getImage())
+                .createAt(LocalDateTime.now())
+                .createBy(users.getId())
+                .updateAt(LocalDateTime.now())
+                .updateBy(users.getId())
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
-
-
-
-        certificateRepository.save(certificate); // Update the reference with the saved entity
-
-
-        // Build and return the ApiResponse with the created CertificateDTO
-        return covertToCertificateRespone(certificate);
+        certificateRepository.save(certificate);
+        return covertToCertificateResponse(certificate);
     }
 
-    public CertificateRespone updateCertificate(Integer id, CreateCertificateRequest certificateRequest) {
-        // Check if the certificate exists
-        Certificate certificate = certificateRepository.findById(id)
+    public CertificateResponse updateCertificate(Integer id, CreateCertificateRequest certificateRequest) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        Certificate certificate = certificateRepository.findCertificateByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
-
-        // Map the CreateCertificateRequest to the existing Certificate entity
 
         certificate.setCertificateName(certificateRequest.getCertificateName());
         certificate.setCertificateDescription(certificateRequest.getCertificateDescription());
@@ -93,33 +88,42 @@ public class CertificateService {
         certificate.setOrigin(certificateRequest.getOrigin());
         certificate.setAward(certificateRequest.getAward());
         certificate.setHealth(certificateRequest.getHealth());
-        // Save the updated certificate to the repository
-        certificate = certificateRepository.save(certificate); // Update the reference with the saved entity
+        certificate.setUpdateAt(LocalDateTime.now());
+        certificate.setUpdateBy(users.getId());
 
-        return covertToCertificateRespone(certificate);
+        certificate = certificateRepository.save(certificate);
+
+        return covertToCertificateResponse(certificate);
 
     }
-    public CertificateRespone  deleteCertificate(Integer id) {
+
+    public CertificateResponse deleteCertificate(Integer id) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
         Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
 
         certificate.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        certificate.setUpdateAt(LocalDateTime.now());
+        certificate.setUpdateBy(users.getId());
         certificateRepository.save(certificate);
-        return covertToCertificateRespone(certificate);
+        return covertToCertificateResponse(certificate);
 
     }
 
 
-    public List<CertificateRespone> convertToListCertificateResponse(List<Certificate> certificateList) {
-        List<CertificateRespone> certificateRespones = new ArrayList<>();
+    public List<CertificateResponse> convertToListCertificateResponse(List<Certificate> certificateList) {
+        List<CertificateResponse> certificateResponse = new ArrayList<>();
         for (Certificate certificate : certificateList) {
-            certificateRespones.add(covertToCertificateRespone(certificate));
+            certificateResponse.add(covertToCertificateResponse(certificate));
         }
-        return certificateRespones;
+        return certificateResponse;
     }
 
-    public CertificateRespone covertToCertificateRespone(Certificate certificate){
-        return CertificateRespone.builder()
+    public CertificateResponse covertToCertificateResponse(Certificate certificate) {
+        return CertificateResponse.builder()
                 .id(certificate.getId())
                 .certificateName(certificate.getCertificateName())
                 .certificateDescription(certificate.getCertificateDescription())
@@ -128,11 +132,12 @@ public class CertificateService {
                 .origin(certificate.getOrigin())
                 .award(certificate.getAward())
                 .image(certificate.getImage())
-                .stautus(certificate.getStatus())
+                .createAt(certificate.getCreateAt())
+                .createBy(certificate.getCreateBy())
+                .updateAt(certificate.getUpdateAt())
+                .updateBy(certificate.getUpdateBy())
+                .status(certificate.getStatus())
                 .build();
-
     }
-
-
 }
 

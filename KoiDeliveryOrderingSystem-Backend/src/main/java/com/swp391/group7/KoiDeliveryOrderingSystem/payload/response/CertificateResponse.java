@@ -12,14 +12,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CertificateRespone {
-    private int id;
+public class CertificateResponse {
+    private Integer id;
+    private Integer orderId;
     private String certificateName;
     private String certificateDescription;
-    private int orderId;
     private String health;
     private String origin;
     private String award;
     private String image;
-    private SystemStatusEnum  stautus;
+    private LocalDateTime createAt;
+    private Integer createBy;
+    private LocalDateTime updateAt;
+    private Integer updateBy;
+    private SystemStatusEnum  status;
 }

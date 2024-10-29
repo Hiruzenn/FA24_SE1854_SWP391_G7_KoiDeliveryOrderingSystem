@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateO
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,58 +17,63 @@ import java.util.List;
 @RequestMapping("order")
 @RequiredArgsConstructor
 public class OrderController {
-    @Autowired
     private OrderService orderService;
 
+    @Autowired
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @PostMapping("create")
-    ApiResponse<OrderResponse> createOrder(@RequestBody CreateOrderRequest createOrderRequest){
+    public ResponseEntity<ApiResponse<OrderResponse>> createOrder(@Valid @RequestBody CreateOrderRequest createOrderRequest) {
         var result = orderService.createOrder(createOrderRequest);
-        return ApiResponse.<OrderResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<OrderResponse>builder()
                 .code(200)
                 .message("Order Created")
                 .result(result)
-                .build();
+                .build());
     }
 
     @PutMapping("update/{OrderId}")
-    ApiResponse<OrderResponse> updateOrder(@PathVariable Integer OrderId, @RequestBody UpdateOrderRequest updateOrderRequest){
+    public ResponseEntity<ApiResponse<OrderResponse>> updateOrder(@Valid @PathVariable Integer OrderId, @RequestBody UpdateOrderRequest updateOrderRequest) {
         var result = orderService.updateOrder(OrderId, updateOrderRequest);
-        return ApiResponse.<OrderResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<OrderResponse>builder()
                 .code(200)
                 .message("Order Updated")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("get-all")
-    ApiResponse<List<OrderResponse>> getAllOrders(){
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getAllOrders() {
         var result = orderService.getAllOrders();
-        return ApiResponse.<List<OrderResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder()
                 .code(200)
                 .message("Order List")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("get-by-customer")
-    ApiResponse<List<OrderResponse>> getOrderByCustomerId(){
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrderByCustomerId() {
         var result = orderService.getOrderByCustomerId();
-        return ApiResponse.<List<OrderResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder()
                 .code(200)
                 .message("Order List By Customer")
                 .result(result)
-                .build();
+                .build());
     }
 
     @PutMapping("delete/{orderId}")
-    ApiResponse<String> deleteOrder(@PathVariable Integer orderId){
+    public ResponseEntity<ApiResponse<OrderResponse>> deleteOrder(@PathVariable Integer orderId) {
         var result = orderService.deleteOrder(orderId);
-        return ApiResponse.<String>builder()
+        return ResponseEntity.ok(ApiResponse.<OrderResponse>builder()
                 .code(200)
                 .message("Order Deleted")
                 .result(result)
-                .build();
+                .build());
     }
+
     @GetMapping("/last-7-days")
     public ResponseEntity<List<OrderResponse>> getOrdersIn7Days() {
         List<OrderResponse> orderResponses = orderService.orderIn7days();

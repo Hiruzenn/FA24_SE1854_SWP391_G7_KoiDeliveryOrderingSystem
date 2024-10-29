@@ -24,7 +24,6 @@ public class CheckingKoiHealthResponse {
     private String color;
     private String type;
     private Integer age;
-    private Float price;
     private LocalDateTime createAt;
     private Integer createBy;
     private LocalDateTime updateAt;

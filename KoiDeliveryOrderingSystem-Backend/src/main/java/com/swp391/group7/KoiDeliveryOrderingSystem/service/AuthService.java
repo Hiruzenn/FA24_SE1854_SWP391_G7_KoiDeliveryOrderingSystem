@@ -55,7 +55,7 @@ public class AuthService {
     public AuthResponse register(RegisterCustomerRequest registerCustomerRequest) {
         var customer = userRepository.findByEmail(registerCustomerRequest.getEmail());
         if (customer.isPresent()) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+            throw new AppException(ErrorCode.ACCOUNT_REGISTERED);
         }
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         String encodedPassword = passwordEncoder.encode(registerCustomerRequest.getPassword());
@@ -81,7 +81,7 @@ public class AuthService {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(authRequest.getPassword(), user.getPassword());
         if (!authenticated) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+            throw new AppException(ErrorCode.INVALID_PASSWORD);
         }
         var token = generateToken(user);
         return AuthResponse.builder()
@@ -90,13 +90,12 @@ public class AuthService {
                 .build();
     }
 
-
     public String changePassword(ChangePasswordRequest changePasswordRequest) {
         Users users = accountUtils.getCurrentUser();
-        if (users == null){
+        if (users == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
-        if(!Objects.equals(changePasswordRequest.getNewPassword(), changePasswordRequest.getConfirmPassword())){
+        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
             throw new AppException(ErrorCode.INVALID_REPEAT_PASSWORD);
         }
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -104,7 +103,7 @@ public class AuthService {
         if (authenticated) {
             users.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
             usersRepository.save(users);
-        }else{
+        } else {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         return "Password changed successfully";

@@ -7,6 +7,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderDetailR
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.OrderDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,34 +19,43 @@ public class OrderDetailController {
     @Autowired
     private final OrderDetailService orderDetailService;
 
-    @PostMapping("create/{orderId}/{fishProfileId}")
-    public ApiResponse<OrderDetailResponse> createOrderDetail(@PathVariable("orderId") Integer orderDetailId, @PathVariable("fishProfileId") Integer fishProfileId,
-                                                        @RequestBody CreateOrderDetailRequest createOrderDetailRequest) {
-        var result = orderDetailService.createOrderDetail(orderDetailId, fishProfileId, createOrderDetailRequest);
-        return ApiResponse.<OrderDetailResponse>builder()
+    @PostMapping("create")
+    public ResponseEntity<ApiResponse<OrderDetailResponse>> createOrderDetail(@RequestBody CreateOrderDetailRequest createOrderDetailRequest) {
+        var result = orderDetailService.createOrderDetail(createOrderDetailRequest);
+        return ResponseEntity.ok(ApiResponse.<OrderDetailResponse>builder()
                 .code(200)
                 .message("OrderDetail created successfully")
                 .result(result)
-                .build();
+                .build());
     }
 
     @PutMapping("update/{orderDetailId}")
-    public ApiResponse<OrderDetailResponse> updateOrderDetail (@PathVariable Integer orderDetailId, @RequestBody UpdateOrderDetailRequest updateOrderDetailRequest){
+    public ResponseEntity<ApiResponse<OrderDetailResponse>> updateOrderDetail (@PathVariable Integer orderDetailId, @RequestBody UpdateOrderDetailRequest updateOrderDetailRequest){
         var result = orderDetailService.updateOrderDetail(orderDetailId, updateOrderDetailRequest);
-        return ApiResponse.<OrderDetailResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<OrderDetailResponse>builder()
                 .code(200)
                 .message("OrderDetail updated successfully")
                 .result(result)
-                .build();
+                .build());
     }
 
-    @GetMapping("view-order-detail-by-order-id/{orderId}")
-    public ApiResponse<List<OrderDetailResponse>> getOrderDetailByOrderId (@PathVariable Integer orderId){
+    @GetMapping("view-by-order-id/{orderId}")
+    public ResponseEntity<ApiResponse<List<OrderDetailResponse>>> getOrderDetailByOrderId (@PathVariable Integer orderId){
         var result = orderDetailService.getOrderDetailsByOrderId(orderId);
-        return ApiResponse.<List<OrderDetailResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<OrderDetailResponse>>builder()
                 .code(200)
                 .message("OrderDetail view successfully")
                 .result(result)
-                .build();
+                .build());
+    }
+
+    @PutMapping("delete/{orderDetailId}")
+    public ResponseEntity<ApiResponse<OrderDetailResponse>> deleteOrderDetail (@PathVariable Integer orderDetailId){
+        var result = orderDetailService.deleteOrderDetail(orderDetailId);
+        return ResponseEntity.ok(ApiResponse.<OrderDetailResponse>builder()
+                .code(200)
+                .message("OrderDetail deleted")
+                .result(result)
+                .build());
     }
 }

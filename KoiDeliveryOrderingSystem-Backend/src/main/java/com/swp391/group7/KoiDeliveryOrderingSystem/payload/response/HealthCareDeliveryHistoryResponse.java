@@ -14,39 +14,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class HealthCareDeliveryHistoryResponse {
-
     private Integer id;
-
-
-    private Invoice invoice;
-
-
-    private HandoverDocument handoverDocument;
-
-
+    private Integer invoiceId;
+    private Integer handoverDocumentId;
     private String route;
-
-
     private String healthDescription;
-
-
     private String eatingDescription;
-
-
     private DeliveryStatusEnum deliveryStatus;
-
-
     private LocalDateTime createAt;
-
-
     private Integer createBy;
-
-
     private LocalDateTime updateAt;
-
-
     private Integer updateBy;
-
-
     private SystemStatusEnum status;
 }

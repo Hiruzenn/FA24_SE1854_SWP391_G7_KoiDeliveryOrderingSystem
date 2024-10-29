@@ -1,8 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.checkingkoihealth;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HealthStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.OrderDetail;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -15,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateCheckingKoiHealthRequest {
+public class UpdateCheckingKoiHealthRequest {
     @NotNull(message = "Health Status is required")
     private HealthStatusEnum healthStatus;
 

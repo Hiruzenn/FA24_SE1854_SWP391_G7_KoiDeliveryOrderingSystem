@@ -5,9 +5,10 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.healthyservic
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthServiceCategoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.HealthServiceCategoryService;
-import jakarta.validation.constraints.Null;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,44 +18,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HealthServiceCategoryController {
     @Autowired
-    private final HealthServiceCategoryService healthServiceCategoryService;
+    private HealthServiceCategoryService healthServiceCategoryService;
 
     @PostMapping("create")
-    public ApiResponse<HealthServiceCategoryResponse> createHealthyServiceCategory(@RequestBody CreateHealthServiceCategoryRequest createHealthServiceCategoryRequest) {
+    public ResponseEntity<ApiResponse<HealthServiceCategoryResponse>> createHealthyServiceCategory(@Valid @RequestBody CreateHealthServiceCategoryRequest createHealthServiceCategoryRequest) {
         var result = healthServiceCategoryService.createHealthyServiceCategory(createHealthServiceCategoryRequest);
-        return ApiResponse.<HealthServiceCategoryResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<HealthServiceCategoryResponse>builder()
                 .code(200)
                 .message("Healthy Service Category Created")
                 .result(result)
-                .build();
+                .build());
     }
 
     @PutMapping("update/{id}")
-    public ApiResponse<HealthServiceCategoryResponse> updateHealthServiceCategory(@PathVariable int id, @RequestBody UpdateHealthServiceCategoryRequest updateHealthServiceCategoryRequest) {
+    public ResponseEntity<ApiResponse<HealthServiceCategoryResponse>> updateHealthServiceCategory(@Valid @PathVariable int id, @RequestBody UpdateHealthServiceCategoryRequest updateHealthServiceCategoryRequest) {
         var result = healthServiceCategoryService.updateHealthServiceCategory(id, updateHealthServiceCategoryRequest);
-        return ApiResponse.<HealthServiceCategoryResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<HealthServiceCategoryResponse>builder()
                 .code(200)
                 .message("Healthy Service Category Updated")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("view-all")
-    public ApiResponse<List<HealthServiceCategoryResponse>> viewAllHealthServiceCategory() {
+    public ResponseEntity<ApiResponse<List<HealthServiceCategoryResponse>>> viewAllHealthServiceCategory() {
         var result = healthServiceCategoryService.getAllHealthServiceCategory();
-        return ApiResponse.<List<HealthServiceCategoryResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<HealthServiceCategoryResponse>>builder()
                 .code(200)
                 .message("Healthy Service Category Viewed")
                 .result(result)
-                .build();
+                .build());
     }
 
     @PutMapping("delete/{id}")
-    public ApiResponse<HealthServiceCategoryResponse> deleteHealthServiceCategory(@PathVariable int id) {
-        healthServiceCategoryService.deleteHealthServiceCategory(id);
-        return ApiResponse.<HealthServiceCategoryResponse>builder()
+    public ResponseEntity<ApiResponse<HealthServiceCategoryResponse>> deleteHealthServiceCategory(@PathVariable int id) {
+        var result = healthServiceCategoryService.deleteHealthServiceCategory(id);
+        return ResponseEntity.ok(ApiResponse.<HealthServiceCategoryResponse>builder()
                 .code(200)
                 .message("Healthy Service Category Deleted")
-                .build();
+                .result(result)
+                .build());
     }
 }

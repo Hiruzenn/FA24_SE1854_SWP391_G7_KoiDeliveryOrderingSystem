@@ -8,9 +8,12 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishCategoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishCategoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.FishCategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -25,41 +28,42 @@ public class FishCategoryController {
     }
 
     @PostMapping("create")
-    public ApiResponse<FishCategoryResponse> createFishCategory(@RequestBody CreateFishCategoryRequest createFishCategoryRequest) {
+    public ResponseEntity<ApiResponse<FishCategoryResponse>> createFishCategory(@Valid() @RequestBody CreateFishCategoryRequest createFishCategoryRequest) {
         var result = fishCategoryService.createFishCategory(createFishCategoryRequest);
-        return ApiResponse.<FishCategoryResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<FishCategoryResponse>builder()
                 .code(200)
                 .message("Fish Category Created")
                 .result(result)
-                .build();
+                .build());
     }
 
     @PutMapping("update/{id}")
-    public ApiResponse<FishCategoryResponse> updateFishCategory(@PathVariable int id, @RequestBody UpdateFishCategoryRequest updateFishCategoryRequest) {
+    public ResponseEntity<ApiResponse<FishCategoryResponse>> updateFishCategory(@Valid() @PathVariable int id, @RequestBody UpdateFishCategoryRequest updateFishCategoryRequest) {
         var result = fishCategoryService.updateFishCategory(id, updateFishCategoryRequest);
-        return ApiResponse.<FishCategoryResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<FishCategoryResponse>builder()
                 .code(200)
                 .message("Fish Category Updated")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("view-all")
-    public ApiResponse<List<FishCategoryResponse>> viewAllFishCategories() {
+    public ResponseEntity<ApiResponse<List<FishCategoryResponse>>> viewAllFishCategories() {
         var result = fishCategoryService.viewAllFishCategories();
-        return ApiResponse.<List<FishCategoryResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<FishCategoryResponse>>builder()
                 .code(200)
                 .message("Fish Category Viewed")
                 .result(result)
-                .build();
+                .build());
     }
 
-    @DeleteMapping("delete/{id}")
-    public ApiResponse<FishCategoryResponse> deleteFishCategory(@PathVariable int id) {
-       fishCategoryService.deleteFishCategory(id);
-        return ApiResponse.<FishCategoryResponse>builder()
+    @PutMapping("delete/{id}")
+    public ResponseEntity<ApiResponse<FishCategoryResponse>> deleteFishCategory(@PathVariable int id) {
+        var result = fishCategoryService.deleteFishCategory(id);
+        return ResponseEntity.ok(ApiResponse.<FishCategoryResponse>builder()
                 .code(200)
                 .message("Fish Category Deleted")
-                .build();
+                .result(result)
+                .build());
     }
 }
