@@ -1,5 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.customsdeclaration;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +14,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateCustomsDeclarationRequest {
-    private String declarationNo;
-    private LocalDateTime declarationDate;
-    private String declaratonBy;
-    private String referenceNo;
-    private LocalDateTime referenceeDate;
+    @NotBlank(message = "Declaration No is required")
     private String customsName;
+
+    @NotBlank(message = "Declaration No is required")
+    private String declarationNo;
+
+    @NotNull(message = "Declaration No is required")
+    private LocalDateTime declarationDate;
+
+    @NotBlank(message = "Declaration No is required")
+    private String declarationBy;
+
+    @NotBlank(message = "Declaration No is required")
+    private String referenceNo;
+    
+    @NotNull(message = "Declaration No is required")
+    private LocalDateTime referenceDate;
+
+    @NotBlank(message = "Declaration No is required")
     private String image;
 }

@@ -36,7 +36,7 @@ public class PackageService {
     public PackageResponse createPackage(CreatePackageRequest createPackageRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Package packages = Package.builder()
                 .packageNo(generatePackageNo())
@@ -59,10 +59,10 @@ public class PackageService {
     public PackageResponse updatePackage(Integer packageId, UpdatePackageRequest updatePackageRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Package packages = packageRepository.findById(packageId)
-                .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_EXISTED));
+        Package packages = packageRepository.findByIdAndStatus(packageId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
         packages.setPackageStatus(updatePackageRequest.getPackageStatus());
         packages.setImage(updatePackageRequest.getImage());
         packages.setUpdateAt(LocalDateTime.now());
@@ -72,12 +72,26 @@ public class PackageService {
     }
 
     public List<PackageResponse> getAllPackages() {
-        List<Package> packages = packageRepository.findAll();
+        List<Package> packages = packageRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         return convertToListPackageResponse(packages);
     }
 
     public PackageResponse getPackageByPackageNo(String packageNo){
-        Package packages = packageRepository.findByPackageNo(packageNo);
+        Package packages = packageRepository.findByPackageNoAndStatus(packageNo, SystemStatusEnum.AVAILABLE);
+        return convertToPackageResponse(packages);
+    }
+
+    public PackageResponse deletePackage(Integer id){
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+        Package packages = packageRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
+        packages.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        packages.setUpdateAt(LocalDateTime.now());
+        packages.setUpdateBy(users.getId());
+        packageRepository.save(packages);
         return convertToPackageResponse(packages);
     }
 
@@ -111,7 +125,7 @@ public class PackageService {
         StringBuilder stringBuilder;
         String packageNo = "";
         do {
-            stringBuilder = new StringBuilder("ORD");
+            stringBuilder = new StringBuilder("PAC");
             for (int i = 0; i < 5; i++) {
                 int randomIndex = random.nextInt(5);
                 stringBuilder.append(RANDOM_STRING.charAt(randomIndex));

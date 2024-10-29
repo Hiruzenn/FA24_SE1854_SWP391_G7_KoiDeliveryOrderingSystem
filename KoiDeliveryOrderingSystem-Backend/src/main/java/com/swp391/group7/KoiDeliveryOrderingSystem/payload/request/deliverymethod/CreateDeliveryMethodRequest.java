@@ -2,6 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.deliverymeth
 
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,8 +15,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateDeliveryMethodRequest {
-
-    private String delivery_name;
-
-
+    @NotBlank(message = "Delivery Method Name is required")
+    private String deliveryMethodName;
 }

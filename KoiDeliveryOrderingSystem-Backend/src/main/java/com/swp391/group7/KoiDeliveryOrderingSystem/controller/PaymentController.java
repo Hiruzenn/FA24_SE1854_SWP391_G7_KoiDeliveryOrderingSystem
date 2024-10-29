@@ -11,8 +11,10 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.service.PaymentService;
 import com.swp391.group7.KoiDeliveryOrderingSystem.vnpay.ResponseObject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -30,44 +32,44 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("create/{orderId}")
-    public ApiResponse<PaymentResponse> createPayment (@PathVariable("orderId") Integer orderId,
-                                                       @RequestBody CreatePaymentRequest createPaymentRequest){
+    public ResponseEntity<ApiResponse<PaymentResponse>> createPayment (@Valid @PathVariable("orderId") Integer orderId,
+                                                                      @RequestBody CreatePaymentRequest createPaymentRequest){
         var result = paymentService.createPayment(orderId, createPaymentRequest);
-        return ApiResponse.<PaymentResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<PaymentResponse>builder()
                 .code(200)
                 .message("Payment created successfully")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("view-all")
-    public ApiResponse<List<PaymentResponse>> getAllPayments(){
+    public ResponseEntity<ApiResponse<List<PaymentResponse>>> getAllPayments(){
         var result = paymentService.viewAllPayment();
-        return ApiResponse.<List<PaymentResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<PaymentResponse>>builder()
                 .code(200)
                 .message("All payments successfully")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("view-by-customer")
-    public ApiResponse<List<PaymentResponse>> getPaymentByCustomer(){
+    public ResponseEntity<ApiResponse<List<PaymentResponse>>> getPaymentByCustomer(){
         var result = paymentService.viewPaymentsByCustomer();
-        return ApiResponse.<List<PaymentResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<PaymentResponse>>builder()
                 .code(200)
                 .message("Payment by customer successfully")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("view-by-order-id/{orderId}")
-    public ApiResponse<List<PaymentResponse>> getPaymentByOrderId(@PathVariable("orderId") Integer orderId){
+    public ResponseEntity<ApiResponse<List<PaymentResponse>>> getPaymentByOrderId(@PathVariable("orderId") Integer orderId){
         var result = paymentService.viewPaymentsByOrderId(orderId);
-        return ApiResponse.<List<PaymentResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<PaymentResponse>>builder()
                 .code(200)
                 .message("Payment by customer successfully")
                 .result(result)
-                .build();
+                .build());
     }
 
     @PostMapping("/payment")

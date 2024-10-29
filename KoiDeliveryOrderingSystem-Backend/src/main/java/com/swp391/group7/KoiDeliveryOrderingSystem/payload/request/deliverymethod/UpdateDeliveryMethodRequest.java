@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.deliverymethod;
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,8 +12,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateDeliveryMethodRequest {
-
-    private String delivery_name;
-
-
+    @NotBlank(message = "Delivery Method Name is required")
+    private String deliveryMethodName;
 }

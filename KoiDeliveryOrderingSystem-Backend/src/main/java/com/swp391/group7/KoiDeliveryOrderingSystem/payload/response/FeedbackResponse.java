@@ -15,9 +15,4 @@ public class FeedbackResponse {
     private Integer customerId;
     private Integer orderId;
     private String feedbackDescription;
-    private LocalDateTime createAt;
-    private Integer createBy;
-    private LocalDateTime updateAt;
-    private Integer updateBy;
-    private SystemStatusEnum status;
 }

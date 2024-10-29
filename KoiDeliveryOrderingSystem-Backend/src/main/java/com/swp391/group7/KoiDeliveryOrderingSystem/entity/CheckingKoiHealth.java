@@ -48,9 +48,6 @@ public class CheckingKoiHealth {
     @Column(name = "age", nullable = false)
     private Integer age;
 
-    @Column(name = "price", nullable = false)
-    private Float price;
-
     @Column(name = "create_at")
     private LocalDateTime createAt;
 

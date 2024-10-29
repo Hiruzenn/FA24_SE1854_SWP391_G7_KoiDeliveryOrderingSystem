@@ -5,8 +5,8 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.packages.Upda
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.PackageResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.PackageService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,42 +19,53 @@ public class PackageController {
     private PackageService packageService;
 
     @PostMapping("create")
-    public ApiResponse<PackageResponse> createPackage(@RequestBody CreatePackageRequest createPackageRequest){
+    public ResponseEntity<ApiResponse<PackageResponse>> createPackage(@Valid @RequestBody CreatePackageRequest createPackageRequest){
         var result = packageService.createPackage(createPackageRequest);
-        return ApiResponse.<PackageResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
                 .code(200)
                 .message("Package Created")
                 .result(result)
-                .build();
+                .build());
     }
 
-    @PutMapping("update/{packageId}")
-    public ApiResponse<PackageResponse> updatePackage(@PathVariable Integer packageId, @RequestBody UpdatePackageRequest updatePackageRequest){
-        var result = packageService.updatePackage(packageId, updatePackageRequest);
-        return ApiResponse.<PackageResponse>builder()
+    @PutMapping("update/{id}")
+    public ResponseEntity<ApiResponse<PackageResponse>> updatePackage(@Valid @PathVariable Integer id, @RequestBody UpdatePackageRequest updatePackageRequest){
+        var result = packageService.updatePackage(id, updatePackageRequest);
+        return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
                 .code(200)
-                .message("Package Created")
+                .message("Package Updated")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("view-all")
-    public ApiResponse<List<PackageResponse>> viewAllPackage(){
+    public ResponseEntity<ApiResponse<List<PackageResponse>>> viewAllPackage(){
         var result = packageService.getAllPackages();
-        return ApiResponse.<List<PackageResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<PackageResponse>>builder()
                 .code(200)
                 .message("View All")
                 .result(result)
-                .build();
+                .build());
     }
 
-    @GetMapping("view-by-packageno/{packageNo}")
-    public ApiResponse<PackageResponse> viewPackageByPackageNo(@PathVariable String packageNo){
+    @GetMapping("view-by-packageNo/{packageNo}")
+    public ResponseEntity<ApiResponse<PackageResponse>> viewPackageByPackageNo(@PathVariable String packageNo){
         var result = packageService.getPackageByPackageNo(packageNo);
-        return  ApiResponse.<PackageResponse>builder()
+        return  ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
                 .code(200)
                 .message("Package No Found")
                 .result(result)
-                .build();
+                .build());
     }
+
+    @PutMapping("delete/{id}")
+    public ResponseEntity<ApiResponse<PackageResponse>> deletePackage(@Valid @PathVariable Integer id){
+        var result = packageService.deletePackage(id);
+        return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
+                .code(200)
+                .message("Package Deleted")
+                .result(result)
+                .build());
+    }
+
 }

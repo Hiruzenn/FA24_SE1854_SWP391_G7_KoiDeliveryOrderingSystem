@@ -33,19 +33,14 @@ public class FeedbackService {
     public FeedbackResponse createFeedback(Integer orderId, CreateFeedbackRequest createFeedbackRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         Feedback feedback = Feedback.builder()
                 .users(users)
                 .orders(orders)
                 .feedbackDescription(createFeedbackRequest.getFeedbackDescription())
-                .createAt(LocalDateTime.now())
-                .createBy(users.getId())
-                .updateAt(LocalDateTime.now())
-                .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
         feedbackRepository.save(feedback);
         return convertToFeedbackResponse(feedback);
@@ -57,15 +52,15 @@ public class FeedbackService {
     }
 
     public List<FeedbackResponse> viewFeedbackByOrderId(Integer orderId) {
-        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         List<Feedback> feedbacks = feedbackRepository.findByOrders(orders);
         return convertToListFeedbackResponse(feedbacks);
     }
 
     public List<FeedbackResponse> viewFeedbackByCustomer() {
         Users users = accountUtils.getCurrentUser();
-        if(users == null){
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
         List<Feedback> feedbacks = feedbackRepository.findByUsers(users);
         return convertToListFeedbackResponse(feedbacks);
@@ -78,17 +73,13 @@ public class FeedbackService {
         }
         return feedbackResponses;
     }
+
     public FeedbackResponse convertToFeedbackResponse(Feedback feedback) {
         return FeedbackResponse.builder()
                 .id(feedback.getId())
                 .customerId(feedback.getUsers().getId())
                 .orderId(feedback.getOrders().getId())
                 .feedbackDescription(feedback.getFeedbackDescription())
-                .createAt(feedback.getCreateAt())
-                .createBy(feedback.getCreateBy())
-                .updateAt(feedback.getUpdateAt())
-                .updateBy(feedback.getUpdateBy())
-                .status(feedback.getStatus())
                 .build();
     }
 }

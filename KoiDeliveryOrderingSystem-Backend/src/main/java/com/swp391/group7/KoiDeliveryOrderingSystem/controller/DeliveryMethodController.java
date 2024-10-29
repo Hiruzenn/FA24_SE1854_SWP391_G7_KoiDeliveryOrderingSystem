@@ -7,9 +7,11 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.DeliveryMethodResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.DeliveryMethodService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,42 +24,42 @@ public class DeliveryMethodController {
     private final DeliveryMethodService deliveryMethodService;
 
     @PostMapping("create")
-    public ApiResponse<DeliveryMethodResponse> createDeliveryMethod(@RequestBody CreateDeliveryMethodRequest createDeliveryMethodRequest) {
+    public ResponseEntity<ApiResponse<DeliveryMethodResponse>> createDeliveryMethod(@Valid @RequestBody CreateDeliveryMethodRequest createDeliveryMethodRequest) {
         var result = deliveryMethodService.createDeliveryMethod(createDeliveryMethodRequest);
-        return ApiResponse.<DeliveryMethodResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<DeliveryMethodResponse>builder()
                 .code(200)
                 .message("Delivery Method Created")
                 .result(result)
-                .build();
+                .build());
     }
 
     @PutMapping("update/{id}")
-    public ApiResponse<DeliveryMethodResponse> updateDeliveryMethod(@PathVariable int id, @RequestBody UpdateDeliveryMethodRequest updateDeliveryMethodRequest) {
+    public ResponseEntity<ApiResponse<DeliveryMethodResponse>> updateDeliveryMethod(@Valid @PathVariable int id, @RequestBody UpdateDeliveryMethodRequest updateDeliveryMethodRequest) {
         var result = deliveryMethodService.updateDeliveryMethod(id, updateDeliveryMethodRequest);
-        return ApiResponse.<DeliveryMethodResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<DeliveryMethodResponse>builder()
                 .code(200)
                 .message("Delivery Method Updated")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("view-all")
-    public ApiResponse<List<DeliveryMethodResponse>> viewAllDeliveryMethod() {
+    public ResponseEntity<ApiResponse<List<DeliveryMethodResponse>>> viewAllDeliveryMethod() {
         var result = deliveryMethodService.viewAllDeliveryMethods();
-        return ApiResponse.<List<DeliveryMethodResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<DeliveryMethodResponse>>builder()
                 .code(200)
                 .message("Delivery Method Viewed")
                 .result(result)
-                .build();
+                .build());
     }
 
-    @DeleteMapping("delete/{id}")
-    public ApiResponse<DeliveryMethodResponse> deleteDeliveryMethod(@PathVariable int id) {
+    @PutMapping("delete/{id}")
+    public ResponseEntity<ApiResponse<DeliveryMethodResponse>> deleteDeliveryMethod(@PathVariable int id) {
         var result = deliveryMethodService.deleteDeliveryMethod(id);
-        return ApiResponse.<DeliveryMethodResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<DeliveryMethodResponse>builder()
                 .code(200)
                 .message("Delivery Method Deleted")
                 .result(result)
-                .build();
+                .build());
     }
 }

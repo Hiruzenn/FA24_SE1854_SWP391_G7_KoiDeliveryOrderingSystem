@@ -3,10 +3,13 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.CreateFishProfileRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.UpdateFishProfileRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishCategoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishProfileResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.FishProfileService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,31 +22,41 @@ public class FishProfileController {
     private FishProfileService fishProfileService;
 
     @PostMapping("create")
-    public ApiResponse<FishProfileResponse> createFishProfile(@RequestBody CreateFishProfileRequest createFishProfileRequest) {
+    public ResponseEntity<ApiResponse<FishProfileResponse>> createFishProfile(@Valid @RequestBody CreateFishProfileRequest createFishProfileRequest) {
         var result = fishProfileService.createFishProfile(createFishProfileRequest);
-        return ApiResponse.<FishProfileResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<FishProfileResponse>builder()
                 .code(200)
                 .message("Fish profile created successfully")
                 .result(result)
-                .build();
+                .build());
     }
     @PutMapping("update/{fishProfileId}")
-    public ApiResponse<FishProfileResponse> updateFishProfile(@PathVariable Integer fishProfileId,@RequestBody UpdateFishProfileRequest updateFishProfileRequest) {
+    public ResponseEntity<ApiResponse<FishProfileResponse>> updateFishProfile(@Valid @PathVariable Integer fishProfileId,@RequestBody UpdateFishProfileRequest updateFishProfileRequest) {
         var result = fishProfileService.updateFishProfile(fishProfileId, updateFishProfileRequest);
-        return ApiResponse.<FishProfileResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<FishProfileResponse>builder()
                 .code(200)
                 .message("Fish profile updated successfully")
                 .result(result)
-                .build();
+                .build());
     }
 
     @GetMapping("get-all")
-    public ApiResponse<List<FishProfileResponse>> getAllFishProfile() {
+    public ResponseEntity<ApiResponse<List<FishProfileResponse>>> getAllFishProfile() {
         var result = fishProfileService.getAllFishProfiles();
-        return ApiResponse.<List<FishProfileResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<FishProfileResponse>>builder()
                 .code(200)
                 .message("Fish profile list")
                 .result(result)
-                .build();
+                .build());
+    }
+
+    @GetMapping("delete/{fishProfileId}")
+    public ResponseEntity<ApiResponse<FishProfileResponse>> deleteFishProfile(@PathVariable Integer fishProfileId) {
+        var result = fishProfileService.deleteFishProfile(fishProfileId);
+        return ResponseEntity.ok(ApiResponse.<FishProfileResponse>builder()
+                .code(200)
+                .message("Fish profile list")
+                .result(result)
+                .build());
     }
 }

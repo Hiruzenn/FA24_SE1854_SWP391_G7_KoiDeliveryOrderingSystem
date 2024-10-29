@@ -7,6 +7,8 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceOrder;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.healthserviceorder.CreateHealthServiceOrderRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.healthserviceorder.UpdateHealthServiceOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthServiceOrderResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.HealthServiceCategoryRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.HealthServiceOrderRepository;
@@ -35,17 +37,17 @@ public class HealthServiceOrderService {
     @Autowired
     private AccountUtils accountUtils;
 
-    public HealthServiceOrderResponse createHealthServiceOrder(Integer orderId, Integer heathServiceCategoryId) {
+    public HealthServiceOrderResponse createHealthServiceOrder(CreateHealthServiceOrderRequest request) throws AppException {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findById(orderId)
+        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(heathServiceCategoryId)
-                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(request.getHealthServiceCategoryId(), SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
         if (healthServiceOrderRepository.existsHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(healthServiceCategory, orders, SystemStatusEnum.AVAILABLE)) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+            throw new AppException(ErrorCode.HEALTH_SERVICE_ORDER_IS_EXISTED);
         }
         HealthServiceOrder healthServiceOrder = HealthServiceOrder.builder()
                 .orders(orders)
@@ -60,34 +62,57 @@ public class HealthServiceOrderService {
         return convertToHealthServiceOrderResponse(healthServiceOrder);
     }
 
+    public HealthServiceOrderResponse updateHealthServiceOrder(Integer id, UpdateHealthServiceOrderRequest request) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(request.getHealthServiceCategoryId(), SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
+        HealthServiceOrder healthServiceOrder = healthServiceOrderRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_ORDER_NOT_FOUND));
+        if (healthServiceOrderRepository.existsHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(healthServiceCategory, orders, SystemStatusEnum.AVAILABLE)) {
+            throw new AppException(ErrorCode.HEALTH_SERVICE_ORDER_IS_EXISTED);
+        }
+        healthServiceOrder.setOrders(orders);
+        healthServiceOrder.setHealthServiceCategory(healthServiceCategory);
+        healthServiceOrder.setUpdateAt(LocalDateTime.now());
+        healthServiceOrder.setUpdateBy(users.getId());
+        healthServiceOrderRepository.save(healthServiceOrder);
+        return convertToHealthServiceOrderResponse(healthServiceOrder);
+    }
+
     public List<HealthServiceOrderResponse> getHealthServiceOrderByOrderId(Integer orderId) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findById(orderId)
-                .orElseThrow(()-> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         List<HealthServiceOrderResponse> healthServiceOrderResponses = new ArrayList<>();
-        List<HealthServiceOrder> healthServiceOrders = healthServiceOrderRepository.findHealthServiceOrderByOrders(orders);
+        List<HealthServiceOrder> healthServiceOrders = healthServiceOrderRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
         for (HealthServiceOrder healthServiceOrder : healthServiceOrders) {
-            if (healthServiceOrder.getStatus() == SystemStatusEnum.AVAILABLE) {
-                healthServiceOrderResponses.add(convertToHealthServiceOrderResponse(healthServiceOrder));
-            }
+            healthServiceOrderResponses.add(convertToHealthServiceOrderResponse(healthServiceOrder));
         }
         return healthServiceOrderResponses;
     }
-    public void deleteHealthServiceOrder(Integer orderId, Integer heathServiceCategoryId) {
+
+    public HealthServiceOrderResponse deleteHealthServiceOrder(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(heathServiceCategoryId)
-                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
-        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HealthServiceOrder healthServiceOrder = healthServiceOrderRepository
-                .findHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(healthServiceCategory, orders, SystemStatusEnum.AVAILABLE);
+                .findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_ORDER_NOT_FOUND));
         healthServiceOrder.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        healthServiceOrder.setUpdateAt(LocalDateTime.now());
+        healthServiceOrder.setUpdateBy(users.getId());
+        return convertToHealthServiceOrderResponse(healthServiceOrder);
     }
+
     public HealthServiceOrderResponse convertToHealthServiceOrderResponse(HealthServiceOrder healthServiceOrder) {
         return HealthServiceOrderResponse.builder()
                 .id(healthServiceOrder.getId())

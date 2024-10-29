@@ -1,78 +1,100 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishCategory;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishcategory.CreateFishCategoryRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishcategory.UpdateFishCategoryRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishCategoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishCategoryRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FishCategoryService {
 
     @Autowired
     private FishCategoryRepository fishCategoryRepository;
+
+    @Autowired
+    private AccountUtils accountUtils;
+
     public FishCategoryResponse createFishCategory(CreateFishCategoryRequest createFishCategoryRequest) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
         FishCategory fishCategory = FishCategory.builder()
-                .fishCategoryName(createFishCategoryRequest.getFish_category_name())
-                .fishCategoryDescription(createFishCategoryRequest.getFish_category_description())
+                .fishCategoryName(createFishCategoryRequest.getFishCategoryName())
+                .fishCategoryDescription(createFishCategoryRequest.getFishCategoryDescription())
+                .createAt(LocalDateTime.now())
+                .createBy(users.getId())
+                .updateAt(LocalDateTime.now())
+                .updateBy(users.getId())
+                .status(SystemStatusEnum.AVAILABLE)
                 .build();
         fishCategoryRepository.save(fishCategory);
         return convertToFishCategoryResponse(fishCategory);
     }
 
     public FishCategoryResponse updateFishCategory(Integer id, UpdateFishCategoryRequest updateFishCategoryRequest) {
-        FishCategory fishCategory = fishCategoryRepository.findById(id)
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        FishCategory fishCategory = fishCategoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
-
-        fishCategory.setFishCategoryName(updateFishCategoryRequest.getFish_category_name());
-        fishCategory.setFishCategoryDescription(updateFishCategoryRequest.getFish_category_description());
+        fishCategory.setFishCategoryName(updateFishCategoryRequest.getFishCategoryName());
+        fishCategory.setFishCategoryDescription(updateFishCategoryRequest.getFishCategoryDescription());
+        fishCategory.setUpdateAt(LocalDateTime.now());
+        fishCategory.setUpdateBy(users.getId());
         fishCategoryRepository.save(fishCategory);
 
         return convertToFishCategoryResponse(fishCategory);
     }
 
     public List<FishCategoryResponse> viewAllFishCategories() {
-        List<FishCategory> fishCategories = fishCategoryRepository.findAll();
+        List<FishCategory> fishCategories = fishCategoryRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         List<FishCategoryResponse> fishCategoryResponses = new ArrayList<>();
-
         for (FishCategory fishCategory : fishCategories) {
-            FishCategoryResponse response = convertToFishCategoryResponse(fishCategory);
-            fishCategoryResponses.add(response);
+            fishCategoryResponses.add(convertToFishCategoryResponse(fishCategory));
         }
-
         return fishCategoryResponses;
     }
 
-    public FishCategoryResponse getFishCategoryById(Integer id) {
-        FishCategory fishCategory = fishCategoryRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
-
-        return convertToFishCategoryResponse(fishCategory);
-    }
-
     public FishCategoryResponse deleteFishCategory(Integer id) {
-        FishCategory fishCategory = fishCategoryRepository.findById(id)
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        FishCategory fishCategory = fishCategoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
-
-        FishCategoryResponse response = convertToFishCategoryResponse(fishCategory);
-        fishCategoryRepository.deleteById(id);
-
-        return response;
+        fishCategory.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        fishCategory.setUpdateAt(LocalDateTime.now());
+        fishCategory.setUpdateBy(users.getId());
+        fishCategoryRepository.save(fishCategory);
+        return convertToFishCategoryResponse(fishCategory);
     }
 
     private FishCategoryResponse convertToFishCategoryResponse(FishCategory fishCategory) {
         return FishCategoryResponse.builder()
                 .id(fishCategory.getId())
-                .fish_category_name(fishCategory.getFishCategoryName())
-                .fish_category_description(fishCategory.getFishCategoryDescription())
+                .fishCategoryName(fishCategory.getFishCategoryName())
+                .fishCategoryDescription(fishCategory.getFishCategoryDescription())
+                .createAt(fishCategory.getCreateAt())
+                .createBy(fishCategory.getCreateBy())
+                .updateAt(fishCategory.getUpdateAt())
+                .updateBy(fishCategory.getUpdateBy())
+                .status(fishCategory.getStatus())
                 .build();
     }
 }

@@ -19,39 +19,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateHandoverDocumentRequest {
-
-
-
-    private int users;
-
-
-    private int packages;
-
-
-    private int orders;
-
-
-    private int healthCareDeliveryHistory;
-
-
-    private String handoverNo;
-
-
+    private Integer userId;
+    private Integer packageId;
+    private Integer orderId;
     private String staff;
-
-
     private String handoverDescription;
-
-
     private String vehicle;
-
-
     private String destination;
-
-
     private String departure;
-
-
     private Float totalPrice;
 
 }
