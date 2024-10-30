@@ -2,6 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.config.VNPayConfig;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -63,7 +64,7 @@ public class PaymentService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE)
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Payment payment = Payment.builder()
                 .paymentCode(generatePaymentCode())
@@ -86,7 +87,7 @@ public class PaymentService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         List<Payment> paymentList = paymentRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
         return convertToListPaymentResponse(paymentList);
     }
@@ -122,7 +123,7 @@ public class PaymentService {
 
        paymentRequest2.setOrderId(orderId);
         String username =user.getName();
-        float amount = paymentRequest2.getTotalAmount()*100;
+        int amount = (int) (paymentRequest2.getTotalAmount()*100);
         String bankCode = paymentRequest2.getBankCode();
         String transactionId = "1";
 

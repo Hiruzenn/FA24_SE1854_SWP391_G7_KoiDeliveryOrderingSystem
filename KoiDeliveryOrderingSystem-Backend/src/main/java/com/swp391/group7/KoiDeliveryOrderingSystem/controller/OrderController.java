@@ -78,7 +78,7 @@ public class OrderController {
         var result = orderService.AcceptOrder(orderId);
         return ResponseEntity.ok(ApiResponse.<OrderResponse>builder()
                 .code(200)
-                .message("Order Deleted")
+                .message("Order is accept")
                 .result(result)
                 .build());
     }

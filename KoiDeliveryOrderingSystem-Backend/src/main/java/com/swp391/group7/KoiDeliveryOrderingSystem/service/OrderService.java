@@ -8,7 +8,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateO
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishProfileResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
@@ -104,7 +104,7 @@ public class OrderService {
     }
 
     public List<OrderResponse> getAllOrders() {
-        List<Orders> orders = orderRepository.findByStatus(SystemStatusEnum.AVAILABLE);
+        List<Orders> orders = orderRepository.findByStatus(OrderStatusEnum.AVAILABLE);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : orders) {
             orderResponses.add(convertOrderToResponse(order));
@@ -117,7 +117,7 @@ public class OrderService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        List<Orders> ordersList = orderRepository.findByUsersAndStatus(users, SystemStatusEnum.AVAILABLE);
+        List<Orders> ordersList = orderRepository.findByUsersAndStatus(users, OrderStatusEnum.AVAILABLE);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : ordersList) {
             orderResponses.add(convertOrderToResponse(order));
@@ -130,7 +130,7 @@ public class OrderService {
         if(users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(OrderId, SystemStatusEnum.AVAILABLE)
+        Orders orders = orderRepository.findByIdAndStatus(OrderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         orders.setStatus(OrderStatusEnum.NOT_AVAILABLE);
         orders.setUpdateAt(LocalDateTime.now());
@@ -144,7 +144,7 @@ public class OrderService {
         if(users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(OrderId, SystemStatusEnum.AVAILABLE)
+        Orders orders = orderRepository.findByIdAndStatus(OrderId, OrderStatusEnum.PENDING)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         orders.setStatus(OrderStatusEnum.AVAILABLE);
         orders.setUpdateAt(LocalDateTime.now());

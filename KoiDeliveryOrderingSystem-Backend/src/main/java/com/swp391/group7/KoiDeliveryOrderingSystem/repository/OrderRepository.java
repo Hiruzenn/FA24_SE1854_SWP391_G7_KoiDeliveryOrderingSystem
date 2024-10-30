@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.repository;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -16,9 +17,9 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Orders, Integer> {
     boolean existsByOrderCode(String orderCode);
-    List<Orders> findByUsersAndStatus(Users users, SystemStatusEnum status);
-    List<Orders> findByStatus(SystemStatusEnum status);
-    Optional<Orders> findByIdAndStatus(Integer id, SystemStatusEnum status);
+    List<Orders> findByUsersAndStatus(Users users, OrderStatusEnum status);
+    List<Orders> findByStatus(OrderStatusEnum status);
+    Optional<Orders> findByIdAndStatus(Integer id, OrderStatusEnum status);
 
     List<Orders> findByOrderDateAfter (LocalDateTime date);
     @Query(value= "SELECT o.orders_id, o.total_amount FROM orders o " +
