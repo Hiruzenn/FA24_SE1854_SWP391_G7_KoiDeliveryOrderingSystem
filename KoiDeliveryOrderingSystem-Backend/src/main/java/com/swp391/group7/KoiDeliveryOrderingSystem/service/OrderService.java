@@ -138,28 +138,6 @@ public class OrderService {
         return convertOrderToResponse(orders);
     }
 
-    public List<OrderResponse> orderIn7days() {
-        LocalDateTime sevenDayAgo = LocalDateTime.now().minusDays(7);
-        List<Orders> recentOrders = orderRepository.findByOrderDateAfter(sevenDayAgo);
-        List<OrderResponse> orderResponseList = new ArrayList<>();
-        for (Orders orders : recentOrders) {
-            orderResponseList.add(convertOrderToResponse(orders));
-        }
-        return orderResponseList;
-
-    }
-
-    public List<OrderResponse> orderIn30days() {
-        LocalDateTime sevenDayAgo = LocalDateTime.now().minusDays(30);
-        List<Orders> recentOrders = orderRepository.findByOrderDateAfter(sevenDayAgo);
-        List<OrderResponse> orderResponseList = new ArrayList<>();
-        for (Orders orders : recentOrders) {
-            orderResponseList.add(convertOrderToResponse(orders));
-        }
-        return orderResponseList;
-
-    }
-
     private OrderResponse convertOrderToResponse(Orders orders) {
         return OrderResponse.builder()
                 .id(orders.getId())

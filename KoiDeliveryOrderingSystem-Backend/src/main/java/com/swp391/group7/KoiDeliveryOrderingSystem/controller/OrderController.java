@@ -74,19 +74,4 @@ public class OrderController {
                 .build());
     }
 
-    @GetMapping("/last-7-days")
-    public ResponseEntity<List<OrderResponse>> getOrdersIn7Days() {
-        List<OrderResponse> orderResponses = orderService.orderIn7days();
-
-        // Return the list of orders with an HTTP 200 OK status
-        return ResponseEntity.ok(orderResponses);
-    }
-
-    @GetMapping("/last-1-month")
-    public ResponseEntity<List<OrderResponse>> getOrdersIn1Month() {
-        List<OrderResponse> orderResponses = orderService.orderIn30days();
-
-        // Return the list of orders with an HTTP 200 OK status
-        return ResponseEntity.ok(orderResponses);
-    }
 }
