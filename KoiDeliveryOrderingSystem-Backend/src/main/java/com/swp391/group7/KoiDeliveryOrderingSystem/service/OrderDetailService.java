@@ -118,6 +118,7 @@ public class OrderDetailService {
                 .updateAt(orderDetail.getUpdateAt())
                 .updateBy(orderDetail.getUpdateBy())
                 .status(orderDetail.getStatus())
+                .quantity(orderDetail.getQuantity())
                 .build();
     }
 }

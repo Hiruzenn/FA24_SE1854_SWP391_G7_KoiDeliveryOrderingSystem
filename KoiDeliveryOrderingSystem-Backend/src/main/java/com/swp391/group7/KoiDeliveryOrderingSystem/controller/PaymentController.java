@@ -72,9 +72,9 @@ public class PaymentController {
                 .build());
     }
 
-    @PostMapping("/payment")
-    public ResponseObject<PaymentRequest> pay(@RequestBody PaymentRequest2 request, HttpServletRequest httpServletRequest) {
-        return new ResponseObject<>(HttpStatus.OK, "Success", paymentService.createVnPayPayment(request, httpServletRequest));
+    @PostMapping("/payment/{orderId}")
+    public ResponseObject<PaymentRequest> pay(@RequestBody PaymentRequest2 request, HttpServletRequest httpServletRequest, int orderId) {
+        return new ResponseObject<>(HttpStatus.OK, "Success", paymentService.createVnPayPayment(request, httpServletRequest, orderId));
     }
 
     @GetMapping("/return")

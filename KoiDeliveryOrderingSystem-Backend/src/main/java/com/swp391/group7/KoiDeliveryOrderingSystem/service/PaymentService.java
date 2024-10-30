@@ -106,7 +106,7 @@ public class PaymentService {
     }
 
 
-    public PaymentRequest createVnPayPayment(PaymentRequest2 paymentRequest2, HttpServletRequest request) {
+    public PaymentRequest createVnPayPayment(PaymentRequest2 paymentRequest2, HttpServletRequest request, int orderId) {
         Orders orders = orderRepository.findById(paymentRequest2.getOrderId()).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         Users user = userRepository.findById(orders.getUsers().getId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -120,7 +120,7 @@ public class PaymentService {
         }
 
 
-        int orderId = paymentRequest2.getOrderId();
+       paymentRequest2.setOrderId(orderId);
         String username =user.getName();
         float amount = paymentRequest2.getTotalAmount()*100;
         String bankCode = paymentRequest2.getBankCode();
@@ -147,11 +147,14 @@ public class PaymentService {
         String paymentUrl = vnPayConfig.getVnpPayUrl() + "?" + queryUrl;
 
         Payment payment = new Payment();
+        payment.setUsers(user);
+        payment.setOrders(orders);
+        payment.setPaymentStatus("Success");
         payment.setAmount(orders.getTotalAmount());
-        payment.setPaymentMethod("PENDING");
+        payment.setPaymentMethod("VNPay");
         payment.setPaymentDate(LocalDate.now());
         payment.setPaymentCode(String.valueOf(Integer.parseInt(vnpParamsMap.get("vnp_TxnRef"))));
-        payment.setUsers(user);
+       payment.setStatus(SystemStatusEnum.AVAILABLE);
         paymentRepository.save(payment);
         if (payment.getOrders() == null) {
             throw new IllegalArgumentException("Order ID cannot be null");
