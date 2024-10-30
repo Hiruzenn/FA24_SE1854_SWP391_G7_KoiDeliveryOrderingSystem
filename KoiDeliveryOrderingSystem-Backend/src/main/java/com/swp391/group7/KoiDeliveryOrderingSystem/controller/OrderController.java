@@ -73,5 +73,14 @@ public class OrderController {
                 .result(result)
                 .build());
     }
+    @PutMapping("acceptorder/{orderId}")
+    public ResponseEntity<ApiResponse<OrderResponse>> acceptOrder(@PathVariable Integer orderId) {
+        var result = orderService.AcceptOrder(orderId);
+        return ResponseEntity.ok(ApiResponse.<OrderResponse>builder()
+                .code(200)
+                .message("Order is accept")
+                .result(result)
+                .build());
+    }
 
 }

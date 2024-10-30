@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -56,7 +57,7 @@ public class HandoverDocumentService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         Package packages = packageRepository.findByIdAndStatus(request.getPackageId(), SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
-        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), SystemStatusEnum.AVAILABLE)
+        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HandoverDocument handoverDocument = HandoverDocument.builder()
                 .handoverNo(generateHandoverNo())

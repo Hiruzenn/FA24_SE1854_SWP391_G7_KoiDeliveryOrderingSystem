@@ -2,6 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.config.VNPayConfig;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -63,7 +64,7 @@ public class PaymentService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE)
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Payment payment = Payment.builder()
                 .paymentCode(generatePaymentCode())
@@ -86,7 +87,7 @@ public class PaymentService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         List<Payment> paymentList = paymentRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
         return convertToListPaymentResponse(paymentList);
     }
@@ -106,7 +107,7 @@ public class PaymentService {
     }
 
 
-    public PaymentRequest createVnPayPayment(PaymentRequest2 paymentRequest2, HttpServletRequest request) {
+    public PaymentRequest createVnPayPayment(PaymentRequest2 paymentRequest2, HttpServletRequest request, int orderId) {
         Orders orders = orderRepository.findById(paymentRequest2.getOrderId()).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         Users user = userRepository.findById(orders.getUsers().getId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -120,9 +121,9 @@ public class PaymentService {
         }
 
 
-        int orderId = paymentRequest2.getOrderId();
+       paymentRequest2.setOrderId(orderId);
         String username =user.getName();
-        float amount = paymentRequest2.getTotalAmount()*100;
+        int amount = (int) (paymentRequest2.getTotalAmount()*100);
         String bankCode = paymentRequest2.getBankCode();
         String transactionId = "1";
 
@@ -147,11 +148,14 @@ public class PaymentService {
         String paymentUrl = vnPayConfig.getVnpPayUrl() + "?" + queryUrl;
 
         Payment payment = new Payment();
+        payment.setUsers(user);
+        payment.setOrders(orders);
+        payment.setPaymentStatus("Success");
         payment.setAmount(orders.getTotalAmount());
-        payment.setPaymentMethod("PENDING");
+        payment.setPaymentMethod("VNPay");
         payment.setPaymentDate(LocalDate.now());
         payment.setPaymentCode(String.valueOf(Integer.parseInt(vnpParamsMap.get("vnp_TxnRef"))));
-        payment.setUsers(user);
+       payment.setStatus(SystemStatusEnum.AVAILABLE);
         paymentRepository.save(payment);
         if (payment.getOrders() == null) {
             throw new IllegalArgumentException("Order ID cannot be null");

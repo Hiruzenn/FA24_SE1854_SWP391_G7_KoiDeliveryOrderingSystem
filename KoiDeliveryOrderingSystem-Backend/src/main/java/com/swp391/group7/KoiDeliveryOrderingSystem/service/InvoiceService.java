@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Invoice;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -65,7 +66,7 @@ public class InvoiceService {
     // Method to create a new invoice
     public InvoiceResponse createInvoice(CreateInvoiceRequest request) {
         Users users = accountUtils.getCurrentUser();
-        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), SystemStatusEnum.AVAILABLE)
+        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Users customer = userRepository.findById(users.getId())
                 .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
