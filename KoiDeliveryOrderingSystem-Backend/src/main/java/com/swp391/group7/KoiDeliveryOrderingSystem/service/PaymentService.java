@@ -46,8 +46,8 @@ public class PaymentService {
     private PaymentRepository paymentRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
 
+    private OrderRepository orderRepository;
     @Autowired
     private AccountUtils accountUtils;
 

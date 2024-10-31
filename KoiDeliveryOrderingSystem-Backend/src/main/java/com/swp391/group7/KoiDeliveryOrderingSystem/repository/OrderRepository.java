@@ -17,11 +17,18 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Orders, Integer> {
     boolean existsByOrderCode(String orderCode);
+
     List<Orders> findByUsersAndStatus(Users users, OrderStatusEnum status);
     List<Orders> findByStatus(OrderStatusEnum status);
     Optional<Orders> findByIdAndStatus(Integer id, OrderStatusEnum status);
 
     List<Orders> findByOrderDateAfter (LocalDateTime date);
+
+    List<Orders> findByUsersAndStatus(Users users, SystemStatusEnum status);
+    List<Orders> findByStatus(SystemStatusEnum status);
+    Optional<Orders> findByIdAndStatus(Integer id, SystemStatusEnum status);
+    List<Orders> findByStatusAndCreateAtBetween(SystemStatusEnum status, LocalDateTime start, LocalDateTime end);
+
     @Query(value= "SELECT o.orders_id, o.total_amount FROM orders o " +
             " where o.orders_id= :orderId", nativeQuery= true )
     Object findTotalAmount(@Param("orderId") int orderId);
