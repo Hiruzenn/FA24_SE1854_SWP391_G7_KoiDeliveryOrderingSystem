@@ -44,7 +44,7 @@ public class OrderDetailService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), OrderStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), OrderStatusEnum.PENDING).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(request.getFishProfileId(), SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         OrderDetail orderDetail = OrderDetail.builder()
                 .orders(orders)
