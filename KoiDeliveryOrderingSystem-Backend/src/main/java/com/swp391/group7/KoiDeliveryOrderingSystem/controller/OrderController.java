@@ -44,12 +44,22 @@ public class OrderController {
                 .build());
     }
 
-    @GetMapping("get-all")
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> getAllOrders() {
-        var result = orderService.getAllOrders();
+    @GetMapping("view-order-available")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrderAvailable() {
+        var result = orderService.viewOrderAvailable();
         return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder()
                 .code(200)
-                .message("Order List")
+                .message("Order Available List")
+                .result(result)
+                .build());
+    }
+
+    @GetMapping("view-order-pending")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrderPending() {
+        var result = orderService.viewOrderPending();
+        return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder()
+                .code(200)
+                .message("Order Pending List")
                 .result(result)
                 .build());
     }
@@ -73,6 +83,7 @@ public class OrderController {
                 .result(result)
                 .build());
     }
+
     @PutMapping("acceptorder/{orderId}")
     public ResponseEntity<ApiResponse<OrderResponse>> acceptOrder(@PathVariable Integer orderId) {
         var result = orderService.AcceptOrder(orderId);
