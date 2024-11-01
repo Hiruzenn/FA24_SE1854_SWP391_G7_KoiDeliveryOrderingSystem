@@ -56,7 +56,7 @@ public class CertificateService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.PENDING).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Certificate certificate = Certificate.builder()
                 .certificateName(certificateRequest.getCertificateName())
                 .certificateDescription(certificateRequest.getCertificateDescription())
