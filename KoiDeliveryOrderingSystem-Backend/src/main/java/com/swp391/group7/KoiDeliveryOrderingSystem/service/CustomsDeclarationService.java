@@ -41,7 +41,7 @@ public class CustomsDeclarationService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.PENDING).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
                 .customsName(createCustomsDeclarationRequest.getCustomsName())
                 .declarationDate(createCustomsDeclarationRequest.getDeclarationDate())
