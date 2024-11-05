@@ -15,4 +15,5 @@ public interface DeliveryMethodRepository extends JpaRepository<DeliveryMethod, 
     DeliveryMethod findByDeliveryMethodName(String deliveryMethod);
     Optional<DeliveryMethod> findByIdAndStatus(Integer id, SystemStatusEnum status);
     List<DeliveryMethod> findByStatus(SystemStatusEnum status);
+    Optional<DeliveryMethod> findByDeliveryMethodNameAndStatus(String deliveryMethodName, SystemStatusEnum status);
 }

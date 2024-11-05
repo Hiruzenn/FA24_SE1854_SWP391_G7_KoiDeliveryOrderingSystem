@@ -34,6 +34,17 @@ public class OrderController {
                 .build());
     }
 
+    @PutMapping("calculate/{orderId}")
+    public ResponseEntity<ApiResponse<OrderResponse>> calculateOrder(@PathVariable Integer orderId) {
+        var result = orderService.calculateOrder(orderId);
+        return ResponseEntity.ok(ApiResponse.<OrderResponse>builder()
+                .code(200)
+                .message("Calculated Order")
+                .result(result)
+                .build());
+    }
+
+
     @PutMapping("update/{OrderId}")
     public ResponseEntity<ApiResponse<OrderResponse>> updateOrder(@Valid @PathVariable Integer OrderId, @RequestBody UpdateOrderRequest updateOrderRequest) {
         var result = orderService.updateOrder(OrderId, updateOrderRequest);

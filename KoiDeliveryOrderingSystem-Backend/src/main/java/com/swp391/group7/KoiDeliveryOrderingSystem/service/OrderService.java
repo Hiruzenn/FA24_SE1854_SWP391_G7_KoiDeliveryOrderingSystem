@@ -2,6 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.CreateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
@@ -12,6 +13,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
+import com.swp391.group7.KoiDeliveryOrderingSystem.utils.CalculateMoney;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -38,6 +40,9 @@ public class OrderService {
     @Autowired
     private AccountUtils accountUtils;
 
+    @Autowired
+    private CalculateMoney calculateMoney;
+
     public OrderResponse createOrder(CreateOrderRequest createOrderRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
@@ -56,16 +61,27 @@ public class OrderService {
                 .departure(createOrderRequest.getDeparture())
                 .distance(createOrderRequest.getDistance())
                 .phone(createOrderRequest.getPhone())
-                .amount(createOrderRequest.getAmount())
-                .vat(createOrderRequest.getVat())
-                .vatAmount(createOrderRequest.getVatAmount())
-                .totalAmount((createOrderRequest.getTotalAmount()))
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
                 .status(OrderStatusEnum.PENDING)
                 .build();
+        orderRepository.save(orders);
+        return convertOrderToResponse(orders);
+    }
+
+    public OrderResponse calculateOrder(Integer orderId) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.PENDING)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        orders.setAmount(calculateMoney.calculateMoney(orders.getId()));
+        orders.setVat(0.1f);
+        orders.setVatAmount(calculateMoney.calculateMoney(orders.getId()) * 0.1f);
+        orders.setTotalAmount(calculateMoney.calculateMoney(orders.getId()) * 1.1f);
         orderRepository.save(orders);
         return convertOrderToResponse(orders);
     }
@@ -107,7 +123,7 @@ public class OrderService {
         return orderResponses;
     }
 
-    public List<OrderResponse> viewOrderPending(){
+    public List<OrderResponse> viewOrderPending() {
         List<Orders> orders = orderRepository.findByStatus(OrderStatusEnum.PENDING);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : orders) {
@@ -115,6 +131,7 @@ public class OrderService {
         }
         return orderResponses;
     }
+
     public List<OrderResponse> getOrderByCustomerId() {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
@@ -130,7 +147,7 @@ public class OrderService {
 
     public OrderResponse deleteOrder(Integer OrderId) {
         Users users = accountUtils.getCurrentUser();
-        if(users == null) {
+        if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Orders orders = orderRepository.findByIdAndStatus(OrderId, OrderStatusEnum.AVAILABLE)
@@ -144,7 +161,7 @@ public class OrderService {
 
     public OrderResponse AcceptOrder(Integer OrderId) {
         Users users = accountUtils.getCurrentUser();
-        if(users == null) {
+        if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Orders orders = orderRepository.findByIdAndStatus(OrderId, OrderStatusEnum.PENDING)

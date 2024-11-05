@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class DeliveryMethodResponse {
     private Integer id;
     private String deliveryMethodName;
+    private Float price;
     private LocalDateTime createAt;
     private Integer createBy;
     private LocalDateTime updateAt;
