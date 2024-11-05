@@ -4,10 +4,7 @@ import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.AuthRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.ChangePasswordRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.RegisterCustomerRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.AuthResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
@@ -26,17 +23,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Objects;
 
 
 @Service
@@ -128,7 +122,6 @@ public class AuthService {
         String url = "http://localhost:8080/auth/verify?token=" + token;
         String subject = "Xác thực tài khoản của bạn";
 
-        // Tạo nội dung email với HTML
         String message = "<html>" +
                 "<body>" +
                 "<h2>Xác thực tài khoản của bạn</h2>" +
@@ -146,6 +139,12 @@ public class AuthService {
         helper.setText(message, true);
 
         mailSender.send(mimeMessage);
+    }
+
+    public void verifyAccount(String token) {
+        Users users = validateToken(token);
+        users.setCustomerStatus(CustomerStatusEnum.VERIFIED);
+        usersRepository.save(users);
     }
 
     public String generateToken(Users user) {
@@ -167,12 +166,6 @@ public class AuthService {
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void verifyAccount(String token) {
-        Users users = validateToken(token);
-        users.setCustomerStatus(CustomerStatusEnum.VERIFIED);
-        usersRepository.save(users);
     }
 
     private Users validateToken(String token) {
