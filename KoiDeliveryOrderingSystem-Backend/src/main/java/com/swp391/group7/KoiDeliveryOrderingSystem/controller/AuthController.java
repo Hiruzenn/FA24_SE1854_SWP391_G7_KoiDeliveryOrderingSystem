@@ -1,9 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.AuthRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.ChangePasswordRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.RegisterCustomerRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.AuthResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.AuthService;
@@ -11,10 +8,9 @@ import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("/auth")
@@ -63,11 +59,9 @@ public class AuthController {
     }
 
     @GetMapping("verify")
-    public ResponseEntity<ApiResponse<String>> verify(@RequestParam("token") String token) throws MessagingException {
+    public ModelAndView verify(@RequestParam("token") String token) {
         authService.verifyAccount(token);
-        return ResponseEntity.ok(ApiResponse.<String>builder()
-                .code(200)
-                .message("Email send successfully")
-                .build());
+        return new ModelAndView("verifySuccess");
     }
+
 }
