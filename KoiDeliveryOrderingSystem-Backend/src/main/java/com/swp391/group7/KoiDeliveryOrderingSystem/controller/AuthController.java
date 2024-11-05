@@ -24,7 +24,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("register")
-    public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterCustomerRequest registerCustomerRequest) {
+    public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterCustomerRequest registerCustomerRequest) throws MessagingException {
         AuthResponse result = authService.register(registerCustomerRequest);
         return ResponseEntity.ok(ApiResponse.<AuthResponse>builder()
                 .code(200)
