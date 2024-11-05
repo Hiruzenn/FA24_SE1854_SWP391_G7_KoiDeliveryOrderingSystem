@@ -14,6 +14,7 @@ public enum ErrorCode {
     INVALID_REPEAT_PASSWORD(1004, "Invalid Re-Password"),
     UNAUTHENTICATED(1010, "Unauthenticated"),
     NOT_LOGIN(1011, "Not Login"),
+    INVALID_TOKEN(1012, "Invalid Token"),
 
 
     //ORDER
@@ -56,6 +57,7 @@ public enum ErrorCode {
 
     CHECKING_KOI_HEALTH_NOT_FOUND(1507, "Checking Koi Health Not Found"),
     ;
+
     private final int code;
     private final String message;
 }

@@ -2,7 +2,9 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.AuthRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.ChangePasswordRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.RegisterCustomerRequest;
@@ -14,16 +16,22 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.RoleRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UserRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -46,6 +54,9 @@ public class AuthService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -109,13 +120,40 @@ public class AuthService {
         return "Password changed successfully";
     }
 
+    public void sendVerificationEmail(String email) throws MessagingException {
+        Users users = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String token = generateToken(users);
+        String url = "http://localhost:8080/auth/verify?token=" + token;
+        String subject = "Xác thực tài khoản của bạn";
+
+        // Tạo nội dung email với HTML
+        String message = "<html>" +
+                "<body>" +
+                "<h2>Xác thực tài khoản của bạn</h2>" +
+                "<p>Chào " + users.getName() + ",</p>" +
+                "<p>Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để hoàn tất quá trình đăng ký, vui lòng nhấn vào liên kết bên dưới để xác thực tài khoản của bạn:</p>" +
+                "<p><a href=\"" + url + "\" style=\"background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;\">Xác thực tài khoản</a></p>" +
+                "<p>Trân trọng,<br>Đội ngũ hỗ trợ</p>" +
+                "</body>" +
+                "</html>";
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        helper.setTo(email);
+        helper.setSubject(subject);
+        helper.setText(message, true);
+
+        mailSender.send(mimeMessage);
+    }
+
     public String generateToken(Users user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getId().toString())
-                .issuer("KoiDeliveryOrderingSystem")
+                .issuer("KoiDeliveryOrder   ingSystem")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()))
                 .claim("role", user.getRole().getName())
                 .build();
 
@@ -130,4 +168,27 @@ public class AuthService {
         }
     }
 
+    public void verifyAccount(String token) {
+        Users users = validateToken(token);
+        users.setCustomerStatus(CustomerStatusEnum.VERIFIED);
+        usersRepository.save(users);
+    }
+
+    private Users validateToken(String token) {
+        try {
+            JWSObject jwt = JWSObject.parse(token);
+            MACVerifier verifier = new MACVerifier(signerKey.getBytes());
+            if (!jwt.verify(verifier)) {
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+            }
+            JWTClaimsSet claimsSet = JWTClaimsSet.parse(jwt.getPayload().toJSONObject());
+
+            String userId = claimsSet.getSubject();
+
+            return userRepository.findById(Integer.valueOf(userId))
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        }catch (Exception e){
+            throw new AppException(ErrorCode.INVALID_TOKEN);
+        }
+    }
 }
