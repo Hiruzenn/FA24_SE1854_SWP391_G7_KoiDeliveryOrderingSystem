@@ -7,11 +7,13 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.auth.Register
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.AuthResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.AuthService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -48,6 +50,24 @@ public class AuthController {
                 .code(200)
                 .message("Password changed successfully")
                 .result(result)
+                .build());
+    }
+
+    @GetMapping("send-verification-email")
+    public ResponseEntity<ApiResponse<String>> sendVerificationEmail(@RequestParam("email") String email) throws MessagingException {
+        authService.sendVerificationEmail(email);
+        return ResponseEntity.ok(ApiResponse.<String>builder()
+                .code(200)
+                .message("Email send successfully")
+                .build());
+    }
+
+    @GetMapping("verify")
+    public ResponseEntity<ApiResponse<String>> verify(@RequestParam("token") String token) throws MessagingException {
+        authService.verifyAccount(token);
+        return ResponseEntity.ok(ApiResponse.<String>builder()
+                .code(200)
+                .message("Email send successfully")
                 .build());
     }
 }

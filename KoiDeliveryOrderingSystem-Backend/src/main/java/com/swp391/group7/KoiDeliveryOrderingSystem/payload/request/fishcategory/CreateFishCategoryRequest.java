@@ -1,7 +1,9 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishcategory;
 
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
