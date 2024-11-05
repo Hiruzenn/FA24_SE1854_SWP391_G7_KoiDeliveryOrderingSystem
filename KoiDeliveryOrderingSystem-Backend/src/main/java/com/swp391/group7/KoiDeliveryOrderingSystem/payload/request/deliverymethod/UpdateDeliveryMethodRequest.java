@@ -14,4 +14,6 @@ import lombok.experimental.FieldDefaults;
 public class UpdateDeliveryMethodRequest {
     @NotBlank(message = "Delivery Method Name is required")
     private String deliveryMethodName;
+
+    private Float price;
 }

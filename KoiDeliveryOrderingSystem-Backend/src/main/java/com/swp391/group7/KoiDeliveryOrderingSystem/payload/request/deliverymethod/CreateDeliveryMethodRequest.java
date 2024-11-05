@@ -17,4 +17,5 @@ import java.time.LocalDateTime;
 public class CreateDeliveryMethodRequest {
     @NotBlank(message = "Delivery Method Name is required")
     private String deliveryMethodName;
+    private Float price;
 }

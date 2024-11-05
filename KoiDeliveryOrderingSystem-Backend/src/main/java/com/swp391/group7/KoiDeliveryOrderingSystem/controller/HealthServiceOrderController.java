@@ -40,7 +40,7 @@ public class HealthServiceOrderController {
                 .build());
     }
 
-    @PutMapping("udpate/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<ApiResponse<HealthServiceOrderResponse>> updateHealServiceOrder(
             @PathVariable("id") Integer id,
             @RequestBody UpdateHealthServiceOrderRequest updateHealthServiceOrder) {

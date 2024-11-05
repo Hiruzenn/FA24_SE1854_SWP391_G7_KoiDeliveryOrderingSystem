@@ -22,6 +22,9 @@ public class DeliveryMethod {
     @Column(name = "delivery_name")
     private String deliveryMethodName;
 
+    @Column(name = "price")
+    private Float price;
+
     @OneToMany(mappedBy = "deliveryMethod")
     @JsonBackReference
     private List<Orders> orders;

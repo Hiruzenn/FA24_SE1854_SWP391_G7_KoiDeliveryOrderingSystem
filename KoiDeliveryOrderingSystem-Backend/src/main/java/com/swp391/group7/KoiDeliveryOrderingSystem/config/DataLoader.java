@@ -79,18 +79,22 @@ public class DataLoader {
             if (deliveryMethodRepository.count() == 0) {
                 DeliveryMethod van = DeliveryMethod.builder()
                         .deliveryMethodName("VAN")
+                        .price(50f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod plane = DeliveryMethod.builder()
                         .deliveryMethodName("PLANE")
+                        .price(200f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod boat = DeliveryMethod.builder()
                         .deliveryMethodName("BOAT")
+                        .price(150f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod train = DeliveryMethod.builder()
                         .deliveryMethodName("TRAIN")
+                        .price(100f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 deliveryMethodRepository.save(van);
@@ -122,31 +126,31 @@ public class DataLoader {
                 HealthServiceCategory healthServiceCategoryA = HealthServiceCategory.builder()
                         .serviceName("Prepare oxygen bag and pump")
                         .serviceDescription("Ensure adequate oxygen and space for the fish.")
-                        .price(Float.parseFloat(String.valueOf(500.0)))
+                        .price(100f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryB = HealthServiceCategory.builder()
                         .serviceName("Add salt or anti-stress medication")
                         .serviceDescription("Reduce stress and risk of infection.")
-                        .price(Float.parseFloat(String.valueOf(400.0)))
+                        .price(200f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryC = HealthServiceCategory.builder()
                         .serviceName("Maintain proper temperature and lighting")
                         .serviceDescription("Stabilize the transport environment")
-                        .price(Float.parseFloat(String.valueOf(500.0)))
+                        .price(300f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryD = HealthServiceCategory.builder()
                         .serviceName("Use insulated boxes")
                         .serviceDescription("Protect fish from thermal shock and vibration.")
-                        .price(Float.parseFloat(String.valueOf(500.0)))
+                        .price(400f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryE = HealthServiceCategory.builder()
                         .serviceName("Tracking and post-shipment support")
                         .serviceDescription("Update information and instruct recipients on how to care for fish.")
-                        .price(Float.parseFloat(String.valueOf(500.0)))
+                        .price(500f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 healthServiceCategoryRepository.save(healthServiceCategoryA);

@@ -29,21 +29,4 @@ public class CreateOrderRequest {
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
     @NotBlank(message = "Phone is required")
     private String phone;
-
-    @Positive(message = "Amount is must be positive")
-    @NotNull(message = "Amount is required")
-    private float amount;
-
-    @Positive(message = "VAT is must be positive")
-    @NotNull(message = "VAT is required")
-    private float vat;
-
-    @Positive(message = "VAT amount is must be positive")
-    @NotNull(message = "VAT Amount is required")
-    private float vatAmount;
-
-    @Positive(message = "Total Amount is must be positive")
-    @NotNull(message = "Total Amount is required")
-    private float totalAmount;
-
 }

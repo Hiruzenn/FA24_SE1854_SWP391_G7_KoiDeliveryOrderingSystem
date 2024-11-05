@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Integer> {
     List<OrderDetail> findByOrders(Orders orders);
     Optional<OrderDetail> findByIdAndStatus(Integer id, SystemStatusEnum status);
+    List<OrderDetail> findByOrdersAndStatus(Orders orders, SystemStatusEnum status);
 }

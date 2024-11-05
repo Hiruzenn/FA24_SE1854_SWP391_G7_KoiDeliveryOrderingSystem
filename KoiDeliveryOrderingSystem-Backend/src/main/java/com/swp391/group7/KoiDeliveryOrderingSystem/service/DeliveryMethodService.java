@@ -37,6 +37,7 @@ public class DeliveryMethodService {
         }
         DeliveryMethod deliveryMethod = DeliveryMethod.builder()
                 .deliveryMethodName(createDeliveryMethodRequest.getDeliveryMethodName())
+                .price(createDeliveryMethodRequest.getPrice())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -55,6 +56,7 @@ public class DeliveryMethodService {
         DeliveryMethod deliveryMethod = deliveryMethodRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
         deliveryMethod.setDeliveryMethodName(updateDeliveryMethodRequest.getDeliveryMethodName());
+        deliveryMethod.setPrice(updateDeliveryMethodRequest.getPrice());
         deliveryMethod.setUpdateAt(LocalDateTime.now());
         deliveryMethod.setUpdateBy(users.getId());
         deliveryMethodRepository.save(deliveryMethod);
@@ -88,6 +90,7 @@ public class DeliveryMethodService {
         return DeliveryMethodResponse.builder()
                 .id(deliveryMethod.getId())
                 .deliveryMethodName(deliveryMethod.getDeliveryMethodName())
+                .price(deliveryMethod.getPrice())
                 .createAt(deliveryMethod.getCreateAt())
                 .createBy(deliveryMethod.getCreateBy())
                 .updateAt(deliveryMethod.getUpdateAt())
