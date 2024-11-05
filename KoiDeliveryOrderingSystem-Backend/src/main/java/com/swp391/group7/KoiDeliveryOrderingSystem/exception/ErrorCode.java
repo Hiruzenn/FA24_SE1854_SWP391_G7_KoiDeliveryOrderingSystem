@@ -15,6 +15,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1010, "Unauthenticated"),
     NOT_LOGIN(1011, "Not Login"),
     INVALID_TOKEN(1012, "Invalid Token"),
+    UNVERIFIED_ACCOUNT(1013, "Unverified Account"),
 
 
     //ORDER
@@ -56,6 +57,7 @@ public enum ErrorCode {
 
 
     CHECKING_KOI_HEALTH_NOT_FOUND(1507, "Checking Koi Health Not Found"),
+    INTERNAL_SEVER_ERROR(1600, "Internal Sever Error"),
     ;
 
     private final int code;

@@ -63,32 +63,33 @@ public class AuthService {
     protected String signerKey;
 
 
-    public AuthResponse register(RegisterCustomerRequest registerCustomerRequest) {
-        var customer = userRepository.findByEmail(registerCustomerRequest.getEmail());
-        if (customer.isPresent()) {
-            throw new AppException(ErrorCode.ACCOUNT_REGISTERED);
-        }
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        String encodedPassword = passwordEncoder.encode(registerCustomerRequest.getPassword());
-        new Users();
-        Users newCustomer = Users.builder()
-                .email(registerCustomerRequest.getEmail())
-                .password(encodedPassword)
-                .name(registerCustomerRequest.getName())
-                .role(roleRepository.findByName("CUSTOMERS"))
-                .createAt(LocalDateTime.now())
-                .customerStatus(CustomerStatusEnum.UNVERIFIED)
-                .build();
-        userRepository.save(newCustomer);
-        var token = generateToken(newCustomer);
-        return AuthResponse.builder()
-                .token(token)
-                .build();
+    public AuthResponse register(RegisterCustomerRequest registerCustomerRequest) throws MessagingException {
+            var customer = userRepository.findByEmail(registerCustomerRequest.getEmail());
+            if (customer.isPresent()) {
+                throw new AppException(ErrorCode.ACCOUNT_REGISTERED);
+            }
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+            String encodedPassword = passwordEncoder.encode(registerCustomerRequest.getPassword());
+            new Users();
+            Users newCustomer = Users.builder()
+                    .email(registerCustomerRequest.getEmail())
+                    .password(encodedPassword)
+                    .name(registerCustomerRequest.getName())
+                    .role(roleRepository.findByName("CUSTOMERS"))
+                    .createAt(LocalDateTime.now())
+                    .customerStatus(CustomerStatusEnum.UNVERIFIED)
+                    .build();
+            userRepository.save(newCustomer);
+            sendVerificationEmail(registerCustomerRequest.getEmail());
+            var token = generateToken(newCustomer);
+            return AuthResponse.builder()
+                    .token(token)
+                    .build();
     }
 
     public AuthResponse login(AuthRequest authRequest) {
-        var user = usersRepository.findByEmail(authRequest.getEmail()).
-                orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var user = usersRepository.findByEmailAndCustomerStatus(authRequest.getEmail(), CustomerStatusEnum.VERIFIED).
+                orElseThrow(() -> new AppException(ErrorCode.UNVERIFIED_ACCOUNT));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(authRequest.getPassword(), user.getPassword());
         if (!authenticated) {
@@ -187,7 +188,7 @@ public class AuthService {
 
             return userRepository.findById(Integer.valueOf(userId))
                     .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new AppException(ErrorCode.INVALID_TOKEN);
         }
     }
