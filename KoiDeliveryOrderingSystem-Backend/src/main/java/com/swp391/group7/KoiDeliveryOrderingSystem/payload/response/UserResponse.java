@@ -15,5 +15,6 @@ public class UserResponse {
     String email;
     String address;
     String avatar;
+    String phone;
     CustomerStatusEnum status;
 }
