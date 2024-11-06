@@ -95,7 +95,7 @@ public class OrderController {
                 .build());
     }
 
-    @PutMapping("acceptorder/{orderId}")
+    @PutMapping("accept-order/{orderId}")
     public ResponseEntity<ApiResponse<OrderResponse>> acceptOrder(@PathVariable Integer orderId) {
         var result = orderService.AcceptOrder(orderId);
         return ResponseEntity.ok(ApiResponse.<OrderResponse>builder()

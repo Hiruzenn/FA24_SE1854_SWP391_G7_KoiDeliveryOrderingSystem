@@ -62,7 +62,7 @@ public class FishProfileService {
 
     public FishProfileResponse updateFishProfile(Integer fishProfileId, UpdateFishProfileRequest updateFishProfileRequest) {
         Users users = accountUtils.getCurrentUser();
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE).orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
@@ -84,15 +84,25 @@ public class FishProfileService {
 
     public List<FishProfileResponse> getAllFishProfiles() {
         Users users = accountUtils.getCurrentUser();
-        if (users == null){
+        if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         List<FishProfile> fishProfiles = fishProfileRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         List<FishProfileResponse> fishProfileResponses = new ArrayList<>();
-        for(FishProfile fishProfile : fishProfiles){
+        for (FishProfile fishProfile : fishProfiles) {
             fishProfileResponses.add(convertToFishProfileResponse(fishProfile));
         }
         return fishProfileResponses;
+    }
+
+    public FishProfileResponse viewOne(Integer fishProfileId) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        return convertToFishProfileResponse(fishProfile);
     }
 
     public FishProfileResponse deleteFishProfile(Integer fishProfileId) {
@@ -101,7 +111,7 @@ public class FishProfileService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
-                .orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         fishProfile.setStatus(SystemStatusEnum.NOT_AVAILABLE);
         fishProfile.setUpdateAt(LocalDateTime.now());
         fishProfile.setUpdateBy(users.getId());

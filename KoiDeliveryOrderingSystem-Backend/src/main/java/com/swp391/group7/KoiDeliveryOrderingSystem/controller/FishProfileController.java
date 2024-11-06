@@ -30,8 +30,9 @@ public class FishProfileController {
                 .result(result)
                 .build());
     }
+
     @PutMapping("update/{fishProfileId}")
-    public ResponseEntity<ApiResponse<FishProfileResponse>> updateFishProfile(@Valid @PathVariable Integer fishProfileId,@RequestBody UpdateFishProfileRequest updateFishProfileRequest) {
+    public ResponseEntity<ApiResponse<FishProfileResponse>> updateFishProfile(@Valid @PathVariable Integer fishProfileId, @RequestBody UpdateFishProfileRequest updateFishProfileRequest) {
         var result = fishProfileService.updateFishProfile(fishProfileId, updateFishProfileRequest);
         return ResponseEntity.ok(ApiResponse.<FishProfileResponse>builder()
                 .code(200)
@@ -46,6 +47,16 @@ public class FishProfileController {
         return ResponseEntity.ok(ApiResponse.<List<FishProfileResponse>>builder()
                 .code(200)
                 .message("Fish profile list")
+                .result(result)
+                .build());
+    }
+
+    @GetMapping("view-one/{id}")
+    public ResponseEntity<ApiResponse<FishProfileResponse>> viewFishProfile(@PathVariable Integer id) {
+        var result = fishProfileService.viewOne(id);
+        return ResponseEntity.ok(ApiResponse.<FishProfileResponse>builder()
+                .code(200)
+                .message("Fish Profile By Id")
                 .result(result)
                 .build());
     }
