@@ -43,6 +43,7 @@ public class UserService {
         users.setName(request.getName());
         users.setAddress(request.getAddress());
         users.setAvatar(request.getAvatar());
+        users.setPhone(request.getPhone());
         users.setUpdateAt(LocalDateTime.now());
         users.setUpdateBy(users.getId());
         userRepository.save(users);
@@ -56,6 +57,7 @@ public class UserService {
                 .email(users.getEmail())
                 .address(users.getAddress())
                 .avatar(users.getAvatar())
+                .phone(users.getPhone())
                 .status(users.getCustomerStatus())
                 .build();
     }

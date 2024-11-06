@@ -13,7 +13,7 @@ import lombok.Setter;
 public class UpdateProfileRequest {
     @NotBlank(message = "Name is required")
     private String name;
-
     private String address;
     private String avatar;
+    private String phone;
 }
