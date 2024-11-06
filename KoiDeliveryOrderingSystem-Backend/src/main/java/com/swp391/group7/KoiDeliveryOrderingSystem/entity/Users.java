@@ -58,8 +58,8 @@ public class Users {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "balance")
-    private float balance;
+    @Column(name = "phone")
+    private String phone;
 
     @Column(name = "avatar", unique = true)
     private String avatar;

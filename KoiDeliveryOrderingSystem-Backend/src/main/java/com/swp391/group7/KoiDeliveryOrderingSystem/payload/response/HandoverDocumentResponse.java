@@ -21,7 +21,6 @@ public class HandoverDocumentResponse {
     private Integer packageId;
     private Integer orderId;
     private String handoverNo;
-    private String staff;
     private String handoverDescription;
     private String vehicle;
     private String destination;

@@ -1,7 +1,5 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.invoice.CreateInvoiceRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.invoice.UpdateInvoiceRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.InvoiceResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.InvoiceService;
@@ -19,30 +17,40 @@ public class InvoiceController {
     @Autowired
     private InvoiceService invoiceService;
 
-    @GetMapping
+    @GetMapping("view-all")
     public ResponseEntity<ApiResponse<List<InvoiceResponse>>> getAllInvoices() {
-        List<InvoiceResponse> invoices = invoiceService.getListInvoices();
+        var invoices = invoiceService.getListInvoices();
         return ResponseEntity.ok(ApiResponse.<List<InvoiceResponse>>builder()
-                .code(200) // HTTP OK
+                .code(200)
                 .message("Invoices retrieved successfully")
                 .result(invoices)
                 .build());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("view-one/{id}")
     public ResponseEntity<ApiResponse<InvoiceResponse>> getInvoiceById(@PathVariable int id) {
-        InvoiceResponse InvoiceResponse = invoiceService.getInvoiceById(id);
+        var InvoiceResponse = invoiceService.getInvoiceById(id);
         return ResponseEntity.ok(ApiResponse.<InvoiceResponse>builder()
-                .code(200) // HTTP OK
+                .code(200)
                 .message("Invoice retrieved successfully")
                 .result(InvoiceResponse)
                 .build());
     }
 
-    // Endpoint to create a new invoice
-    @PostMapping("/create/") // Ensure the orderId is part of the path variable
-    public ResponseEntity<ApiResponse<InvoiceResponse>> createInvoice(@RequestBody CreateInvoiceRequest createInvoiceRequest) {
-        var result = invoiceService.createInvoice(createInvoiceRequest);
+    @GetMapping("view-by-customer")
+    public ResponseEntity<ApiResponse<List<InvoiceResponse>>> getInvoiceByUserId() {
+        var result = invoiceService.getInvoiceByUserId();
+        return ResponseEntity.ok(ApiResponse.<List<InvoiceResponse>>builder()
+                .code(200)
+                .message("Invoice by User")
+                .result((result))
+                .build());
+
+    }
+
+    @PostMapping("/create/{orderId}")
+    public ResponseEntity<ApiResponse<InvoiceResponse>> createInvoice(@PathVariable("orderId") Integer orderId) {
+        var result = invoiceService.createInvoice(orderId);
         return ResponseEntity.ok(ApiResponse.<InvoiceResponse>builder()
                 .code(200)
                 .message("Invoice created successfully")
@@ -50,19 +58,6 @@ public class InvoiceController {
                 .build());
     }
 
-
-    // Endpoint to update an existing invoice by ID
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<InvoiceResponse>> updateInvoice(@PathVariable Integer id, @RequestBody UpdateInvoiceRequest updateInvoiceRequest) {
-        var result = invoiceService.updateInvoice(id, updateInvoiceRequest);
-        return ResponseEntity.ok(ApiResponse.<InvoiceResponse>builder()
-                .code(200)
-                .message("Invoice updated successfully")
-                .result(result)
-                .build());
-    }
-
-    // Endpoint to delete an invoice by ID
     @PutMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<InvoiceResponse>> deleteInvoice(@PathVariable Integer id) {
         var result = invoiceService.removeInvoice(id);

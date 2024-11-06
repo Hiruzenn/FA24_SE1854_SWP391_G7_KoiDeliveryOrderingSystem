@@ -64,7 +64,6 @@ public class HandoverDocumentService {
                 .users(customer)
                 .orders(orders)
                 .packages(packages)
-                .staff(request.getStaff())
                 .handoverDescription(request.getHandoverDescription())
                 .vehicle(request.getVehicle())
                 .destination(request.getDestination())
@@ -87,7 +86,6 @@ public class HandoverDocumentService {
         }
         HandoverDocument handoverDocument = handoverDocumentRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
-        handoverDocument.setStaff(request.getStaff());
         handoverDocument.setHandoverDescription(request.getHandoverDescription());
         handoverDocument.setVehicle(request.getVehicle());
         handoverDocument.setDestination(request.getDestination());
@@ -130,7 +128,6 @@ public class HandoverDocumentService {
                 .userId(handoverDocument.getUsers().getId())
                 .packageId(handoverDocument.getPackages().getId())
                 .orderId(handoverDocument.getOrders().getId())
-                .staff(handoverDocument.getStaff())
                 .handoverDescription(handoverDocument.getHandoverDescription())
                 .vehicle(handoverDocument.getVehicle())
                 .destination(handoverDocument.getDestination())
