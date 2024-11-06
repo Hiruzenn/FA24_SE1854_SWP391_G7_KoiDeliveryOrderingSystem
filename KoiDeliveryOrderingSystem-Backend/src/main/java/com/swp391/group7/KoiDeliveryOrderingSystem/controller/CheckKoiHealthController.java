@@ -17,7 +17,7 @@ public class CheckKoiHealthController {
     @Autowired
     private CheckingKoiHealthService checkingKoiHealthService;
 
-    @PostMapping("create/{orderDetailId}/{packageId}")
+    @PostMapping("create}")
     public ResponseEntity<ApiResponse<CheckingKoiHealthResponse>> createCheckingKoiHealth(@RequestBody CreateCheckingKoiHealthRequest createCheckingKoiHealthRequest) {
         var result = checkingKoiHealthService.createCheckingKoiHealth(createCheckingKoiHealthRequest);
         return ResponseEntity.ok(ApiResponse.<CheckingKoiHealthResponse>builder()
