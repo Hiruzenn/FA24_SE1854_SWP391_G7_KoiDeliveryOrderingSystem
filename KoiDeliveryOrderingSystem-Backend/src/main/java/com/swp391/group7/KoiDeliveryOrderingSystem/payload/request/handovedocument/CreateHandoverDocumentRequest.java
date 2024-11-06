@@ -23,9 +23,4 @@ public class CreateHandoverDocumentRequest {
     private Integer packageId;
     private Integer orderId;
     private String handoverDescription;
-    private String vehicle;
-    private String destination;
-    private String departure;
-    private Float totalPrice;
-
 }

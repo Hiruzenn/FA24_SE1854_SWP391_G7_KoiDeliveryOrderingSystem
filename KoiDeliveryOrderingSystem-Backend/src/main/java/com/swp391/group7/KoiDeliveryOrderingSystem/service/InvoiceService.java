@@ -1,6 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.InvoiceStatus;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.InvoiceStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Invoice;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -69,9 +69,9 @@ public class InvoiceService {
         }
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.PENDING)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        Invoice invoiceCheck = invoiceRepository.findByOrdersAndStatus(orders, InvoiceStatus.UNPAID);
+        Invoice invoiceCheck = invoiceRepository.findByOrdersAndStatus(orders, InvoiceStatusEnum.UNPAID);
         if (invoiceCheck != null) {
-            invoiceCheck.setStatus(InvoiceStatus.NOT_AVAILABLE);
+            invoiceCheck.setStatus(InvoiceStatusEnum.NOT_AVAILABLE);
         }
         Invoice invoice = Invoice.builder()
                 .invoiceNo(generateInvoiceNo())
@@ -83,7 +83,7 @@ public class InvoiceService {
                 .vatAmount(orders.getVatAmount())
                 .amount(orders.getAmount())
                 .totalAmount(orders.getTotalAmount())
-                .status(InvoiceStatus.UNPAID)
+                .status(InvoiceStatusEnum.UNPAID)
                 .build();
         invoice = invoiceRepository.save(invoice);
         return covertToInvoiceResponse(invoice);
@@ -92,7 +92,7 @@ public class InvoiceService {
     public InvoiceResponse removeInvoice(Integer id) {
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
-        invoice.setStatus(InvoiceStatus.NOT_AVAILABLE);
+        invoice.setStatus(InvoiceStatusEnum.NOT_AVAILABLE);
         invoice = invoiceRepository.save(invoice);
         return covertToInvoiceResponse(invoice);
     }

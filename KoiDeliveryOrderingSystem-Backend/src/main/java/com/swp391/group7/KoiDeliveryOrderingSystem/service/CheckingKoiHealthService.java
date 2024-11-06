@@ -40,14 +40,14 @@ public class CheckingKoiHealthService {
     @Autowired
     private AccountUtils accountUtils;
 
-    public CheckingKoiHealthResponse createCheckingKoiHealth(Integer orderDetailId, Integer packageId, CreateCheckingKoiHealthRequest request) {
+    public CheckingKoiHealthResponse createCheckingKoiHealth(CreateCheckingKoiHealthRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId)
+        OrderDetail orderDetail = orderDetailRepository.findById(request.getOrderDetailId())
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND));
-        Package packages = packageRepository.findById(packageId)
+        Package packages = packageRepository.findById(request.getPackageId())
                 .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
         CheckingKoiHealth checkingKoiHealth = CheckingKoiHealth.builder()
                 .orderDetail(orderDetail)
