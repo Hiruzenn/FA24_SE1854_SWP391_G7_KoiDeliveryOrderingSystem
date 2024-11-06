@@ -1,6 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.InvoiceStatus;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.InvoiceStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Invoice;
@@ -63,7 +63,7 @@ public class HealthCareDeliveryHistoryService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         // Retrieve the associated Invoice and HandoverDocument
-        Invoice invoice = invoiceRepository.findByIdAndStatus(request.getInvoiceId(), InvoiceStatus.UNPAID)
+        Invoice invoice = invoiceRepository.findByIdAndStatus(request.getInvoiceId(), InvoiceStatusEnum.UNPAID)
                 .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
         HandoverDocument document = handoverDocumentRepository.findByIdAndStatus(request.getHandoverDocumentId(), SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));

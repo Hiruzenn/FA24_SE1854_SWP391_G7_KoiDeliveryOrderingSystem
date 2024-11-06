@@ -16,5 +16,4 @@ public class UpdateHandoverDocumentRequest {
     private String vehicle;
     private String destination;
     private String departure;
-    private Float totalPrice;
 }

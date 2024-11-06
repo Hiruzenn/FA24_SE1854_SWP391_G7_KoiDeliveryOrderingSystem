@@ -65,10 +65,10 @@ public class HandoverDocumentService {
                 .orders(orders)
                 .packages(packages)
                 .handoverDescription(request.getHandoverDescription())
-                .vehicle(request.getVehicle())
-                .destination(request.getDestination())
-                .departure(request.getDeparture())
-                .totalPrice(request.getTotalPrice())
+                .vehicle(orders.getDeliveryMethod().getDeliveryMethodName())
+                .destination(orders.getDestination())
+                .departure(orders.getDeparture())
+                .totalPrice(orders.getTotalAmount())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -90,7 +90,6 @@ public class HandoverDocumentService {
         handoverDocument.setVehicle(request.getVehicle());
         handoverDocument.setDestination(request.getDestination());
         handoverDocument.setDeparture(request.getDeparture());
-        handoverDocument.setTotalPrice(request.getTotalPrice());
         handoverDocument.setUpdateAt(LocalDateTime.now());
         handoverDocument.setUpdateBy(users.getId());
         handoverDocumentRepository.save(handoverDocument);

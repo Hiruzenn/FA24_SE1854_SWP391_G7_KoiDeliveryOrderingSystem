@@ -16,6 +16,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateCheckingKoiHealthRequest {
+    @NotNull(message = "Order Detail Id is required")
+    private Integer orderDetailId;
+
+    @NotNull(message = "Package Id is required")
+    private Integer packageId;
     @NotNull(message = "Health Status is required")
     private HealthStatusEnum healthStatus;
 

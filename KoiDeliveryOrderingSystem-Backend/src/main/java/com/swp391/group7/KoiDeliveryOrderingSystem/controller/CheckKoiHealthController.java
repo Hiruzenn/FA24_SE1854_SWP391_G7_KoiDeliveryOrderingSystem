@@ -18,10 +18,8 @@ public class CheckKoiHealthController {
     private CheckingKoiHealthService checkingKoiHealthService;
 
     @PostMapping("create/{orderDetailId}/{packageId}")
-    public ResponseEntity<ApiResponse<CheckingKoiHealthResponse>> createCheckingKoiHealth(@PathVariable("orderDetailId") Integer orderDetailId,
-                                                                                          @PathVariable("packageId") Integer packageId,
-                                                                                          @RequestBody CreateCheckingKoiHealthRequest createCheckingKoiHealthRequest) {
-        var result = checkingKoiHealthService.createCheckingKoiHealth(orderDetailId, packageId, createCheckingKoiHealthRequest);
+    public ResponseEntity<ApiResponse<CheckingKoiHealthResponse>> createCheckingKoiHealth(@RequestBody CreateCheckingKoiHealthRequest createCheckingKoiHealthRequest) {
+        var result = checkingKoiHealthService.createCheckingKoiHealth(createCheckingKoiHealthRequest);
         return ResponseEntity.ok(ApiResponse.<CheckingKoiHealthResponse>builder()
                 .code(200)
                 .message("Checking Koi Health Created")

@@ -2,12 +2,10 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.InvoiceStatus;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.InvoiceStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -59,5 +57,5 @@ public class Invoice {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private InvoiceStatus status;
+    private InvoiceStatusEnum status;
 }
