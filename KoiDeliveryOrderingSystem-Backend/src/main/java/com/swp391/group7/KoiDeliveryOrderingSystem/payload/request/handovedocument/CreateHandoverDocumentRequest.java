@@ -22,7 +22,6 @@ public class CreateHandoverDocumentRequest {
     private Integer userId;
     private Integer packageId;
     private Integer orderId;
-    private String staff;
     private String handoverDescription;
     private String vehicle;
     private String destination;

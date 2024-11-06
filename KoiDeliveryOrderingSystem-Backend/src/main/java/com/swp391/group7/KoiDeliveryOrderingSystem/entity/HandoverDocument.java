@@ -43,9 +43,6 @@ public class HandoverDocument {
     @Column(name = "handover_no", nullable = false)
     private String handoverNo;
 
-    @Column(name = "staff", nullable = false)
-    private String staff;
-
     @Column(name = "handover_description")
     private String handoverDescription;
 

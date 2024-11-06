@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.InvoiceStatus;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -17,18 +18,13 @@ import java.util.List;
 public class InvoiceResponse {
     private Integer id;
     private String invoiceNo;
-    private String staff;
     private Integer orderId;
     private Integer userId;
-    private LocalDateTime date;
     private String addressStore;
     private String addressCustomer;
-    private Float vat;
     private Float amount;
+    private Float vat;
+    private Float vatAmount;
     private Float totalAmount;
-    private LocalDateTime createAt;
-    private Integer createBy;
-    private LocalDateTime updateAt;
-    private Integer updateBy;
-    private SystemStatusEnum status;
+    private InvoiceStatus status;
 }
