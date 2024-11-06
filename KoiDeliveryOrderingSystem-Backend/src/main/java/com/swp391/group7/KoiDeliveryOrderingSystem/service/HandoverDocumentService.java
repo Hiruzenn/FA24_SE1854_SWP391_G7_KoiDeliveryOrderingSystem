@@ -112,6 +112,25 @@ public class HandoverDocumentService {
 
     public List<HandoverDocumentResponse> getAll() {
         List<HandoverDocument> handoverDocumentList = handoverDocumentRepository.findByStatus(SystemStatusEnum.AVAILABLE);
+        return convertToListHandoverDocumentResponse(handoverDocumentList);
+    }
+
+    public List<HandoverDocumentResponse> viewByUsers(){
+        Users users = accountUtils.getCurrentUser();
+        if (users == null){
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        List<HandoverDocument> handoverDocumentList = handoverDocumentRepository.findByUsersAndStatus(users, SystemStatusEnum.AVAILABLE);
+        return convertToListHandoverDocumentResponse(handoverDocumentList);
+    }
+
+    public List<HandoverDocumentResponse> viewByOrder(Integer orderId){
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        List<HandoverDocument> handoverDocumentList = handoverDocumentRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
+        return convertToListHandoverDocumentResponse(handoverDocumentList);
+    }
+    public List<HandoverDocumentResponse> convertToListHandoverDocumentResponse(List<HandoverDocument> handoverDocumentList) {
         List<HandoverDocumentResponse> handoverDocumentResponses = new ArrayList<>();
         for (HandoverDocument handoverDocument : handoverDocumentList) {
             handoverDocumentResponses.add(convertToHandoverDocumentResponse(handoverDocument));
@@ -119,6 +138,11 @@ public class HandoverDocumentService {
         return handoverDocumentResponses;
     }
 
+    public HandoverDocumentResponse viewOne(Integer id){
+        HandoverDocument handoverDocument = handoverDocumentRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(()-> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+        return convertToHandoverDocumentResponse(handoverDocument);
+    }
 
     public HandoverDocumentResponse convertToHandoverDocumentResponse(HandoverDocument handoverDocument) {
         return HandoverDocumentResponse.builder()
