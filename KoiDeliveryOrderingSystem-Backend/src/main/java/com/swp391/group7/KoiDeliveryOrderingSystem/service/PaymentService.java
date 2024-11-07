@@ -107,7 +107,7 @@ public class PaymentService {
     }
 
 
-    public PaymentRequest createVnPayPayment(PaymentRequest2 paymentRequest2, HttpServletRequest request, int orderId) {
+    public PaymentRequest createVnPayPayment(PaymentRequest2 paymentRequest2, HttpServletRequest request) {
         Orders orders = orderRepository.findById(paymentRequest2.getOrderId()).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         Users user = userRepository.findById(orders.getUsers().getId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -121,9 +121,9 @@ public class PaymentService {
         }
 
 
-       paymentRequest2.setOrderId(orderId);
+        int orderId= orders.getId();
         String username =user.getName();
-        int amount = (int) (paymentRequest2.getTotalAmount()*100);
+        int amount = (int) orders.getTotalAmount() * 100000  ;
         String bankCode = paymentRequest2.getBankCode();
         String transactionId = "1";
 

@@ -72,15 +72,15 @@ public class PaymentController {
                 .build());
     }
 
-    @PostMapping("/payment/{orderId}")
-    public ResponseObject<PaymentRequest> pay(@RequestBody PaymentRequest2 request, HttpServletRequest httpServletRequest, int orderId) {
-        return new ResponseObject<>(HttpStatus.OK, "Success", paymentService.createVnPayPayment(request, httpServletRequest, orderId));
+    @PostMapping("/payment")
+    public ResponseObject<PaymentRequest> pay(@RequestBody PaymentRequest2 request, HttpServletRequest httpServletRequest) {
+        return new ResponseObject<>(HttpStatus.OK, "Success", paymentService.createVnPayPayment(request, httpServletRequest));
     }
 
     @GetMapping("/return")
     public void payCallbackHandler(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String url = "http://localhost:3001/PaymentSuccess";
-        String urlFail = "http://localhost:3001/PaymentFailed";
+        String url = "http://localhost:5173/paysuccess";
+        String urlFail = "http://localhost:5173/feedback";
         PaymentResponse2 payment = paymentService.handleCallback(request);
 
         if (payment.getCode().equals("00")) {
