@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class PaymentRequest2 {
     private String bankCode;
     private int orderId;
-    private float totalAmount;
+
     private String code;
     private String message;
     private String paymentUrl;

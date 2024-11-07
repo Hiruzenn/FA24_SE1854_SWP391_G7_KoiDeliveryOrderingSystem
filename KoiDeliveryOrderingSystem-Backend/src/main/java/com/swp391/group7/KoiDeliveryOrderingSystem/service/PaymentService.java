@@ -59,28 +59,7 @@ public class PaymentService {
 
     public static final String RANDOM_STRING = "0123456789";
 
-    public PaymentResponse createPayment(Integer orderId, CreatePaymentRequest createPaymentRequest) {
-        Users users = accountUtils.getCurrentUser();
-        if (users == null) {
-            throw new AppException(ErrorCode.NOT_LOGIN);
-        }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        Payment payment = Payment.builder()
-                .paymentCode(generatePaymentCode())
-                .users(users)
-                .orders(orders)
-                .paymentMethod(createPaymentRequest.getPaymentMethod())
-                .amount(createPaymentRequest.getAmount())
-                .createAt(LocalDateTime.now())
-                .createBy(users.getId())
-                .updateAt(LocalDateTime.now())
-                .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
-                .build();
-        paymentRepository.save(payment);
-        return convertToPaymentResponse(payment);
-    }
+
 
     public List<PaymentResponse> viewPaymentsByOrderId(Integer orderId) {
         Users users = accountUtils.getCurrentUser();
@@ -107,7 +86,7 @@ public class PaymentService {
     }
 
 
-    public PaymentRequest createVnPayPayment(PaymentRequest2 paymentRequest2, HttpServletRequest request, int orderId) {
+    public PaymentRequest createVnPayPayment(PaymentRequest2 paymentRequest2, HttpServletRequest request) {
         Orders orders = orderRepository.findById(paymentRequest2.getOrderId()).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         Users user = userRepository.findById(orders.getUsers().getId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -121,9 +100,9 @@ public class PaymentService {
         }
 
 
-       paymentRequest2.setOrderId(orderId);
+        int orderId= orders.getId();
         String username =user.getName();
-        int amount = (int) (paymentRequest2.getTotalAmount()*100);
+        int amount = (int) orders.getTotalAmount() * 100000  ;
         String bankCode = paymentRequest2.getBankCode();
         String transactionId = "1";
 
