@@ -31,16 +31,7 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
-    @PostMapping("create/{orderId}")
-    public ResponseEntity<ApiResponse<PaymentResponse>> createPayment (@Valid @PathVariable("orderId") Integer orderId,
-                                                                      @RequestBody CreatePaymentRequest createPaymentRequest){
-        var result = paymentService.createPayment(orderId, createPaymentRequest);
-        return ResponseEntity.ok(ApiResponse.<PaymentResponse>builder()
-                .code(200)
-                .message("Payment created successfully")
-                .result(result)
-                .build());
-    }
+
 
     @GetMapping("view-all")
     public ResponseEntity<ApiResponse<List<PaymentResponse>>> getAllPayments(){

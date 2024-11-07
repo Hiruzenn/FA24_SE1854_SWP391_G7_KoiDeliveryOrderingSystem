@@ -59,28 +59,7 @@ public class PaymentService {
 
     public static final String RANDOM_STRING = "0123456789";
 
-    public PaymentResponse createPayment(Integer orderId, CreatePaymentRequest createPaymentRequest) {
-        Users users = accountUtils.getCurrentUser();
-        if (users == null) {
-            throw new AppException(ErrorCode.NOT_LOGIN);
-        }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        Payment payment = Payment.builder()
-                .paymentCode(generatePaymentCode())
-                .users(users)
-                .orders(orders)
-                .paymentMethod(createPaymentRequest.getPaymentMethod())
-                .amount(createPaymentRequest.getAmount())
-                .createAt(LocalDateTime.now())
-                .createBy(users.getId())
-                .updateAt(LocalDateTime.now())
-                .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
-                .build();
-        paymentRepository.save(payment);
-        return convertToPaymentResponse(payment);
-    }
+
 
     public List<PaymentResponse> viewPaymentsByOrderId(Integer orderId) {
         Users users = accountUtils.getCurrentUser();
