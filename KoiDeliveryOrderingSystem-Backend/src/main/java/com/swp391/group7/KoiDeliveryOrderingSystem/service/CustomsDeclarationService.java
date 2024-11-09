@@ -16,6 +16,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ public class CustomsDeclarationService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.PENDING).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
                 .customsName(createCustomsDeclarationRequest.getCustomsName())
                 .declarationDate(createCustomsDeclarationRequest.getDeclarationDate())
@@ -94,6 +95,13 @@ public class CustomsDeclarationService {
     public CustomsDeclarationResponse getCustomsDeclaration(int id) {
         CustomsDeclaration customsDeclaration = customsDeclarationRepository.findCustomsDeclarationByIdAndStatus(id, SystemStatusEnum.AVAILABLE).
                 orElseThrow(() -> new AppException(ErrorCode.CUSTOM_DECLARATION_NOT_EXISTED));
+        return covertToCustomsDeclarationResponse(customsDeclaration);
+    }
+
+    public CustomsDeclarationResponse getCustomsDeclarationByOrder(Integer orderId) {
+        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        CustomsDeclaration customsDeclaration = customsDeclarationRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.CUSTOM_DECLARATION_NOT_EXISTED));
         return covertToCustomsDeclarationResponse(customsDeclaration);
     }
 

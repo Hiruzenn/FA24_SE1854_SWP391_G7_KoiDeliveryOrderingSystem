@@ -24,7 +24,7 @@ public class CertificateController {
         var result = certificateService.getListCertificate();
         return ResponseEntity.ok(ApiResponse.<List<CertificateResponse>>builder()
                 .code(200)
-                .message("Certificates retrieved successfully")
+                .message("All Certificates")
                 .result(result)
                 .build());
     }
@@ -34,11 +34,22 @@ public class CertificateController {
         var result = certificateService.getCertificateById(id);
         return ResponseEntity.ok(ApiResponse.<CertificateResponse>builder()
                 .code(200)
-                .message("Certificate retrieved successfully")
+                .message("Certificate by id")
                 .result(result)
                 .build());
 
     }
+
+    @GetMapping("view-by-order/{orderId}")
+    public ResponseEntity<ApiResponse<List<CertificateResponse>>> getCertificateByOrderId(@PathVariable("orderId") int orderId) {
+        var result = certificateService.getCertificateByOrder(orderId);
+        return ResponseEntity.ok(ApiResponse.<List<CertificateResponse>>builder()
+                .code(200)
+                .message("Certificates by Orders")
+                .result(result)
+                .build());
+    }
+
 
     @PostMapping("/create/{orderId}")
     public ResponseEntity<ApiResponse<CertificateResponse>> createCertificate(@Valid

@@ -38,6 +38,16 @@ public class CustomsDeclarationController {
                 .build());
     }
 
+    @GetMapping("view-by-order/{orderId}")
+    public ResponseEntity<ApiResponse<CustomsDeclarationResponse>> getCustomDeclarationByOrderId(@PathVariable("orderId") Integer orderId) {
+        var result = customsDeclarationService.getCustomsDeclarationByOrder(orderId);
+        return ResponseEntity.ok(ApiResponse.<CustomsDeclarationResponse>builder()
+                .code(200)
+                .message("Customs Declaration by Order")
+                .result(result)
+                .build());
+    }
+
     @PostMapping("/create/{orderId}")
     public ResponseEntity<ApiResponse<CustomsDeclarationResponse>> createCustomDeclaration
             (@PathVariable Integer orderId, @RequestBody CreateCustomsDeclarationRequest request) {
@@ -71,4 +81,5 @@ public class CustomsDeclarationController {
                 .result(result)
                 .build());
     }
+
 }

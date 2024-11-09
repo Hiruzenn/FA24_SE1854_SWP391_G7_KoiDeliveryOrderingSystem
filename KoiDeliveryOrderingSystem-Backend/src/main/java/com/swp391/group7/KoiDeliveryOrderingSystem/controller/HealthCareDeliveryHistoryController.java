@@ -33,7 +33,7 @@ public class HealthCareDeliveryHistoryController {
     }
 
     // Retrieve a specific healthcare delivery history by its ID
-    @GetMapping("/{id}")
+    @GetMapping("view-one/{id}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> getHealthCareDeliveryHistoryById(@PathVariable int id) {
         HealthCareDeliveryHistoryResponse historyResponse = healthCareDeliveryHistoryService.getHealthCareDeliveryHistoryById(id);
         ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
@@ -44,10 +44,30 @@ public class HealthCareDeliveryHistoryController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("view-by-invoice/{invoiceId}")
+    public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getHealthCareDeliveryHistoryByInvoice(@PathVariable("invoiceId") Integer invoiceId) {
+        var result = healthCareDeliveryHistoryService.getHealthCareDeliveryHistoryByInvoice(invoiceId);
+        return ResponseEntity.ok(ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
+                .code(200)
+                .message("View By Invoice")
+                .result(result)
+                .build());
+    }
+
+    @GetMapping("view-by-invoice/{handoverDocumentId}")
+    public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getHealthCareDeliveryHistoryByHandoverDocument(@PathVariable("handoverDocumentId") Integer handoverDocumentId) {
+        var result = healthCareDeliveryHistoryService.getHealthCareDeliveryHistoryByHandoverDocument(handoverDocumentId);
+        return ResponseEntity.ok(ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
+                .code(200)
+                .message("View By Handover Documents")
+                .result(result)
+                .build());
+    }
+
     // Create a new healthcare delivery history
     @PostMapping("create")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> createHealthCareDeliveryHistory(
-            @RequestBody CreateHealthCareDeliveryHistoryRequest request){
+            @RequestBody CreateHealthCareDeliveryHistoryRequest request) {
 
         var result = healthCareDeliveryHistoryService.createHealthCareDeliveryHistory(request);
 
