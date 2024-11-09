@@ -50,6 +50,12 @@ public class CertificateService {
         return covertToCertificateResponse(certificate);
 
     }
+    public List<CertificateResponse> getCertificateByOrder(Integer orderId){
+        Orders orders = orderRepository.findById(orderId)
+                .orElseThrow(()-> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        List<Certificate> certificate = certificateRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
+        return convertToListCertificateResponse(certificate);
+    }
 
     public CertificateResponse creatCertificate(Integer orderId, CreateCertificateRequest certificateRequest) {
         Users users = accountUtils.getCurrentUser();

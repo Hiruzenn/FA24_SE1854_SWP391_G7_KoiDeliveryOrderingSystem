@@ -45,16 +45,30 @@ public class HealthCareDeliveryHistoryService {
         if (healthCareDeliveryHistories.isEmpty()) {
             throw new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND);
         }
-        return covertToListHealthCareDeliveryHistoryResponse(healthCareDeliveryHistories);
+        return convertToListHealthCareDeliveryHistoryResponse(healthCareDeliveryHistories);
     }
 
     // Retrieve a specific healthcare delivery history by its ID
     public HealthCareDeliveryHistoryResponse getHealthCareDeliveryHistoryById(int id) {
         HealthCareDeliveryHistory healthCareDeliveryHistory = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
-        return covertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory);
+        return convertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory);
     }
 
+    public List<HealthCareDeliveryHistoryResponse> getHealthCareDeliveryHistoryByInvoice(Integer invoiceId){
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
+        List<HealthCareDeliveryHistory> healthCareDeliveryHistories = healthCareDeliveryHistoryRepository
+                .findByInvoiceAndStatus(invoice, SystemStatusEnum.AVAILABLE);
+        return convertToListHealthCareDeliveryHistoryResponse(healthCareDeliveryHistories);
+    }
+
+    public List<HealthCareDeliveryHistoryResponse> getHealthCareDeliveryHistoryByHandoverDocument(Integer handoverDocumentId){
+        HandoverDocument handoverDocument = handoverDocumentRepository.findById(handoverDocumentId)
+                .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+        List<HealthCareDeliveryHistory> healthCareDeliveryHistories = healthCareDeliveryHistoryRepository
+                .findByHandoverDocumentAndStatus(handoverDocument, SystemStatusEnum.AVAILABLE);
+        return convertToListHealthCareDeliveryHistoryResponse(healthCareDeliveryHistories);
+    }
     // Create a new healthcare delivery history
     public HealthCareDeliveryHistoryResponse createHealthCareDeliveryHistory(
             CreateHealthCareDeliveryHistoryRequest request) {
@@ -85,7 +99,7 @@ public class HealthCareDeliveryHistoryService {
 
         // Save the new health care delivery history to the repository
         healthCareDeliveryHistoryRepository.save(healthCareDeliveryHistory);
-        return covertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory);
+        return convertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory);
     }
 
     // Update an existing healthcare delivery history by ID
@@ -103,7 +117,7 @@ public class HealthCareDeliveryHistoryService {
 
         // Save the updated healthcare delivery history
         existingHistory = healthCareDeliveryHistoryRepository.save(existingHistory);
-        return covertToHealthCareDeliveryHistoryResponse(existingHistory);
+        return convertToHealthCareDeliveryHistoryResponse(existingHistory);
     }
 
     // Delete a healthcare delivery history by ID
@@ -119,26 +133,26 @@ public class HealthCareDeliveryHistoryService {
 
         // Save the updated healthcare delivery history
         existingHistory = healthCareDeliveryHistoryRepository.save(existingHistory);
-        return covertToHealthCareDeliveryHistoryResponse(existingHistory);
+        return convertToHealthCareDeliveryHistoryResponse(existingHistory);
     }
 
-    public List<HealthCareDeliveryHistoryResponse> covertToListHealthCareDeliveryHistoryResponse(List<HealthCareDeliveryHistory> healthCareDeliveryHistoryList) {
+    public List<HealthCareDeliveryHistoryResponse> convertToListHealthCareDeliveryHistoryResponse(List<HealthCareDeliveryHistory> healthCareDeliveryHistoryList) {
         List<HealthCareDeliveryHistoryResponse> historyResponses = new ArrayList<>();
         for (HealthCareDeliveryHistory healthCareDeliveryHistory : healthCareDeliveryHistoryList) {
-            historyResponses.add(covertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory));
+            historyResponses.add(convertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory));
         }
         return historyResponses;
     }
 
-    public HealthCareDeliveryHistoryResponse covertToHealthCareDeliveryHistoryResponse(HealthCareDeliveryHistory healthCareDeliveryHistory) {
+    public HealthCareDeliveryHistoryResponse convertToHealthCareDeliveryHistoryResponse(HealthCareDeliveryHistory healthCareDeliveryHistory) {
         if (healthCareDeliveryHistory == null) {
-            return null; // Handle null input if necessary
+            return null;
         }
 
         return HealthCareDeliveryHistoryResponse.builder()
                 .id(healthCareDeliveryHistory.getId())
-                .invoiceId(healthCareDeliveryHistory.getInvoice().getId()) // Ensure proper mapping if necessary
-                .handoverDocumentId(healthCareDeliveryHistory.getHandoverDocument().getId()) // Ensure proper mapping if necessary
+                .invoiceId(healthCareDeliveryHistory.getInvoice().getId())
+                .handoverDocumentId(healthCareDeliveryHistory.getHandoverDocument().getId())
                 .route(healthCareDeliveryHistory.getRoute())
                 .healthDescription(healthCareDeliveryHistory.getHealthDescription())
                 .eatingDescription(healthCareDeliveryHistory.getEatingDescription())
