@@ -2,6 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishcategory
 
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,4 +18,7 @@ public class UpdateFishCategoryRequest {
 
     @NotBlank(message = "Fish Category Description is required")
     private String fishCategoryDescription;
+
+    @NotNull(message = "Price is required")
+    private Float price;
 }

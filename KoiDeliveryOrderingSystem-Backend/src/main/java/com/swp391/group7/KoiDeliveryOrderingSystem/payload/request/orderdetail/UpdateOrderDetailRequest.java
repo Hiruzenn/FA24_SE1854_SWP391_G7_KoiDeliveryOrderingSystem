@@ -12,7 +12,4 @@ import lombok.experimental.FieldDefaults;
 public class UpdateOrderDetailRequest {
     @Positive(message = "quantity must be positive")
     private Integer quantity;
-
-    @Positive(message = "Unit Price must be positive")
-    private Float unitPrice;
 }

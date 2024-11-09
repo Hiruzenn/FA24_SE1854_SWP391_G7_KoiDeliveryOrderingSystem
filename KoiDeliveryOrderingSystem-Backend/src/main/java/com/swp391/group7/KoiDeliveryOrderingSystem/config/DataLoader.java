@@ -106,16 +106,19 @@ public class DataLoader {
                 FishCategory fishA = FishCategory.builder()
                         .fishCategoryName("Type A")
                         .fishCategoryDescription("Super A")
+                        .price(50000F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fishB = FishCategory.builder()
                         .fishCategoryName("Type B")
                         .fishCategoryDescription("Super B")
+                        .price(25000F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fishC = FishCategory.builder()
                         .fishCategoryName("Type C")
                         .fishCategoryDescription("Super C")
+                        .price(10000F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 fishCategoryRepository.save(fishA);
@@ -126,31 +129,31 @@ public class DataLoader {
                 HealthServiceCategory healthServiceCategoryA = HealthServiceCategory.builder()
                         .serviceName("Prepare oxygen bag and pump")
                         .serviceDescription("Ensure adequate oxygen and space for the fish.")
-                        .price(100f)
+                        .price(100000f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryB = HealthServiceCategory.builder()
                         .serviceName("Add salt or anti-stress medication")
                         .serviceDescription("Reduce stress and risk of infection.")
-                        .price(200f)
+                        .price(200000f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryC = HealthServiceCategory.builder()
                         .serviceName("Maintain proper temperature and lighting")
                         .serviceDescription("Stabilize the transport environment")
-                        .price(300f)
+                        .price(300000f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryD = HealthServiceCategory.builder()
                         .serviceName("Use insulated boxes")
                         .serviceDescription("Protect fish from thermal shock and vibration.")
-                        .price(400f)
+                        .price(400000f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryE = HealthServiceCategory.builder()
                         .serviceName("Tracking and post-shipment support")
                         .serviceDescription("Update information and instruct recipients on how to care for fish.")
-                        .price(500f)
+                        .price(500000f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 healthServiceCategoryRepository.save(healthServiceCategoryA);
