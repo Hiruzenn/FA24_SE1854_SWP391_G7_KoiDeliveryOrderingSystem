@@ -29,6 +29,9 @@ public class FishCategory {
     @JsonBackReference
     private List<FishProfile> fishProfiles;
 
+    @Column(name = "price")
+    private Float price;
+
     @Column(name = "create_at")
     private LocalDateTime createAt;
 

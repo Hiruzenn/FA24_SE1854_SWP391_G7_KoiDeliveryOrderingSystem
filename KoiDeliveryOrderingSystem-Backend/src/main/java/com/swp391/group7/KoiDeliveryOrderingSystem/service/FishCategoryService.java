@@ -36,6 +36,7 @@ public class FishCategoryService {
         FishCategory fishCategory = FishCategory.builder()
                 .fishCategoryName(createFishCategoryRequest.getFishCategoryName())
                 .fishCategoryDescription(createFishCategoryRequest.getFishCategoryDescription())
+                .price(createFishCategoryRequest.getPrice())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -55,6 +56,7 @@ public class FishCategoryService {
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
         fishCategory.setFishCategoryName(updateFishCategoryRequest.getFishCategoryName());
         fishCategory.setFishCategoryDescription(updateFishCategoryRequest.getFishCategoryDescription());
+        fishCategory.setPrice(updateFishCategoryRequest.getPrice());
         fishCategory.setUpdateAt(LocalDateTime.now());
         fishCategory.setUpdateBy(users.getId());
         fishCategoryRepository.save(fishCategory);

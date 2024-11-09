@@ -1,16 +1,14 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.orderdetail.CreateOrderDetailRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.orderdetail.UpdateOrderDetailRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderDetailResponse;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.OrderDetail;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishCategoryRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishProfileRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderDetailRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
@@ -39,19 +37,25 @@ public class OrderDetailService {
     @Autowired
     private FishProfileRepository fishProfileRepository;
 
+    @Autowired
+    private FishCategoryRepository fishCategoryRepository;
+
     public OrderDetailResponse createOrderDetail(CreateOrderDetailRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), OrderStatusEnum.PENDING).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(request.getFishProfileId(), SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(request.getFishProfileId(), SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        FishCategory fishCategory = fishCategoryRepository.findByFishCategoryName(fishProfile.getType().getFishCategoryName());
+
         OrderDetail orderDetail = OrderDetail.builder()
                 .orders(orders)
                 .fishProfiles(fishProfile)
                 .quantity(request.getQuantity())
-                .unitPrice(request.getUnitPrice())
-                .amount(request.getQuantity() * request.getUnitPrice())
+                .unitPrice(fishCategory.getPrice())
+                .amount(request.getQuantity() * fishCategory.getPrice())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -69,9 +73,9 @@ public class OrderDetailService {
         }
         OrderDetail orderDetail = orderDetailRepository.findByIdAndStatus(orderDetailId, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND));
+
         orderDetail.setQuantity(updateOrderDetailRequest.getQuantity());
-        orderDetail.setUnitPrice(updateOrderDetailRequest.getUnitPrice());
-        orderDetail.setAmount(updateOrderDetailRequest.getQuantity() * updateOrderDetailRequest.getUnitPrice());
+        orderDetail.setAmount(updateOrderDetailRequest.getQuantity() * orderDetail.getUnitPrice());
         orderDetail.setUpdateAt(LocalDateTime.now());
         orderDetail.setUpdateBy(users.getId());
         orderDetailRepository.save(orderDetail);
