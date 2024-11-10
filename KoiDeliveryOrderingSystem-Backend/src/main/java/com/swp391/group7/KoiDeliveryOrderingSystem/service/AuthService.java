@@ -57,7 +57,7 @@ public class AuthService {
     protected String signerKey;
 
 
-    public AuthResponse register(RegisterCustomerRequest registerCustomerRequest) throws MessagingException {
+    public void register(RegisterCustomerRequest registerCustomerRequest) throws MessagingException {
             var customer = userRepository.findByEmail(registerCustomerRequest.getEmail());
             if (customer.isPresent()) {
                 throw new AppException(ErrorCode.ACCOUNT_REGISTERED);
@@ -75,10 +75,6 @@ public class AuthService {
                     .build();
             userRepository.save(newCustomer);
             sendVerificationEmail(registerCustomerRequest.getEmail());
-            var token = generateToken(newCustomer);
-            return AuthResponse.builder()
-                    .token(token)
-                    .build();
     }
 
     public AuthResponse login(AuthRequest authRequest) {
@@ -93,6 +89,7 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(token)
                 .role(user.getRole().getName())
+                .id(user.getId())
                 .build();
     }
 

@@ -21,11 +21,10 @@ public class AuthController {
 
     @PostMapping("register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterCustomerRequest registerCustomerRequest) throws MessagingException {
-        AuthResponse result = authService.register(registerCustomerRequest);
+        authService.register(registerCustomerRequest);
         return ResponseEntity.ok(ApiResponse.<AuthResponse>builder()
                 .code(200)
-                .message("Register successful")
-                .result(result)
+                .message("Register successful, Check your email to verify account")
                 .build());
     }
 
