@@ -133,6 +133,8 @@ public class CheckingKoiHealthService {
                 .id(checkingKoi.getId())
                 .orderDetailId(checkingKoi.getOrderDetail().getId())
                 .packageId(checkingKoi.getPackages().getId())
+                .healthStatus(checkingKoi.getHealthStatus())
+                .healthStatusDescription(checkingKoi.getHealthStatusDescription())
                 .weight(checkingKoi.getWeight())
                 .color(checkingKoi.getColor())
                 .type(checkingKoi.getType())
