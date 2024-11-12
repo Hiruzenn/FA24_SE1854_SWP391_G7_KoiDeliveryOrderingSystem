@@ -144,6 +144,50 @@ public class AuthService {
         usersRepository.save(users);
     }
 
+    public void sendResetPasswordEmail(String email) throws MessagingException {
+        Users users = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Tạo token cho việc reset mật khẩu
+        String token = generateToken(users);
+        String url = "http://localhost:8080/auth/reset-password?token=" + token;
+        String subject = "Yêu cầu reset mật khẩu";
+
+        String message = "<html>" +
+                "<body>" +
+                "<h2>Yêu cầu reset mật khẩu</h2>" +
+                "<p>Chào " + users.getName() + ",</p>" +
+                "<p>Chúng tôi đã nhận được yêu cầu reset mật khẩu cho tài khoản của bạn. Để đặt lại mật khẩu, vui lòng nhấn vào liên kết bên dưới:</p>" +
+                "<p><a href=\"" + url + "\" style=\"background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;\">Reset mật khẩu</a></p>" +
+                "<p>Nếu bạn không yêu cầu reset mật khẩu, bạn có thể bỏ qua email này.</p>" +
+                "<p>Trân trọng,<br>Đội ngũ hỗ trợ</p>" +
+                "</body>" +
+                "</html>";
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        helper.setTo(email);
+        helper.setSubject(subject);
+        helper.setText(message, true);
+
+        mailSender.send(mimeMessage);
+    }
+
+    public void resetPassword(String token, String newPassword, String confirmPassword) throws MessagingException {
+        Users users = validateToken(token);
+        if(!newPassword.equals(confirmPassword)){
+
+            throw new AppException(ErrorCode.INVALID_REPEAT_PASSWORD);
+        }
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        users.setPassword(encodedPassword);
+        users.setUpdateAt(LocalDateTime.now());
+        users.setUpdateBy(users.getId());
+        usersRepository.save(users);
+    }
+
     public String generateToken(Users user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
