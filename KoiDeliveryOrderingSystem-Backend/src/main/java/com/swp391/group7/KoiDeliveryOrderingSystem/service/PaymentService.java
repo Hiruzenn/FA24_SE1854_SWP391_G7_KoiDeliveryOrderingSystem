@@ -102,7 +102,7 @@ public class PaymentService {
 
         int orderId= orders.getId();
         String username =user.getName();
-        int amount = (int) orders.getTotalAmount() * 100000  ;
+        int amount = (int) orders.getTotalAmount();
         String bankCode = paymentRequest2.getBankCode();
         String transactionId = "1";
 
