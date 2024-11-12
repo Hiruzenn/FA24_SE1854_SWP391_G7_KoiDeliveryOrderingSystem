@@ -59,7 +59,7 @@ public class OrderService {
                 .orderDate(LocalDateTime.now())
                 .destination(createOrderRequest.getDestination())
                 .departure(createOrderRequest.getDeparture())
-                .distance(createOrderRequest.getDistance())
+                .distance(calculateMoney.calculateDistance(createOrderRequest.getDeparture(), createOrderRequest.getDestination()))
                 .phone(createOrderRequest.getPhone())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
