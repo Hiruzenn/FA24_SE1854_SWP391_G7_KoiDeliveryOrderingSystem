@@ -39,8 +39,8 @@ public class PayOSService {
 
     public CheckoutResponseData createPayment(Integer orderId) throws Exception {
         try {
-            Random random = new Random();
-            Long orderCode = random.nextLong(10_000_000);
+            Random random = new SecureRandom();
+            Long orderCode = Math.abs(random.nextLong() % 10_000_000_000L);
             Users users = accountUtils.getCurrentUser();
             Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
             PayOS payOS = new PayOS(payOSConfig.getClientId(), payOSConfig.getApiKey(), payOSConfig.getChecksumKey());
