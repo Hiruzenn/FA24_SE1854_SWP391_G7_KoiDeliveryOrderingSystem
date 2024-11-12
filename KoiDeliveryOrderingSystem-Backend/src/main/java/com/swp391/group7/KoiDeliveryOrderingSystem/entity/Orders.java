@@ -78,10 +78,10 @@ public class Orders {
     @Column(name = "receiving_date")
     private LocalDateTime receivingDate;
 
-    @Column(name = "destination", nullable = false)
+    @Column(name = "destination", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String destination;
 
-    @Column(name = "departure", nullable = false)
+    @Column(name = "departure", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String departure;
 
     @Column(name = "distance", nullable = false)

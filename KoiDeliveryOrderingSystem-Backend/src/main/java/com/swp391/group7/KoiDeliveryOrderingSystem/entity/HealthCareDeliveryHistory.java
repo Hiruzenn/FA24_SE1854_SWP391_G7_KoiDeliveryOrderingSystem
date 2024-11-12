@@ -33,10 +33,10 @@ public class HealthCareDeliveryHistory {
     @Column(name = "route", nullable = false)
     private String route;
 
-    @Column(name = "health_description", nullable = false)
+    @Column(name = "health_description", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String healthDescription;
 
-    @Column(name = "eating_description", nullable = false)
+    @Column(name = "eating_description", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String eatingDescription;
 
     @Column(name = "delivery_status", nullable = false)

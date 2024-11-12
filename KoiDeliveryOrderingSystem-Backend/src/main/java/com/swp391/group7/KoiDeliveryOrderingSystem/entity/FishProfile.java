@@ -29,16 +29,16 @@ public class FishProfile {
     @JsonBackReference
     private OrderDetail orderDetail;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "NVARCHAR(255)")
     private String description;
 
-    @Column(name = "size", nullable = false)
+    @Column(name = "size", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String size;
 
-    @Column(name = "origin", nullable = false)
+    @Column(name = "origin", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String origin;
 
     @Column(name = "image", nullable = false)

@@ -43,16 +43,16 @@ public class HandoverDocument {
     @Column(name = "handover_no", nullable = false)
     private String handoverNo;
 
-    @Column(name = "handover_description")
+    @Column(name = "handover_description", columnDefinition = "NVARCHAR(255)")
     private String handoverDescription;
 
     @Column(name = "vehicle", nullable = false)
     private String vehicle;
 
-    @Column(name = "destination", nullable = false)
+    @Column(name = "destination", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String destination;
 
-    @Column(name = "departure", nullable = false)
+    @Column(name = "departure", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String departure;
 
     @Column(name = "total_price", nullable = false)

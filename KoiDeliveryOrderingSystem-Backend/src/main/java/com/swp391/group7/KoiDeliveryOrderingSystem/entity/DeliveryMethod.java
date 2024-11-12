@@ -19,7 +19,7 @@ public class DeliveryMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "delivery_name")
+    @Column(name = "delivery_name", columnDefinition = "NVARCHAR(255)")
     private String deliveryMethodName;
 
     @Column(name = "price")

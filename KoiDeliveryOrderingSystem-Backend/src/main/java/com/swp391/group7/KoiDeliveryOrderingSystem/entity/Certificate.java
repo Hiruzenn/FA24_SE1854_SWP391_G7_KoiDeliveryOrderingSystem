@@ -24,19 +24,19 @@ public class Certificate {
     @JsonManagedReference
     private Orders orders;
 
-    @Column(name = "certificate_name",nullable = false)
+    @Column(name = "certificate_name",nullable = false, columnDefinition = "NVARCHAR(255)")
     private String certificateName;
 
-    @Column(name = "certificate_description", nullable = false)
+    @Column(name = "certificate_description", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String certificateDescription;
 
-    @Column(name = "health", nullable = false)
+    @Column(name = "health", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String health;
 
-    @Column(name = "origin", nullable = false)
+    @Column(name = "origin", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String origin;
 
-    @Column(name = "award")
+    @Column(name = "award", columnDefinition = "NVARCHAR(255)")
     private String award;
 
     @Column(name = "image")
