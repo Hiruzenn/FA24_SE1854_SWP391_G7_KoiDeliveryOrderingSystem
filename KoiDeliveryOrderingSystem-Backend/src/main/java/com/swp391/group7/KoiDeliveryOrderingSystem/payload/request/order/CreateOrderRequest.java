@@ -22,10 +22,6 @@ public class CreateOrderRequest {
     @NotBlank(message = "Departure is required")
     private String departure;
 
-    @Positive(message = "Distance must be positive")
-    @NotNull(message = "Distance is required")
-    private float distance;
-
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
     @NotBlank(message = "Phone is required")
     private String phone;

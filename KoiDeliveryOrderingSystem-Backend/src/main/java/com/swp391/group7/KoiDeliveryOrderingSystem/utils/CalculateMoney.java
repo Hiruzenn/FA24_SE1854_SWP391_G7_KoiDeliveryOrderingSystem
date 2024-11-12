@@ -11,7 +11,10 @@ import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @Service
 public class CalculateMoney {
@@ -30,6 +33,8 @@ public class CalculateMoney {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
+    private final Map<String, Float> fixedDistance = new HashMap<>();
+
     public Float calculateMoney(Integer orderId) {
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.PENDING)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
@@ -47,4 +52,32 @@ public class CalculateMoney {
         Double total = (orders.getDistance() * deliveryMethod) + orderDetail + healthService;
         return Float.parseFloat(String.valueOf(total));
     }
+
+    public CalculateMoney() {
+        fixedDistance.put("Hồ Chí Minh - Hà Nội", 1500f);
+        fixedDistance.put("Hồ Chí Minh - Đà Nẵng", 800f);
+        fixedDistance.put("Hà Nội - Đà Nẵng", 750f);
+        fixedDistance.put("Hà Nội - Hồ Chí Minh", 1500f);
+        fixedDistance.put("Đà Nẵng - Hồ Chí Minh", 800f);
+        fixedDistance.put("Đà Nẵng - Hà Nội", 750f);
+
+        fixedDistance.put("Tokyo - Hồ Chí Minh", 4400f);
+        fixedDistance.put("Tokyo - Hà Nội", 3700f);
+        fixedDistance.put("Osaka - Hồ Chí Minh", 4000f);
+        fixedDistance.put("Osaka - Hà Nội", 3300f);
+    }
+
+    public Float calculateDistance(String start, String end) {
+        String key = getCity(start) + " - " + getCity(end);
+        return fixedDistance.getOrDefault(key, 0f);
+    }
+    public String getCity(String location){
+        if (location.contains("Hồ Chí Minh")) return "Hồ Chí Minh";
+        if (location.contains("Hà Nội")) return "Hà Nội";
+        if (location.contains("Đà Nẵng")) return "Đà Nẵng";
+        if (location.contains("Tokyo")) return "Tokyo";
+        if (location.contains("Osaka")) return "Osaka";
+        return location;
+    }
+
 }
