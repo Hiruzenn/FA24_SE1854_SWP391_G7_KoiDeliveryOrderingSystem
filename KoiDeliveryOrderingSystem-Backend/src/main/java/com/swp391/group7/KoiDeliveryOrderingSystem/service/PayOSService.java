@@ -20,6 +20,7 @@ import vn.payos.type.PaymentLinkData;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.util.Random;
 
 @Service
 public class PayOSService {
@@ -38,14 +39,15 @@ public class PayOSService {
 
     public CheckoutResponseData createPayment(Integer orderId) throws Exception {
         try {
+            Random random = new Random();
+            Long orderCode = random.nextLong(10_000_000);
             Users users = accountUtils.getCurrentUser();
             Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
             PayOS payOS = new PayOS(payOSConfig.getClientId(), payOSConfig.getApiKey(), payOSConfig.getChecksumKey());
             int totalAmountInt = (int) orders.getTotalAmount();
-            Long orderCodeLong = Long.parseLong(orders.getOrderCode().substring(3));
             PaymentData paymentData = PaymentData.builder()
                     .amount(totalAmountInt)
-                    .orderCode(orderCodeLong)
+                    .orderCode(orderCode)
                     .description("Thanh toán đơn hàng")
                     .returnUrl("http://localhost:8080/payos/payment-success?orderId=" + orderId + "&userId=" + users.getId())
                     .cancelUrl("http://localhost:8080/payos/payment-fail")
