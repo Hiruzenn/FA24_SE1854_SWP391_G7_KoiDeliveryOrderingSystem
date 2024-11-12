@@ -54,6 +54,7 @@ public class CalculateMoney {
     }
 
     public CalculateMoney() {
+        //Trong Việt Nam
         fixedDistance.put("Hồ Chí Minh - Hà Nội", 1500f);
         fixedDistance.put("Hồ Chí Minh - Đà Nẵng", 800f);
         fixedDistance.put("Hà Nội - Đà Nẵng", 750f);
@@ -61,10 +62,12 @@ public class CalculateMoney {
         fixedDistance.put("Đà Nẵng - Hồ Chí Minh", 800f);
         fixedDistance.put("Đà Nẵng - Hà Nội", 750f);
 
+        //Từ Nhật Về Việt Nam
         fixedDistance.put("Tokyo - Hồ Chí Minh", 4400f);
         fixedDistance.put("Tokyo - Hà Nội", 3700f);
         fixedDistance.put("Osaka - Hồ Chí Minh", 4000f);
         fixedDistance.put("Osaka - Hà Nội", 3300f);
+
     }
 
     public Float calculateDistance(String start, String end) {
