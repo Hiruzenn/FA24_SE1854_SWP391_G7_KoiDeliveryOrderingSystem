@@ -8,12 +8,12 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ResetPasswordRequest {
-    @NotBlank(message = "Token is required")
-    private String token;
-
     @NotBlank(message = "New password is required")
     private String newPassword;
 
     @NotBlank(message = "Confirm password is required")
     private String confirmPassword;
+
+    @NotBlank(message = "Token is required")
+    private String token;
 }
