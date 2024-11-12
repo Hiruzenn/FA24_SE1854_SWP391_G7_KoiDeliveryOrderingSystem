@@ -1,4 +1,4 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.customer;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
