@@ -25,7 +25,7 @@ public class CustomsDeclaration {
     @JsonManagedReference
     private Orders orders;
 
-    @Column(name = "customs_name", nullable = false)
+    @Column(name = "customs_name", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String customsName;
 
     @Column(name = "declaration_no", nullable = false)
@@ -34,7 +34,7 @@ public class CustomsDeclaration {
     @Column(name = "declaration_date", nullable = false)
     private LocalDateTime declarationDate;
 
-    @Column(name = "declaration_by", nullable = false)
+    @Column(name = "declaration_by", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String declarationBy;
 
     @Column(name = "reference_no", nullable = false)

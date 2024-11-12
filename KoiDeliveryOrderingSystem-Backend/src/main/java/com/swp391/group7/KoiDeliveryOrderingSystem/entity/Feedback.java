@@ -28,7 +28,7 @@ public class Feedback {
     @JoinColumn(name = "order_id", nullable = false)
     private Orders orders;
 
-    @Column(name = "feedback_description", nullable = false)
+    @Column(name = "feedback_description", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String feedbackDescription;
 
 }

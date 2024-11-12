@@ -33,16 +33,16 @@ public class CheckingKoiHealth {
     @Enumerated(EnumType.STRING)
     private HealthStatusEnum healthStatus;
 
-    @Column(name = "health_status_description", nullable = false)
+    @Column(name = "health_status_description", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String healthStatusDescription;
 
     @Column(name = "weight", nullable = false)
     private Float weight;
 
-    @Column(name = "color", nullable = false)
+    @Column(name = "color", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String color;
 
-    @Column(name = "type", nullable = false)
+    @Column(name = "type", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String type;
 
     @Column(name = "age", nullable = false)

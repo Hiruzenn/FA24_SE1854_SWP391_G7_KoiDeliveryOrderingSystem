@@ -33,7 +33,7 @@ public class Package {
     @Column(name = "package_no", nullable = false)
     private String packageNo;
 
-    @Column(name = "package_description")
+    @Column(name = "package_description", columnDefinition = "NVARCHAR(255)")
     private String packageDescription;
 
     @Column(name = "package_date", nullable = false)

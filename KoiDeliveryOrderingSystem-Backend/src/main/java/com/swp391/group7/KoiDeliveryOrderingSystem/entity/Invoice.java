@@ -37,10 +37,10 @@ public class Invoice {
     @JsonBackReference
     private List<HealthCareDeliveryHistory> healCareDeliveryHistories;
 
-    @Column(name = "address_ store")
+    @Column(name = "address_ store", columnDefinition = "NVARCHAR(255)")
     private String addressStore;
 
-    @Column(name = "address_customer")
+    @Column(name = "address_customer", columnDefinition = "NVARCHAR(255)")
     private String addressCustomer;
 
     @Column(name = "amount")

@@ -19,10 +19,10 @@ public class FishCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "fish_category_name")
+    @Column(name = "fish_category_name", columnDefinition = "NVARCHAR(255)")
     private String fishCategoryName;
 
-    @Column(name = "fish_category_description")
+    @Column(name = "fish_category_description", columnDefinition = "NVARCHAR(255)")
     private String fishCategoryDescription;
 
     @OneToMany(mappedBy = "type")

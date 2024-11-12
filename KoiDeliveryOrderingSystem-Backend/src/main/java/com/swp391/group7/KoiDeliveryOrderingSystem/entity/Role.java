@@ -18,7 +18,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "role_name", nullable = false, unique = true)
+    @Column(name = "role_name", nullable = false, unique = true, columnDefinition = "NVARCHAR(255)")
     private String name;
 
     @OneToMany(mappedBy = "role")

@@ -25,10 +25,10 @@ public class HealthServiceCategory {
     @JsonBackReference
     private List<HealthServiceOrder> healthServiceOrder;
 
-    @Column(name = "service_name", nullable = false)
+    @Column(name = "service_name", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String serviceName;
 
-    @Column(name = "service_description")
+    @Column(name = "service_description", columnDefinition = "NVARCHAR(255)")
     private String serviceDescription;
 
     @Column(name = "price", nullable = false)
