@@ -41,7 +41,7 @@ public class FishProfileController {
                 .build());
     }
 
-    @GetMapping("get-all")
+    @GetMapping("view-all")
     public ResponseEntity<ApiResponse<List<FishProfileResponse>>> getAllFishProfile() {
         var result = fishProfileService.getAllFishProfiles();
         return ResponseEntity.ok(ApiResponse.<List<FishProfileResponse>>builder()
@@ -61,7 +61,7 @@ public class FishProfileController {
                 .build());
     }
 
-    @GetMapping("delete/{fishProfileId}")
+    @PutMapping("delete/{fishProfileId}")
     public ResponseEntity<ApiResponse<FishProfileResponse>> deleteFishProfile(@PathVariable Integer fishProfileId) {
         var result = fishProfileService.deleteFishProfile(fishProfileId);
         return ResponseEntity.ok(ApiResponse.<FishProfileResponse>builder()

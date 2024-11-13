@@ -66,7 +66,7 @@ public class PayOSService {
         return payOS.getPaymentLinkInformation(orderCodeLong);
     }
 
-    public void createPaymentDB(Integer orderId, Integer userId) throws Exception {
+    public void createPaymentSuccess(Integer orderId, Integer userId) throws Exception {
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Users users = userRepository.findById(userId).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
         Payment payment = Payment.builder()
@@ -79,5 +79,9 @@ public class PayOSService {
                 .amount(orders.getTotalAmount())
                 .build();
         paymentRepository.save(payment);
+    }
+    public void createPaymentFail(Integer orderId, Integer userId) throws Exception {
+        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
     }
 }

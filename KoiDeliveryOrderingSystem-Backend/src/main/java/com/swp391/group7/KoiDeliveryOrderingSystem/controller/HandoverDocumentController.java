@@ -50,7 +50,7 @@ public class HandoverDocumentController {
                 .build());
     }
 
-    @GetMapping("view-by-user")
+    @GetMapping("view-by-customer")
     public ResponseEntity<ApiResponse<List<HandoverDocumentResponse>>> viewByUser() {
         var result = handoverDocumentService.viewByUsers();
         return ResponseEntity.ok(ApiResponse.<List<HandoverDocumentResponse>>builder()

@@ -17,7 +17,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("get-profile")
+    @GetMapping("view-profile")
     public ResponseEntity<ApiResponse<UserResponse>> getProfile() {
         var result = userService.getCustomerProfile();
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
