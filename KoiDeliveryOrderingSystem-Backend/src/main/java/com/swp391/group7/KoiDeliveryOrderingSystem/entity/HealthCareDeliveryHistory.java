@@ -30,7 +30,7 @@ public class HealthCareDeliveryHistory {
     @JsonManagedReference
     private HandoverDocument handoverDocument;
 
-    @Column(name = "route", nullable = false)
+    @Column(name = "route", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String route;
 
     @Column(name = "health_description", nullable = false, columnDefinition = "NVARCHAR(255)")
