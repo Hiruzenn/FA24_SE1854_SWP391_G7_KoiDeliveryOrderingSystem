@@ -59,7 +59,7 @@ public class DataLoader {
                         .build();
                 Users manager = Users.builder()
                         .name("Manager")
-                        .email("manager@gmail.com")
+                        .email("Manager@gmail.com")
                         .password(encodedPassword)
                         .role(roleRepository.findByName("MANAGER"))
                         .customerStatus(CustomerStatusEnum.VERIFIED)

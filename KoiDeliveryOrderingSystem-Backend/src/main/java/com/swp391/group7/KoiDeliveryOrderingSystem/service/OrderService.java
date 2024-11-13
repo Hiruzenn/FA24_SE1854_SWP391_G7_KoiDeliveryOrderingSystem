@@ -113,7 +113,7 @@ public class OrderService {
         return convertOrderToResponse(orders);
     }
 
-    public List<OrderResponse> viewOrderAvailable() {
+    public List<OrderResponse> getAll() {
         List<Orders> orders = orderRepository.findByStatus(OrderStatusEnum.AVAILABLE);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : orders) {
@@ -143,20 +143,6 @@ public class OrderService {
         Orders orders = orderRepository.findByIdAndStatus(OrderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         orders.setStatus(OrderStatusEnum.NOT_AVAILABLE);
-        orders.setUpdateAt(LocalDateTime.now());
-        orders.setUpdateBy(users.getId());
-        orderRepository.save(orders);
-        return convertOrderToResponse(orders);
-    }
-
-    public OrderResponse AcceptOrder(Integer OrderId) {
-        Users users = accountUtils.getCurrentUser();
-        if (users == null) {
-            throw new AppException(ErrorCode.NOT_LOGIN);
-        }
-        Orders orders = orderRepository.findByIdAndStatus(OrderId, OrderStatusEnum.AVAILABLE)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        orders.setStatus(OrderStatusEnum.AVAILABLE);
         orders.setUpdateAt(LocalDateTime.now());
         orders.setUpdateBy(users.getId());
         orderRepository.save(orders);

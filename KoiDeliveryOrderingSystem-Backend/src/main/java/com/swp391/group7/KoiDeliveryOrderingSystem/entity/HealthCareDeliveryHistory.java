@@ -34,8 +34,6 @@ public class HealthCareDeliveryHistory {
     @Column(name = "eating_description", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String eatingDescription;
 
-
-
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
@@ -47,6 +45,7 @@ public class HealthCareDeliveryHistory {
 
     @Column(name = "update_by")
     private Integer updateBy;
+
     @Column(name = "delivery_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private DeliveryStatusEnum deliveryStatus;

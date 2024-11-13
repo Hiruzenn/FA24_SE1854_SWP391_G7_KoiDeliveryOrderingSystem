@@ -55,9 +55,9 @@ public class OrderController {
                 .build());
     }
 
-    @GetMapping("view-order-available")
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrderAvailable() {
-        var result = orderService.viewOrderAvailable();
+    @GetMapping("view-all")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getAllOrders() {
+        var result = orderService.getAll();
         return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder()
                 .code(200)
                 .message("Order Available List")
@@ -65,7 +65,7 @@ public class OrderController {
                 .build());
     }
 
-    @GetMapping("get-by-customer")
+    @GetMapping("view-by-customer")
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrderByCustomerId() {
         var result = orderService.getOrderByCustomerId();
         return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder()
@@ -84,15 +84,4 @@ public class OrderController {
                 .result(result)
                 .build());
     }
-
-    @PutMapping("accept-order/{orderId}")
-    public ResponseEntity<ApiResponse<OrderResponse>> acceptOrder(@PathVariable Integer orderId) {
-        var result = orderService.AcceptOrder(orderId);
-        return ResponseEntity.ok(ApiResponse.<OrderResponse>builder()
-                .code(200)
-                .message("Order is accept")
-                .result(result)
-                .build());
-    }
-
 }

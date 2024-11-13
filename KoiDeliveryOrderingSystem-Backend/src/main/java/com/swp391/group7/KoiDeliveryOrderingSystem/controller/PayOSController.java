@@ -20,21 +20,22 @@ public class PayOSController {
         return payOSService.createPayment(orderId);
     }
 
-    @PostMapping("Get")
+    @PostMapping("get")
     public PaymentLinkData getPayment(@RequestParam("orderId") Integer orderId) throws Exception {
         return payOSService.getPaymentLink(orderId);
     }
     @GetMapping("payment-success")
     public ModelAndView paymentSuccess(@RequestParam("orderId") Integer orderId, @RequestParam("userId") Integer userId) throws Exception {
-        payOSService.createPaymentDB(orderId,userId);
+        payOSService.createPaymentSuccess(orderId,userId);
         return new ModelAndView("PaymentSuccess");
     }
     @GetMapping("payment-fail")
     public ModelAndView paymentFail(){
         return new ModelAndView("PaymentFail");
     }
+
     @PostMapping("create-payment")
     public void createPayment(@RequestParam("orderId") Integer orderId, @RequestParam("userId") Integer userId) throws Exception {
-        payOSService.createPaymentDB(orderId, userId);
+        payOSService.createPaymentSuccess(orderId, userId);
     }
 }

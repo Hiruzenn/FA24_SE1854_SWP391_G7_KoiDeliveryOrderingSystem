@@ -30,7 +30,7 @@ public class HealthServiceOrderController {
                 .build());
     }
 
-    @GetMapping("view-by-order-id/{orderId}")
+    @GetMapping("view-by-order/{orderId}")
     public ResponseEntity<ApiResponse<List<HealthServiceOrderResponse>>> getHealthServiceOrdersByOrderId(@PathVariable("orderId") Integer orderId) {
         var result = healthServiceOrderService.getHealthServiceOrderByOrderId(orderId);
         return ResponseEntity.ok(ApiResponse.<List<HealthServiceOrderResponse>>builder()
