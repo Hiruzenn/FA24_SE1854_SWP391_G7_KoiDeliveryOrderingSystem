@@ -54,7 +54,7 @@ public class HealthCareDeliveryHistoryController {
                 .build());
     }
 
-    @GetMapping("view-by-invoice/{handoverDocumentId}")
+    @GetMapping("view-by-handover/{handoverDocumentId}")
     public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getHealthCareDeliveryHistoryByHandoverDocument(@PathVariable("handoverDocumentId") Integer handoverDocumentId) {
         var result = healthCareDeliveryHistoryService.getHealthCareDeliveryHistoryByHandoverDocument(handoverDocumentId);
         return ResponseEntity.ok(ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
