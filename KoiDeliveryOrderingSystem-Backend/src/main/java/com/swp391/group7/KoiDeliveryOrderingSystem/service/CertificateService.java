@@ -2,14 +2,17 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.CreateCertificateRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Certificate;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.UpdateCertificateRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CertificateResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.CertificateRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishProfileRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
@@ -35,6 +38,8 @@ public class CertificateService {
 
     @Autowired
     private AccountUtils accountUtils;
+    @Autowired
+    private FishProfileRepository fishProfileRepository;
 
     public List<CertificateResponse> getListCertificate() {
         List<Certificate> certificateList = certificateRepository.findCertificateByStatus(SystemStatusEnum.AVAILABLE);
@@ -50,27 +55,23 @@ public class CertificateService {
         return covertToCertificateResponse(certificate);
 
     }
-    public List<CertificateResponse> getCertificateByOrder(Integer orderId){
-        Orders orders = orderRepository.findById(orderId)
-                .orElseThrow(()-> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        List<Certificate> certificate = certificateRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
-        return convertToListCertificateResponse(certificate);
-    }
 
-    public CertificateResponse creatCertificate(Integer orderId, CreateCertificateRequest certificateRequest) {
+    public CertificateResponse creatCertificate(Integer fishProfileId, CreateCertificateRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.PENDING).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         Certificate certificate = Certificate.builder()
-                .certificateName(certificateRequest.getCertificateName())
-                .certificateDescription(certificateRequest.getCertificateDescription())
-                .orders(orders)
-                .health(certificateRequest.getHealth())
-                .origin(certificateRequest.getOrigin())
-                .award(certificateRequest.getAward())
-                .image(certificateRequest.getImage())
+                .fishProfile(fishProfile)
+                .name(request.getName())
+                .species(request.getSpecies())
+                .award(request.getAward())
+                .sex(request.getSex())
+                .size(request.getSize())
+                .age(request.getAge())
+                .image(request.getImage())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -81,7 +82,7 @@ public class CertificateService {
         return covertToCertificateResponse(certificate);
     }
 
-    public CertificateResponse updateCertificate(Integer id, CreateCertificateRequest certificateRequest) {
+    public CertificateResponse updateCertificate(Integer id, UpdateCertificateRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
@@ -89,12 +90,14 @@ public class CertificateService {
         Certificate certificate = certificateRepository.findCertificateByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
 
-        certificate.setCertificateName(certificateRequest.getCertificateName());
-        certificate.setCertificateDescription(certificateRequest.getCertificateDescription());
-        certificate.setImage(certificateRequest.getImage());
-        certificate.setOrigin(certificateRequest.getOrigin());
-        certificate.setAward(certificateRequest.getAward());
-        certificate.setHealth(certificateRequest.getHealth());
+        certificate.setName(request.getName());
+        certificate.setSpecies(request.getSpecies());
+        certificate.setAward(request.getAward());
+        certificate.setSex(request.getSex());
+        certificate.setSize(request.getSize());
+        certificate.setAge(request.getAge());
+        certificate.setImage(request.getImage());
+        certificate.setAward(request.getAward());
         certificate.setUpdateAt(LocalDateTime.now());
         certificate.setUpdateBy(users.getId());
 
@@ -132,12 +135,13 @@ public class CertificateService {
     public CertificateResponse covertToCertificateResponse(Certificate certificate) {
         return CertificateResponse.builder()
                 .id(certificate.getId())
-                .certificateName(certificate.getCertificateName())
-                .certificateDescription(certificate.getCertificateDescription())
-                .orderId(certificate.getOrders().getId())
-                .health(certificate.getHealth())
-                .origin(certificate.getOrigin())
+                .fishProleId(certificate.getFishProfile().getId())
+                .name(certificate.getName())
                 .award(certificate.getAward())
+                .species(certificate.getSpecies())
+                .sex(certificate.getSex())
+                .size(certificate.getSize())
+                .age(certificate.getAge())
                 .image(certificate.getImage())
                 .createAt(certificate.getCreateAt())
                 .createBy(certificate.getCreateBy())

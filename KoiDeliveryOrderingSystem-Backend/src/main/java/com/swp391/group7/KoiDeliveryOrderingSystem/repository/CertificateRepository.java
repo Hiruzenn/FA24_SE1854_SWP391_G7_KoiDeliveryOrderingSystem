@@ -13,5 +13,4 @@ import java.util.Optional;
 public interface CertificateRepository extends JpaRepository<Certificate, Integer> {
     List<Certificate> findCertificateByStatus(SystemStatusEnum status);
     Optional<Certificate> findCertificateByIdAndStatus(Integer id, SystemStatusEnum status);
-    List<Certificate> findByOrdersAndStatus(Orders order, SystemStatusEnum status);
 }

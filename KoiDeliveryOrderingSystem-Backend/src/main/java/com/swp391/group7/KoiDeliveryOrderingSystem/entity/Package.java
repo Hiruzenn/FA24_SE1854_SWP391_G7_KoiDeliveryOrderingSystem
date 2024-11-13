@@ -22,13 +22,10 @@ public class Package {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(mappedBy = "packages")
-    @JsonBackReference
-    private List<CheckingKoiHealth> checkingKoiHealth;
-
-    @OneToOne(mappedBy = "packages")
-    @JsonBackReference
-    private HandoverDocument handoverDocument;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @JsonManagedReference
+    private Orders orders;
 
     @Column(name = "package_no", nullable = false)
     private String packageNo;

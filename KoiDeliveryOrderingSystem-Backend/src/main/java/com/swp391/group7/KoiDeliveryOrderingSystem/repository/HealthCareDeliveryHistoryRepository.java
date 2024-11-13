@@ -3,7 +3,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.repository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Invoice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +13,5 @@ import java.util.Optional;
 public interface HealthCareDeliveryHistoryRepository extends JpaRepository<HealthCareDeliveryHistory, Integer> {
     List<HealthCareDeliveryHistory> findByStatus(SystemStatusEnum status);
     Optional<HealthCareDeliveryHistory> findByIdAndStatus(Integer id, SystemStatusEnum status);
-    List<HealthCareDeliveryHistory> findByInvoiceAndStatus(Invoice invoice, SystemStatusEnum status);
     List<HealthCareDeliveryHistory> findByHandoverDocumentAndStatus(HandoverDocument handoverDocument, SystemStatusEnum status);
 }

@@ -14,11 +14,19 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    @JsonManagedReference
+    private Orders orders;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users users;
 
     @Column(name = "payment_code", nullable = false)
     private String paymentCode;
@@ -29,34 +37,9 @@ public class Payment {
     @Column(name="payment_status")
     private String paymentStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private Users users;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    @JsonManagedReference
-    private Orders orders;
-
-    @Column(name = "amount", nullable = false)
-    private Float amount;
-
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
 
-    @Column(name = "create_at")
-    private LocalDateTime createAt;
-
-    @Column(name = "create_by")
-    private Integer createBy;
-
-    @Column(name = "update_at")
-    private LocalDateTime updateAt;
-
-    @Column(name = "update_by")
-    private Integer updateBy;
-
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SystemStatusEnum status;
+    @Column(name = "amount", nullable = false)
+    private Float amount;
 }

@@ -20,24 +20,27 @@ public class Certificate {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "orders_id", nullable = false)
+    @JoinColumn(name = "fish_profle", nullable = false)
     @JsonManagedReference
-    private Orders orders;
+    private FishProfile fishProfile;
 
-    @Column(name = "certificate_name",nullable = false, columnDefinition = "NVARCHAR(255)")
-    private String certificateName;
-
-    @Column(name = "certificate_description", nullable = false, columnDefinition = "NVARCHAR(255)")
-    private String certificateDescription;
-
-    @Column(name = "health", nullable = false, columnDefinition = "NVARCHAR(255)")
-    private String health;
-
-    @Column(name = "origin", nullable = false, columnDefinition = "NVARCHAR(255)")
-    private String origin;
+    @Column(name = "name",nullable = false, columnDefinition = "NVARCHAR(255)")
+    private String name;
 
     @Column(name = "award", columnDefinition = "NVARCHAR(255)")
     private String award;
+
+    @Column(name = "species", nullable = false, columnDefinition = "NVARCHAR(255)")
+    private String species ;
+
+    @Column(name = "sex", columnDefinition = "NVARCHAR(255)")
+    private String sex;
+
+    @Column(name = "size")
+    private Integer size;
+
+    @Column(name = "age")
+    private Integer age;
 
     @Column(name = "image")
     private String image;

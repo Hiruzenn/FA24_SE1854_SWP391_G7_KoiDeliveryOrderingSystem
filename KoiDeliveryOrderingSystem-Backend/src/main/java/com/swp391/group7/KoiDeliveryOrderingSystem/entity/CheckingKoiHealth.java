@@ -20,14 +20,9 @@ public class CheckingKoiHealth {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "order_detail_id")
+    @JoinColumn(name = "fish_profile")
     @JsonManagedReference
-    private OrderDetail orderDetail;
-
-    @ManyToOne
-    @JoinColumn(name = "package_id")
-    @JsonManagedReference
-    private Package packages;
+    private FishProfile fishProfile;
 
     @Column(name = "heal_status", nullable = false)
     @Enumerated(EnumType.STRING)

@@ -13,15 +13,16 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FishProfileResponse {
     private Integer id;
+    private Integer orderId;
+    private String fishCategory;
     private String name;
     private String description;
-    private String type;
     private String size;
     private String origin;
     private String image;
     private LocalDateTime createAt;
-    private  Integer createBy;
+    private Integer createBy;
     private LocalDateTime updateAt;
-    private  Integer updateBy;
+    private Integer updateBy;
     private SystemStatusEnum status;
 }

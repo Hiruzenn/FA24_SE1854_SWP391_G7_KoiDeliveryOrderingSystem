@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
@@ -55,17 +56,14 @@ public class HandoverDocumentService {
         }
         Users customer = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        Package packages = packageRepository.findByIdAndStatus(request.getPackageId(), SystemStatusEnum.AVAILABLE)
-                .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
         Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HandoverDocument handoverDocument = HandoverDocument.builder()
                 .handoverNo(generateHandoverNo())
                 .users(customer)
                 .orders(orders)
-                .packages(packages)
                 .handoverDescription(request.getHandoverDescription())
-                .vehicle(orders.getDeliveryMethod().getDeliveryMethodName())
+                .vehicle(orders.getDeliveryMethod().getName())
                 .destination(orders.getDestination())
                 .departure(orders.getDeparture())
                 .totalPrice(orders.getTotalAmount())
@@ -73,6 +71,7 @@ public class HandoverDocumentService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
+                .handoverStatus(HandoverStatusEnum.PENDING)
                 .status(SystemStatusEnum.AVAILABLE)
                 .build();
         handoverDocumentRepository.save(handoverDocument);
@@ -149,7 +148,6 @@ public class HandoverDocumentService {
                 .id(handoverDocument.getId())
                 .handoverNo(handoverDocument.getHandoverNo())
                 .userId(handoverDocument.getUsers().getId())
-                .packageId(handoverDocument.getPackages().getId())
                 .orderId(handoverDocument.getOrders().getId())
                 .handoverDescription(handoverDocument.getHandoverDescription())
                 .vehicle(handoverDocument.getVehicle())
@@ -160,6 +158,7 @@ public class HandoverDocumentService {
                 .createBy(handoverDocument.getCreateBy())
                 .updateAt(handoverDocument.getUpdateAt())
                 .updateBy(handoverDocument.getUpdateBy())
+                .handoverStatusEnum(handoverDocument.getHandoverStatus())
                 .status(handoverDocument.getStatus())
                 .build();
     }

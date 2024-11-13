@@ -65,16 +65,6 @@ public class OrderController {
                 .build());
     }
 
-    @GetMapping("view-order-pending")
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrderPending() {
-        var result = orderService.viewOrderPending();
-        return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder()
-                .code(200)
-                .message("Order Pending List")
-                .result(result)
-                .build());
-    }
-
     @GetMapping("get-by-customer")
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrderByCustomerId() {
         var result = orderService.getOrderByCustomerId();

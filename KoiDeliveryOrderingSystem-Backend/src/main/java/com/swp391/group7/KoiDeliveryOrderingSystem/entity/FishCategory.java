@@ -19,13 +19,13 @@ public class FishCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "fish_category_name", columnDefinition = "NVARCHAR(255)")
-    private String fishCategoryName;
+    @Column(name = "name", columnDefinition = "NVARCHAR(255)")
+    private String name;
 
-    @Column(name = "fish_category_description", columnDefinition = "NVARCHAR(255)")
-    private String fishCategoryDescription;
+    @Column(name = "description", columnDefinition = "NVARCHAR(255)")
+    private String description;
 
-    @OneToMany(mappedBy = "type")
+    @OneToMany(mappedBy = "fishCategory")
     @JsonBackReference
     private List<FishProfile> fishProfiles;
 

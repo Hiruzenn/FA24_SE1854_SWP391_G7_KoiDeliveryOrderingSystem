@@ -1,10 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
-import com.nimbusds.jose.util.health.HealthStatus;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HealthStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.OrderDetail;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,8 +14,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CheckingKoiHealthResponse {
     private Integer id;
-    private Integer orderDetailId;
-    private Integer packageId;
+    private Integer fishProfileId;
     private HealthStatusEnum healthStatus;
     private String healthStatusDescription;
     private Float weight;

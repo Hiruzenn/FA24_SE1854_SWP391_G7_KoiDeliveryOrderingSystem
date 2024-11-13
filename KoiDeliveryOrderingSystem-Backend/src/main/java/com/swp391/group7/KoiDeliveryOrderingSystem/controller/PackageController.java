@@ -18,9 +18,9 @@ public class PackageController {
     @Autowired
     private PackageService packageService;
 
-    @PostMapping("create")
-    public ResponseEntity<ApiResponse<PackageResponse>> createPackage(@Valid @RequestBody CreatePackageRequest createPackageRequest){
-        var result = packageService.createPackage(createPackageRequest);
+    @PostMapping("create/{orderId}")
+    public ResponseEntity<ApiResponse<PackageResponse>> createPackage(@Valid @PathVariable("orderId") Integer orderId, @RequestBody CreatePackageRequest createPackageRequest) {
+        var result = packageService.createPackage(orderId, createPackageRequest);
         return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
                 .code(200)
                 .message("Package Created")
@@ -29,7 +29,7 @@ public class PackageController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<ApiResponse<PackageResponse>> updatePackage(@Valid @PathVariable Integer id, @RequestBody UpdatePackageRequest updatePackageRequest){
+    public ResponseEntity<ApiResponse<PackageResponse>> updatePackage(@Valid @PathVariable Integer id, @RequestBody UpdatePackageRequest updatePackageRequest) {
         var result = packageService.updatePackage(id, updatePackageRequest);
         return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
                 .code(200)
@@ -39,7 +39,7 @@ public class PackageController {
     }
 
     @GetMapping("view-all")
-    public ResponseEntity<ApiResponse<List<PackageResponse>>> viewAllPackage(){
+    public ResponseEntity<ApiResponse<List<PackageResponse>>> viewAllPackage() {
         var result = packageService.getAllPackages();
         return ResponseEntity.ok(ApiResponse.<List<PackageResponse>>builder()
                 .code(200)
@@ -49,9 +49,9 @@ public class PackageController {
     }
 
     @GetMapping("view-by-packageNo/{packageNo}")
-    public ResponseEntity<ApiResponse<PackageResponse>> viewPackageByPackageNo(@PathVariable String packageNo){
+    public ResponseEntity<ApiResponse<PackageResponse>> viewPackageByPackageNo(@PathVariable String packageNo) {
         var result = packageService.getPackageByPackageNo(packageNo);
-        return  ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
                 .code(200)
                 .message("Package No Found")
                 .result(result)
@@ -59,7 +59,7 @@ public class PackageController {
     }
 
     @PutMapping("delete/{id}")
-    public ResponseEntity<ApiResponse<PackageResponse>> deletePackage(@Valid @PathVariable Integer id){
+    public ResponseEntity<ApiResponse<PackageResponse>> deletePackage(@Valid @PathVariable Integer id) {
         var result = packageService.deletePackage(id);
         return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
                 .code(200)

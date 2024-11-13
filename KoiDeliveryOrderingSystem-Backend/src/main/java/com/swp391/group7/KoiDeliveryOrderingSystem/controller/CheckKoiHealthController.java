@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.checkingkoihe
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CheckingKoiHealthResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.CheckingKoiHealthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,10 @@ public class CheckKoiHealthController {
     @Autowired
     private CheckingKoiHealthService checkingKoiHealthService;
 
-    @PostMapping("create")
-    public ResponseEntity<ApiResponse<CheckingKoiHealthResponse>> createCheckingKoiHealth(@RequestBody CreateCheckingKoiHealthRequest createCheckingKoiHealthRequest) {
-        var result = checkingKoiHealthService.createCheckingKoiHealth(createCheckingKoiHealthRequest);
+    @PostMapping("create/{fishProfileId}")
+    public ResponseEntity<ApiResponse<CheckingKoiHealthResponse>> createCheckingKoiHealth(@Valid @PathVariable("fishProfileId") Integer id,
+                                                                                          @RequestBody CreateCheckingKoiHealthRequest request) {
+        var result = checkingKoiHealthService.createCheckingKoiHealth(id, request);
         return ResponseEntity.ok(ApiResponse.<CheckingKoiHealthResponse>builder()
                 .code(200)
                 .message("Checking Koi Health Created")
@@ -59,19 +61,9 @@ public class CheckKoiHealthController {
                 .build());
     }
 
-    @GetMapping("view-one/{packageId}")
-    public ResponseEntity<ApiResponse<List<CheckingKoiHealthResponse>>> viewCheckingKoiHealthByPackage(@PathVariable Integer packageId) {
-        var result = checkingKoiHealthService.viewCheckingKoiHealthByPackage(packageId);
-        return ResponseEntity.ok(ApiResponse.<List<CheckingKoiHealthResponse>>builder()
-                .code(200)
-                .message("View All Checking Koi Health")
-                .result(result)
-                .build());
-    }
-
-    @GetMapping("view-by-order-detail-id/{orderDetailId}")
-    public ResponseEntity<ApiResponse<List<CheckingKoiHealthResponse>>> viewCheckingKoiHealthByOrderDetail(@PathVariable Integer orderDetailId) {
-        var result = checkingKoiHealthService.viewCheckingKoiHealthByOrderDetail(orderDetailId);
+    @GetMapping("view-by-fish-profile/{fishProfileId}")
+    public ResponseEntity<ApiResponse<List<CheckingKoiHealthResponse>>> viewCheckingKoiHealthByOrderDetail(@PathVariable Integer fishProfileId) {
+        var result = checkingKoiHealthService.viewCheckingKoiHealthByFishProfile(fishProfileId);
         return ResponseEntity.ok(ApiResponse.<List<CheckingKoiHealthResponse>>builder()
                 .code(200)
                 .message("View All Checking Koi Health")

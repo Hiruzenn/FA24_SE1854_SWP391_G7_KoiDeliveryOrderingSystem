@@ -2,7 +2,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.CreateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
@@ -48,7 +47,7 @@ public class OrderService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByDeliveryMethodName(createOrderRequest.getDeliveryMethod());
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByName(createOrderRequest.getDeliveryMethod());
         if (deliveryMethod == null) {
             throw new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND);
         }
@@ -65,7 +64,7 @@ public class OrderService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
-                .status(OrderStatusEnum.PENDING)
+                .status(OrderStatusEnum.AVAILABLE)
                 .build();
         orderRepository.save(orders);
         return convertOrderToResponse(orders);
@@ -76,7 +75,7 @@ public class OrderService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.PENDING)
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         orders.setAmount(calculateMoney.calculateMoney(orders.getId()));
         orders.setVat(0.1f);
@@ -92,7 +91,7 @@ public class OrderService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Orders orders = orderRepository.findById(OrderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByDeliveryMethodName(updateOrderRequest.getDeliveryMethod());
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByName(updateOrderRequest.getDeliveryMethod());
         if (deliveryMethod == null) {
             throw new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND);
         }
@@ -116,15 +115,6 @@ public class OrderService {
 
     public List<OrderResponse> viewOrderAvailable() {
         List<Orders> orders = orderRepository.findByStatus(OrderStatusEnum.AVAILABLE);
-        List<OrderResponse> orderResponses = new ArrayList<>();
-        for (Orders order : orders) {
-            orderResponses.add(convertOrderToResponse(order));
-        }
-        return orderResponses;
-    }
-
-    public List<OrderResponse> viewOrderPending() {
-        List<Orders> orders = orderRepository.findByStatus(OrderStatusEnum.PENDING);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : orders) {
             orderResponses.add(convertOrderToResponse(order));
@@ -164,7 +154,7 @@ public class OrderService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(OrderId, OrderStatusEnum.PENDING)
+        Orders orders = orderRepository.findByIdAndStatus(OrderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         orders.setStatus(OrderStatusEnum.AVAILABLE);
         orders.setUpdateAt(LocalDateTime.now());
@@ -178,7 +168,7 @@ public class OrderService {
                 .id(orders.getId())
                 .orderCode(orders.getOrderCode())
                 .orderDate(orders.getOrderDate())
-                .deliveryMethod(orders.getDeliveryMethod().getDeliveryMethodName())
+                .deliveryMethod(orders.getDeliveryMethod().getName())
                 .destination(orders.getDestination())
                 .departure(orders.getDeparture())
                 .distance(orders.getDistance())

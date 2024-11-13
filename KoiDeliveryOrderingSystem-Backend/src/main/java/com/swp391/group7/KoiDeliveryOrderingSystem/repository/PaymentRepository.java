@@ -11,8 +11,5 @@ import java.util.List;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
-    List<Payment> findByUsersAndStatus(Users users, SystemStatusEnum status);
-    List<Payment> findByOrdersAndStatus(Orders orders, SystemStatusEnum status);
-    List<Payment> findByStatus(SystemStatusEnum status);
-    Payment getPaymentByPaymentCode(String paymentCode);
+
 }

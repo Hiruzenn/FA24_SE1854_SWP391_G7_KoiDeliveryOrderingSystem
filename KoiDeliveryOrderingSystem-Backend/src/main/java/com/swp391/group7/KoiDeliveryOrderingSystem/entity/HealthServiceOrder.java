@@ -20,7 +20,7 @@ public class HealthServiceOrder {
     private Integer Id;
 
     @ManyToOne
-    @JoinColumn(name = "health_service_category_id")
+    @JoinColumn(name = "health_service_category")
     @JsonManagedReference
     private HealthServiceCategory healthServiceCategory;
 

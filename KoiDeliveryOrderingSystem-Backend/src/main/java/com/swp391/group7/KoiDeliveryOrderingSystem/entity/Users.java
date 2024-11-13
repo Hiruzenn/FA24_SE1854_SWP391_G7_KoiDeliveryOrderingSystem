@@ -23,10 +23,6 @@ public class Users {
 
     @OneToMany(mappedBy = "users")
     @JsonBackReference
-    private List<Invoice> invoices;
-
-    @OneToMany(mappedBy = "users")
-    @JsonBackReference
     private List<HandoverDocument> handoverDocuments;
 
     @OneToMany(mappedBy = "users")

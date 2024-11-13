@@ -2,8 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.CheckingKoiHealth;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.OrderDetail;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
@@ -11,8 +10,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.checkingkoihe
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.checkingkoihealth.UpdateCheckingKoiHealthRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CheckingKoiHealthResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.CheckingKoiHealthRepository;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderDetailRepository;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.PackageRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishProfileRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,26 +30,19 @@ public class CheckingKoiHealthService {
     private CheckingKoiHealthRepository checkingKoiHealthRepository;
 
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
-
-    @Autowired
-    private PackageRepository packageRepository;
-
-    @Autowired
     private AccountUtils accountUtils;
+    @Autowired
+    private FishProfileRepository fishProfileRepository;
 
-    public CheckingKoiHealthResponse createCheckingKoiHealth(CreateCheckingKoiHealthRequest request) {
+    public CheckingKoiHealthResponse createCheckingKoiHealth(Integer id, CreateCheckingKoiHealthRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        OrderDetail orderDetail = orderDetailRepository.findById(request.getOrderDetailId())
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND));
-        Package packages = packageRepository.findById(request.getPackageId())
-                .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         CheckingKoiHealth checkingKoiHealth = CheckingKoiHealth.builder()
-                .orderDetail(orderDetail)
-                .packages(packages)
+                .fishProfile(fishProfile)
                 .healthStatus(request.getHealthStatus())
                 .healthStatusDescription(request.getHealthStatusDescription())
                 .weight(request.getWeight())
@@ -92,17 +83,11 @@ public class CheckingKoiHealthService {
         return convertToListCheckingKoiHealthResponse(checkingKoiHealthList);
     }
 
-    public List<CheckingKoiHealthResponse> viewCheckingKoiHealthByPackage(Integer packageId) {
-        Package packages = packageRepository.findByIdAndStatus(packageId, SystemStatusEnum.AVAILABLE)
-                .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
-        List<CheckingKoiHealth> checkingKoiHealthList = checkingKoiHealthRepository.findByPackagesAndStatus(packages, SystemStatusEnum.AVAILABLE);
-        return convertToListCheckingKoiHealthResponse(checkingKoiHealthList);
-    }
 
-    public List<CheckingKoiHealthResponse> viewCheckingKoiHealthByOrderDetail(Integer orderDetailId) {
-        OrderDetail orderDetail = orderDetailRepository.findByIdAndStatus(orderDetailId, SystemStatusEnum.AVAILABLE)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND));
-        List<CheckingKoiHealth> checkingKoiHealthList = checkingKoiHealthRepository.findByOrderDetailAndStatus(orderDetail, SystemStatusEnum.AVAILABLE);
+    public List<CheckingKoiHealthResponse> viewCheckingKoiHealthByFishProfile(Integer fishProfileId) {
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        List<CheckingKoiHealth> checkingKoiHealthList = checkingKoiHealthRepository.findByFishProfileAndStatus(fishProfile, SystemStatusEnum.AVAILABLE);
         return convertToListCheckingKoiHealthResponse(checkingKoiHealthList);
     }
 
@@ -131,8 +116,7 @@ public class CheckingKoiHealthService {
     public CheckingKoiHealthResponse convertToCheckingKoiHealthResponse(CheckingKoiHealth checkingKoi) {
         return CheckingKoiHealthResponse.builder()
                 .id(checkingKoi.getId())
-                .orderDetailId(checkingKoi.getOrderDetail().getId())
-                .packageId(checkingKoi.getPackages().getId())
+                .fishProfileId(checkingKoi.getFishProfile().getId())
                 .healthStatus(checkingKoi.getHealthStatus())
                 .healthStatusDescription(checkingKoi.getHealthStatusDescription())
                 .weight(checkingKoi.getWeight())

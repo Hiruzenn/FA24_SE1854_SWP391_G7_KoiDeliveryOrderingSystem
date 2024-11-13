@@ -19,15 +19,18 @@ public class DeliveryMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "delivery_name", columnDefinition = "NVARCHAR(255)")
-    private String deliveryMethodName;
-
-    @Column(name = "price")
-    private Float price;
-
     @OneToMany(mappedBy = "deliveryMethod")
     @JsonBackReference
     private List<Orders> orders;
+
+    @Column(name = "name", columnDefinition = "NVARCHAR(255)")
+    private String name;
+
+    @Column(name = "description", columnDefinition = "NVARCHAR(255)")
+    private String description;
+
+    @Column(name = "price")
+    private Float price;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
