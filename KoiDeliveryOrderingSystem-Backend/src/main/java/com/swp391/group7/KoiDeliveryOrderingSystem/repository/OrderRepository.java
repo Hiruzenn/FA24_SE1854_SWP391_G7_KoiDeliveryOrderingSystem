@@ -22,7 +22,4 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
     List<Orders> findByStatus(OrderStatusEnum status);
     Optional<Orders> findByIdAndStatus(Integer id, OrderStatusEnum status);
     List<Orders> findByStatusAndCreateAtBetween(OrderStatusEnum status, LocalDateTime start, LocalDateTime end);
-    @Query(value= "SELECT o.orders_id, o.total_amount FROM orders o " +
-            " where o.orders_id= :orderId", nativeQuery= true )
-    Object findTotalAmount(@Param("orderId") int orderId);
 }

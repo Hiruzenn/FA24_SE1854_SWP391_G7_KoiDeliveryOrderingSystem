@@ -21,9 +21,9 @@ public class FishProfileController {
     @Autowired
     private FishProfileService fishProfileService;
 
-    @PostMapping("create")
-    public ResponseEntity<ApiResponse<FishProfileResponse>> createFishProfile(@Valid @RequestBody CreateFishProfileRequest createFishProfileRequest) {
-        var result = fishProfileService.createFishProfile(createFishProfileRequest);
+    @PostMapping("create/{orderId}")
+    public ResponseEntity<ApiResponse<FishProfileResponse>> createFishProfile(@Valid @PathVariable("orderId") Integer orderId, @RequestBody CreateFishProfileRequest createFishProfileRequest) {
+        var result = fishProfileService.createFishProfile(orderId, createFishProfileRequest);
         return ResponseEntity.ok(ApiResponse.<FishProfileResponse>builder()
                 .code(200)
                 .message("Fish profile created successfully")

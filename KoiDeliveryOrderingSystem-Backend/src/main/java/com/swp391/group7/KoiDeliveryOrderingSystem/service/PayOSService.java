@@ -1,7 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.config.PayOSConfig;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Payment;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
@@ -71,14 +70,13 @@ public class PayOSService {
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Users users = userRepository.findById(userId).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
         Payment payment = Payment.builder()
-                .amount(orders.getTotalAmount())
-                .paymentDate(LocalDate.now())
-                .paymentMethod("PAYOS")
-                .paymentStatus("SUCCESS")
-                .status(SystemStatusEnum.AVAILABLE)
-                .paymentCode(orders.getOrderCode().substring(3))
                 .users(users)
                 .orders(orders)
+                .paymentCode(orders.getOrderCode().substring(3))
+                .paymentDate(LocalDate.now())
+                .paymentStatus("SUCCESS")
+                .paymentMethod("PAYOS")
+                .amount(orders.getTotalAmount())
                 .build();
         paymentRepository.save(payment);
     }

@@ -20,7 +20,6 @@ public class HealthCareDeliveryHistoryController {
     @Autowired
     HealthCareDeliveryHistoryService healthCareDeliveryHistoryService;
 
-    // GET: Retrieve the list of healthcare delivery histories
     @GetMapping("view-all")
     public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getAllHealthCareDeliveryHistories() {
         List<HealthCareDeliveryHistoryResponse> histories = healthCareDeliveryHistoryService.getListHealthCareDeliveryHistories();
@@ -32,7 +31,6 @@ public class HealthCareDeliveryHistoryController {
         return ResponseEntity.ok(response);
     }
 
-    // Retrieve a specific healthcare delivery history by its ID
     @GetMapping("view-one/{id}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> getHealthCareDeliveryHistoryById(@PathVariable int id) {
         HealthCareDeliveryHistoryResponse historyResponse = healthCareDeliveryHistoryService.getHealthCareDeliveryHistoryById(id);
@@ -42,16 +40,6 @@ public class HealthCareDeliveryHistoryController {
                 .result(historyResponse)
                 .build();
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("view-by-invoice/{invoiceId}")
-    public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getHealthCareDeliveryHistoryByInvoice(@PathVariable("invoiceId") Integer invoiceId) {
-        var result = healthCareDeliveryHistoryService.getHealthCareDeliveryHistoryByInvoice(invoiceId);
-        return ResponseEntity.ok(ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
-                .code(200)
-                .message("View By Invoice")
-                .result(result)
-                .build());
     }
 
     @GetMapping("view-by-handover/{handoverDocumentId}")

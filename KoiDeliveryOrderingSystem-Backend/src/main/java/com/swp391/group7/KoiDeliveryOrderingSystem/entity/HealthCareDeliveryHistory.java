@@ -21,11 +21,6 @@ public class HealthCareDeliveryHistory {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "invoice_id")
-    @JsonManagedReference
-    private Invoice invoice;
-
-    @ManyToOne
     @JoinColumn(name = "handover_document_id")
     @JsonManagedReference
     private HandoverDocument handoverDocument;
@@ -39,8 +34,7 @@ public class HealthCareDeliveryHistory {
     @Column(name = "eating_description", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String eatingDescription;
 
-    @Column(name = "delivery_status", nullable = false)
-    private DeliveryStatusEnum deliveryStatus;
+
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
@@ -53,9 +47,11 @@ public class HealthCareDeliveryHistory {
 
     @Column(name = "update_by")
     private Integer updateBy;
+    @Column(name = "delivery_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatusEnum deliveryStatus;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private SystemStatusEnum status;
-
 }

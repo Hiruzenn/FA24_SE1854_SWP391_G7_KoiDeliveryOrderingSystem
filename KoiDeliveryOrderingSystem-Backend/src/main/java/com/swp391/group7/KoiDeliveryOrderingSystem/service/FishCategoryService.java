@@ -28,15 +28,15 @@ public class FishCategoryService {
     @Autowired
     private AccountUtils accountUtils;
 
-    public FishCategoryResponse createFishCategory(CreateFishCategoryRequest createFishCategoryRequest) {
+    public FishCategoryResponse createFishCategory(CreateFishCategoryRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         FishCategory fishCategory = FishCategory.builder()
-                .fishCategoryName(createFishCategoryRequest.getFishCategoryName())
-                .fishCategoryDescription(createFishCategoryRequest.getFishCategoryDescription())
-                .price(createFishCategoryRequest.getPrice())
+                .name(request.getFishCategoryName())
+                .description(request.getFishCategoryDescription())
+                .price(request.getPrice())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -54,8 +54,8 @@ public class FishCategoryService {
         }
         FishCategory fishCategory = fishCategoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
-        fishCategory.setFishCategoryName(updateFishCategoryRequest.getFishCategoryName());
-        fishCategory.setFishCategoryDescription(updateFishCategoryRequest.getFishCategoryDescription());
+        fishCategory.setName(updateFishCategoryRequest.getFishCategoryName());
+        fishCategory.setDescription(updateFishCategoryRequest.getFishCategoryDescription());
         fishCategory.setPrice(updateFishCategoryRequest.getPrice());
         fishCategory.setUpdateAt(LocalDateTime.now());
         fishCategory.setUpdateBy(users.getId());
@@ -90,8 +90,8 @@ public class FishCategoryService {
     private FishCategoryResponse convertToFishCategoryResponse(FishCategory fishCategory) {
         return FishCategoryResponse.builder()
                 .id(fishCategory.getId())
-                .fishCategoryName(fishCategory.getFishCategoryName())
-                .fishCategoryDescription(fishCategory.getFishCategoryDescription())
+                .fishCategoryName(fishCategory.getName())
+                .fishCategoryDescription(fishCategory.getDescription())
                 .createAt(fishCategory.getCreateAt())
                 .createBy(fishCategory.getCreateBy())
                 .updateAt(fishCategory.getUpdateAt())

@@ -1,6 +1,8 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
@@ -8,6 +10,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.packages.CreatePackageRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.packages.UpdatePackageRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.PackageResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.PackageRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
@@ -32,13 +35,18 @@ public class PackageService {
     private AccountUtils accountUtils;
 
     public static final String RANDOM_STRING = "0123456789";
+    @Autowired
+    private OrderRepository orderRepository;
 
-    public PackageResponse createPackage(CreatePackageRequest createPackageRequest) {
+    public PackageResponse createPackage(Integer orderId,CreatePackageRequest createPackageRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));;
         Package packages = Package.builder()
+                .orders(orders)
                 .packageNo(generatePackageNo())
                 .packageDescription(createPackageRequest.getPackageDescription())
                 .packageDate(createPackageRequest.getPackageDate())

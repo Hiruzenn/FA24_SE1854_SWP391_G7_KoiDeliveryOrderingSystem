@@ -14,12 +14,13 @@ import java.time.LocalDateTime;
 @Builder
 public class CertificateResponse {
     private Integer id;
-    private Integer orderId;
-    private String certificateName;
-    private String certificateDescription;
-    private String health;
-    private String origin;
+    private Integer fishProleId;
+    private String name;
     private String award;
+    private String species;
+    private String sex;
+    private Integer size;
+    private Integer age;
     private String image;
     private LocalDateTime createAt;
     private Integer createBy;

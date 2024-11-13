@@ -12,20 +12,24 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateCertificateRequest {
     @NotBlank(message =  "Certificate Name is required")
-    private String certificateName;
+    private String name;
 
     @NotBlank(message =  "Certificate Description Name is required")
-    private String certificateDescription;
-
-    @NotBlank(message =  "Health Name is required")
-    private String health;
-
-    @NotBlank(message =  "Origin Name is required")
-    private String origin;
+    private String species;
 
     @NotBlank(message =  "Award Name is required")
     private String award;
 
+    @NotBlank(message = "Sex is required")
+    private String sex;
+
+    @NotNull(message = "Size is required")
+    private Integer size;
+
+    @NotNull(message = "Age is required")
+    private Integer age;
+
     @NotBlank(message =  "Image Name is required")
     private String image;
+
 }

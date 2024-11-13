@@ -30,5 +30,4 @@ public class Feedback {
 
     @Column(name = "feedback_description", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String feedbackDescription;
-
 }

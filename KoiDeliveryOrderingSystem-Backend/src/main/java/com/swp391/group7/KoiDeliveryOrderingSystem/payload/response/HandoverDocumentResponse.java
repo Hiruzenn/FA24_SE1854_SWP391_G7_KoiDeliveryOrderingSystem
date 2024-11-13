@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -18,7 +19,6 @@ import java.util.List;
 public class HandoverDocumentResponse {
     private Integer id;
     private Integer userId;
-    private Integer packageId;
     private Integer orderId;
     private String handoverNo;
     private String handoverDescription;
@@ -30,5 +30,6 @@ public class HandoverDocumentResponse {
     private Integer createBy;
     private LocalDateTime updateAt;
     private Integer updateBy;
+    private HandoverStatusEnum handoverStatusEnum;
     private SystemStatusEnum status;
 }

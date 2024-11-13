@@ -8,6 +8,7 @@ import lombok.*;
 import org.aspectj.weaver.ast.Or;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -23,11 +24,20 @@ public class FishProfile {
     @ManyToOne
     @JoinColumn(name = "type", nullable = false)
     @JsonManagedReference
-    private FishCategory type;
+    private FishCategory fishCategory;
 
-    @OneToOne(mappedBy = "fishProfiles")
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    @JsonManagedReference
+    private Orders orders;
+
+    @OneToMany(mappedBy = "fishProfile")
     @JsonBackReference
-    private OrderDetail orderDetail;
+    private List<Certificate> certificates;
+
+    @OneToMany(mappedBy = "fishProfile")
+    @JsonBackReference
+    private List<CheckingKoiHealth> checkingKoiHealth;
 
     @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String name;

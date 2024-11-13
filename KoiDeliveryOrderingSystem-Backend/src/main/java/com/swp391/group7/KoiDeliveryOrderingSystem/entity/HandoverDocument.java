@@ -2,6 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,12 +28,7 @@ public class HandoverDocument {
     private Users users;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "package_id", referencedColumnName = "id")
-    @JsonManagedReference
-    private Package packages;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
     @JsonManagedReference
     private Orders orders;
 
@@ -69,6 +65,10 @@ public class HandoverDocument {
 
     @Column(name = "update_by")
     private Integer updateBy;
+
+    @Column(name = "handover_status")
+    @Enumerated(EnumType.STRING)
+    private HandoverStatusEnum handoverStatus;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

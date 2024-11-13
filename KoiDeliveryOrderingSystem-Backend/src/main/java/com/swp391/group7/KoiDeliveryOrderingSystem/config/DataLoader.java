@@ -24,37 +24,37 @@ public class DataLoader {
     ) {
         return args -> {
             if (roleRepository.count() == 0) {
-                Role adminRole = Role.builder()
-                        .name("ADMIN")
+                Role customer = Role.builder()
+                        .name("CUSTOMER")
                         .build();
-                Role staffRole = Role.builder()
-                        .name("STAFF")
+                Role saleStaff = Role.builder()
+                        .name("SALE_STAFF")
                         .build();
-                Role managerRole = Role.builder()
+                Role deliveringStaff = Role.builder()
+                        .name("DELIVERY_STAFF")
+                        .build();
+                Role manager = Role.builder()
                         .name("MANAGER")
                         .build();
-                Role customersRole = Role.builder()
-                        .name("CUSTOMERS")
-                        .build();
-                roleRepository.save(adminRole);
-                roleRepository.save(customersRole);
-                roleRepository.save(managerRole);
-                roleRepository.save(staffRole);
+                roleRepository.save(customer);
+                roleRepository.save(manager);
+                roleRepository.save(deliveringStaff);
+                roleRepository.save(saleStaff);
             }
             if (userRepository.count() == 0) {
 
                 Users user = Users.builder()
-                        .name("User")
-                        .email("user@gmail.com")
+                        .name("Customer")
+                        .email("Customer@gmail.com")
                         .password(encodedPassword)
-                        .role(roleRepository.findByName("CUSTOMERS"))
+                        .role(roleRepository.findByName("CUSTOMER"))
                         .customerStatus(CustomerStatusEnum.VERIFIED)
                         .build();
                 Users staff = Users.builder()
-                        .name("Staff")
-                        .email("staff@gmail.com")
+                        .name("SaleStaff")
+                        .email("SaleStaff@gmail.com")
                         .password(encodedPassword)
-                        .role(roleRepository.findByName("STAFF"))
+                        .role(roleRepository.findByName("SALE_STAFF"))
                         .customerStatus(CustomerStatusEnum.VERIFIED)
                         .build();
                 Users manager = Users.builder()
@@ -64,36 +64,36 @@ public class DataLoader {
                         .role(roleRepository.findByName("MANAGER"))
                         .customerStatus(CustomerStatusEnum.VERIFIED)
                         .build();
-                Users admin = Users.builder()
-                        .name("Admin")
-                        .email("admin@gmail.com")
+                Users deliveryStaff = Users.builder()
+                        .name("DeliveryStaff")
+                        .email("DeliveryStaff@gmail.com")
                         .password(encodedPassword)
-                        .role(roleRepository.findByName("ADMIN"))
+                        .role(roleRepository.findByName("DELIVERY_STAFF"))
                         .customerStatus(CustomerStatusEnum.VERIFIED)
                         .build();
                 userRepository.save(user);
                 userRepository.save(staff);
                 userRepository.save(manager);
-                userRepository.save(admin);
+                userRepository.save(deliveryStaff);
             }
             if (deliveryMethodRepository.count() == 0) {
                 DeliveryMethod van = DeliveryMethod.builder()
-                        .deliveryMethodName("VAN")
+                        .name("VAN")
                         .price(50f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod plane = DeliveryMethod.builder()
-                        .deliveryMethodName("PLANE")
+                        .name("PLANE")
                         .price(200f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod boat = DeliveryMethod.builder()
-                        .deliveryMethodName("BOAT")
+                        .name("BOAT")
                         .price(150f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod train = DeliveryMethod.builder()
-                        .deliveryMethodName("TRAIN")
+                        .name("TRAIN")
                         .price(100f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
@@ -104,20 +104,20 @@ public class DataLoader {
             }
             if (fishCategoryRepository.count() == 0) {
                 FishCategory fishA = FishCategory.builder()
-                        .fishCategoryName("Type A")
-                        .fishCategoryDescription("Super A")
+                        .name("Type A")
+                        .description("Super A")
                         .price(50000F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fishB = FishCategory.builder()
-                        .fishCategoryName("Type B")
-                        .fishCategoryDescription("Super B")
+                        .name("Type B")
+                        .description("Super B")
                         .price(25000F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fishC = FishCategory.builder()
-                        .fishCategoryName("Type C")
-                        .fishCategoryDescription("Super C")
+                        .name("Type C")
+                        .description("Super C")
                         .price(10000F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();

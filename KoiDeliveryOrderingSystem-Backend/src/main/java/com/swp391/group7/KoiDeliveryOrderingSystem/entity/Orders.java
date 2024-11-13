@@ -21,7 +21,7 @@ import java.util.List;
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orders_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Column(name = "order_code", nullable = false, unique = true)
@@ -29,23 +29,15 @@ public class Orders {
 
     @OneToMany(mappedBy = "orders")
     @JsonBackReference
-    private List<Invoice> invoice;
+    private List<FishProfile> fishProfiles;
 
     @OneToMany(mappedBy = "orders")
     @JsonBackReference
     private List<HealthServiceOrder> healthServiceOrders;
 
-    @OneToMany(mappedBy = "orders")
+    @OneToOne(mappedBy = "orders")
     @JsonBackReference
-    private List<OrderDetail> orderDetail;
-
-    @OneToMany(mappedBy = "orders")
-    @JsonBackReference
-    private List<HandoverDocument> handoverDocuments;
-
-    @OneToMany(mappedBy = "orders")
-    @JsonBackReference
-    private List<Certificate> certificate;
+    private HandoverDocument handoverDocuments;
 
     @OneToMany(mappedBy = "orders")
     @JsonBackReference

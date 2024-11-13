@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.CreateCertificateRequest;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.UpdateCertificateRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CertificateResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.CertificateService;
@@ -40,23 +41,12 @@ public class CertificateController {
 
     }
 
-    @GetMapping("view-by-order/{orderId}")
-    public ResponseEntity<ApiResponse<List<CertificateResponse>>> getCertificateByOrderId(@PathVariable("orderId") int orderId) {
-        var result = certificateService.getCertificateByOrder(orderId);
-        return ResponseEntity.ok(ApiResponse.<List<CertificateResponse>>builder()
-                .code(200)
-                .message("Certificates by Orders")
-                .result(result)
-                .build());
-    }
-
-
-    @PostMapping("/create/{orderId}")
+    @PostMapping("/create/{fishProfileId}")
     public ResponseEntity<ApiResponse<CertificateResponse>> createCertificate(@Valid
             @RequestBody CreateCertificateRequest certificateRequest,
-            @PathVariable Integer orderId) {
+            @PathVariable Integer fishProfileId) {
 
-        var result = certificateService.creatCertificate(orderId, certificateRequest);
+        var result = certificateService.creatCertificate(fishProfileId, certificateRequest);
         return ResponseEntity.ok(ApiResponse.<CertificateResponse>builder()
                 .code(200)
                 .message("Certificate created successfully")
@@ -67,8 +57,8 @@ public class CertificateController {
     @PutMapping("update/{id}") // Endpoint to update a certificate by ID
     public ResponseEntity<ApiResponse<CertificateResponse>> updateCertificate(@Valid
             @PathVariable Integer id,
-            @RequestBody CreateCertificateRequest certificateRequest) {
-        var result = certificateService.updateCertificate(id, certificateRequest);
+            @RequestBody UpdateCertificateRequest request) {
+        var result = certificateService.updateCertificate(id, request);
         return ResponseEntity.ok(ApiResponse.<CertificateResponse>builder()
                 .code(200)
                 .message("Certificate created successfully")

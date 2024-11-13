@@ -30,14 +30,15 @@ public class DeliveryMethodService {
     @Autowired
     private AccountUtils accountUtils;
 
-    public DeliveryMethodResponse createDeliveryMethod(CreateDeliveryMethodRequest createDeliveryMethodRequest) {
+    public DeliveryMethodResponse createDeliveryMethod(CreateDeliveryMethodRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         DeliveryMethod deliveryMethod = DeliveryMethod.builder()
-                .deliveryMethodName(createDeliveryMethodRequest.getDeliveryMethodName())
-                .price(createDeliveryMethodRequest.getPrice())
+                .name(request.getName())
+                .description(request.getDescription())
+                .price(request.getPrice())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -48,15 +49,16 @@ public class DeliveryMethodService {
         return convertToDeliveryMethodResponse(deliveryMethod);
     }
 
-    public DeliveryMethodResponse updateDeliveryMethod(Integer id, UpdateDeliveryMethodRequest updateDeliveryMethodRequest) {
+    public DeliveryMethodResponse updateDeliveryMethod(Integer id, UpdateDeliveryMethodRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         DeliveryMethod deliveryMethod = deliveryMethodRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
-        deliveryMethod.setDeliveryMethodName(updateDeliveryMethodRequest.getDeliveryMethodName());
-        deliveryMethod.setPrice(updateDeliveryMethodRequest.getPrice());
+        deliveryMethod.setName(request.getName());
+        deliveryMethod.setDescription(request.getDescription());
+        deliveryMethod.setPrice(request.getPrice());
         deliveryMethod.setUpdateAt(LocalDateTime.now());
         deliveryMethod.setUpdateBy(users.getId());
         deliveryMethodRepository.save(deliveryMethod);
@@ -89,7 +91,8 @@ public class DeliveryMethodService {
     public DeliveryMethodResponse convertToDeliveryMethodResponse(DeliveryMethod deliveryMethod) {
         return DeliveryMethodResponse.builder()
                 .id(deliveryMethod.getId())
-                .deliveryMethodName(deliveryMethod.getDeliveryMethodName())
+                .name(deliveryMethod.getName())
+                .description(deliveryMethod.getDescription())
                 .price(deliveryMethod.getPrice())
                 .createAt(deliveryMethod.getCreateAt())
                 .createBy(deliveryMethod.getCreateBy())

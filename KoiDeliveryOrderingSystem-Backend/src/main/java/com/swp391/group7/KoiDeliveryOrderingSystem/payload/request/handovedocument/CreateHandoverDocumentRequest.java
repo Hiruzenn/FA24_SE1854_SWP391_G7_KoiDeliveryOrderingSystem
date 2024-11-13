@@ -20,7 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateHandoverDocumentRequest {
     private Integer userId;
-    private Integer packageId;
     private Integer orderId;
     private String handoverDescription;
 }
