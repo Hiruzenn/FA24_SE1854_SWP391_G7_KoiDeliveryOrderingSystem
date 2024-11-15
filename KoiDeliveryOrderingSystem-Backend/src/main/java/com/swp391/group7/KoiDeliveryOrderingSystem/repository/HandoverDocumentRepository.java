@@ -12,8 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface HandoverDocumentRepository extends JpaRepository<HandoverDocument, Integer> {
-    Optional<HandoverDocument> findByIdAndStatus(Integer id, SystemStatusEnum status);
-    List<HandoverDocument> findByStatus(SystemStatusEnum status);
-    List<HandoverDocument> findByUsersAndStatus(Users user, SystemStatusEnum status);
-    List<HandoverDocument> findByOrdersAndStatus(Orders order, SystemStatusEnum status);
+    List<HandoverDocument> findByUsers(Users user);
+    Optional<HandoverDocument> findByOrders(Orders order);
 }

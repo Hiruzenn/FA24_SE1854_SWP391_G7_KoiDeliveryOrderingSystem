@@ -17,4 +17,6 @@ public interface CheckingKoiHealthRepository extends JpaRepository<CheckingKoiHe
     List<CheckingKoiHealth> findByStatus(SystemStatusEnum status);
 
     Optional<CheckingKoiHealth> findByIdAndStatus(Integer id, SystemStatusEnum status);
+
+    boolean existsByFishProfileAndStatus(FishProfile fishProfile, SystemStatusEnum status);
 }

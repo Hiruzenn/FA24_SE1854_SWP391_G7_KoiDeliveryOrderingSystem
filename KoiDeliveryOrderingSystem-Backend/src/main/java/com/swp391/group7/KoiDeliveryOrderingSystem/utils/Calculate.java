@@ -45,7 +45,7 @@ public class Calculate {
                             .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
                     return healthServiceCategory.getPrice();
                 })).sum();
-        double fishProfile = fishProfileRepository.findByOrders(orders).stream().mapToDouble(fishProfileList -> {
+        double fishProfile = fishProfileRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE).stream().mapToDouble(fishProfileList -> {
             FishCategory fishCategory = fishCategoryRepository.findByNameAndStatus(fishProfileList.getFishCategory().getName(), SystemStatusEnum.AVAILABLE)
                     .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
             return fishCategory.getPrice();

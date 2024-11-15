@@ -51,7 +51,7 @@ public class HealthCareDeliveryHistoryService {
         return convertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory);
     }
 
-    public List<HealthCareDeliveryHistoryResponse> getHealthCareDeliveryHistoryByHandoverDocument(Integer handoverDocumentId){
+    public List<HealthCareDeliveryHistoryResponse> getHealthCareDeliveryHistoryByHandoverDocument(Integer handoverDocumentId) {
         HandoverDocument handoverDocument = handoverDocumentRepository.findById(handoverDocumentId)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
         List<HealthCareDeliveryHistory> healthCareDeliveryHistories = healthCareDeliveryHistoryRepository
@@ -65,7 +65,7 @@ public class HealthCareDeliveryHistoryService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        HandoverDocument document = handoverDocumentRepository.findByIdAndStatus(request.getHandoverDocumentId(), SystemStatusEnum.AVAILABLE)
+        HandoverDocument document = handoverDocumentRepository.findById(request.getHandoverDocumentId())
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
 
         HealthCareDeliveryHistory healthCareDeliveryHistory = HealthCareDeliveryHistory.builder()
@@ -124,10 +124,6 @@ public class HealthCareDeliveryHistoryService {
     }
 
     public HealthCareDeliveryHistoryResponse convertToHealthCareDeliveryHistoryResponse(HealthCareDeliveryHistory healthCareDeliveryHistory) {
-        if (healthCareDeliveryHistory == null) {
-            return null;
-        }
-
         return HealthCareDeliveryHistoryResponse.builder()
                 .id(healthCareDeliveryHistory.getId())
                 .handoverDocumentId(healthCareDeliveryHistory.getHandoverDocument().getId())

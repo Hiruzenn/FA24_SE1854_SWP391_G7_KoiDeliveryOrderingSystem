@@ -113,7 +113,7 @@ public class FishProfileService {
     public List<FishProfileResponse> viewByOrder(Integer orderId){
         Orders orders =  orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        List<FishProfile> fishProfileList = fishProfileRepository.findByOrders(orders);
+        List<FishProfile> fishProfileList = fishProfileRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
         return convertToListFishProfileResponse(fishProfileList);
     }
     public FishProfileResponse deleteFishProfile(Integer fishProfileId) {

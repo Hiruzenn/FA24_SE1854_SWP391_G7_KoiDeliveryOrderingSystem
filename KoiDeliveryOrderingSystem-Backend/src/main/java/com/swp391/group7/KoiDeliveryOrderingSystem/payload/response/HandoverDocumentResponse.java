@@ -26,6 +26,7 @@ public class HandoverDocumentResponse {
     private String destination;
     private String departure;
     private Float totalPrice;
+    private String image;
     private LocalDateTime createAt;
     private Integer createBy;
     private LocalDateTime updateAt;

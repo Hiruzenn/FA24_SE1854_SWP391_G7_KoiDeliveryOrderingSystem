@@ -27,7 +27,7 @@ public class HandoverDocument {
     @JsonManagedReference
     private Users users;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     @JsonManagedReference
     private Orders orders;
@@ -54,6 +54,9 @@ public class HandoverDocument {
     @Column(name = "total_price", nullable = false)
     private Float totalPrice;
 
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
@@ -69,9 +72,4 @@ public class HandoverDocument {
     @Column(name = "handover_status")
     @Enumerated(EnumType.STRING)
     private HandoverStatusEnum handoverStatus;
-
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SystemStatusEnum status;
-
 }

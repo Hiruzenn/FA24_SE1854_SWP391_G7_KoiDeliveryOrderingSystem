@@ -17,9 +17,7 @@ public class PackageResponse {
     private Integer id;
     private String packageNo;
     private String packageDescription;
-    private LocalDateTime packageDate;
     private PackageStatusEnum packageStatus;
-    private String packagedBy;
     private String image;
     private LocalDateTime createAt;
     private Integer createBy;

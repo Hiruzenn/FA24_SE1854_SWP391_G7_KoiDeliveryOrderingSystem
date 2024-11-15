@@ -5,5 +5,4 @@ public enum OrderStatusEnum {
     NOT_AVAILABLE,
     COMPLETED,
     IN_PROGRESS,
-    PENDING,
 }

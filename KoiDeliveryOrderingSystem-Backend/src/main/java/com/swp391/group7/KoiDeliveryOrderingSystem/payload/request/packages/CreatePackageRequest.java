@@ -13,9 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePackageRequest {
-    private String packageDescription;
-    private LocalDateTime packageDate;
-    private PackageStatusEnum packageStatus;
-    private String packageBy;
+    private String description;
     private String image;
 }

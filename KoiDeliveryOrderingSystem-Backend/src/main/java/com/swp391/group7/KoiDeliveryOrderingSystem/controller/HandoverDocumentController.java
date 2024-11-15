@@ -50,20 +50,20 @@ public class HandoverDocumentController {
                 .build());
     }
 
-    @GetMapping("view-by-customer")
-    public ResponseEntity<ApiResponse<List<HandoverDocumentResponse>>> viewByUser() {
-        var result = handoverDocumentService.viewByUsers();
+    @GetMapping("view-by-delivery-staff")
+    public ResponseEntity<ApiResponse<List<HandoverDocumentResponse>>> viewByDeliveryStaff() {
+        var result = handoverDocumentService.viewByDeliveryStaff();
         return ResponseEntity.ok(ApiResponse.<List<HandoverDocumentResponse>>builder()
                 .code(200)
-                .message("handover document list by current user")
+                .message("handover document list by current delivery staff")
                 .result(result)
                 .build());
     }
 
     @GetMapping("view-by-order/{orderId}")
-    public ResponseEntity<ApiResponse<List<HandoverDocumentResponse>>> viewByOrder(@PathVariable Integer orderId) {
+    public ResponseEntity<ApiResponse<HandoverDocumentResponse>> viewByOrder(@PathVariable Integer orderId) {
         var result = handoverDocumentService.viewByOrder(orderId);
-        return ResponseEntity.ok(ApiResponse.<List<HandoverDocumentResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<HandoverDocumentResponse>builder()
                 .code(200)
                 .message("handover document list by current order")
                 .result(result)
@@ -80,7 +80,7 @@ public class HandoverDocumentController {
                 .build());
     }
 
-    @PutMapping("delete/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<ApiResponse<HandoverDocumentResponse>> deleteHandoverDocument(@Valid @PathVariable Integer id) {
         var result = handoverDocumentService.delete(id);
         return ResponseEntity.ok(ApiResponse.<HandoverDocumentResponse>builder()
