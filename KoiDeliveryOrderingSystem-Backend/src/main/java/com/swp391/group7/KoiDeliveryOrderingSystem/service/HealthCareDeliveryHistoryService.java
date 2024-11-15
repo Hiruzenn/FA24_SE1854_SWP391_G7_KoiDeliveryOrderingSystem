@@ -43,14 +43,11 @@ public class HealthCareDeliveryHistoryService {
     // Retrieve the list of all healthcare delivery histories
     public List<HealthCareDeliveryHistoryResponse> viewAll() {
         List<HealthCareDeliveryHistory> healthCareDeliveryHistories = healthCareDeliveryHistoryRepository.findByStatus(SystemStatusEnum.AVAILABLE);
-        if (healthCareDeliveryHistories.isEmpty()) {
-            throw new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND);
-        }
         return convertToListHealthCareDeliveryHistoryResponse(healthCareDeliveryHistories);
     }
 
     // Retrieve a specific healthcare delivery history by its ID
-    public HealthCareDeliveryHistoryResponse viewById(int id) {
+    public HealthCareDeliveryHistoryResponse viewById(Integer id) {
         HealthCareDeliveryHistory healthCareDeliveryHistory = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
         return convertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory);
@@ -72,13 +69,12 @@ public class HealthCareDeliveryHistoryService {
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.IN_PROGRESS)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
-                .orElseThrow(()-> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
         HealthCareDeliveryHistory healthCareDeliveryHistory = HealthCareDeliveryHistory.builder()
                 .handoverDocument(handoverDocument)
                 .route(request.getRoute())
                 .healthDescription(request.getHealthDescription())
                 .eatingDescription(request.getEatingDescription())
-                .deliveryStatus(request.getDeliveryStatus())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -91,33 +87,32 @@ public class HealthCareDeliveryHistoryService {
     }
 
 
-    public HealthCareDeliveryHistoryResponse update(Integer id, CreateHealthCareDeliveryHistoryRequest healthCareDeliveryHistoryRequest) {
+    public HealthCareDeliveryHistoryResponse update(Integer id, CreateHealthCareDeliveryHistoryRequest request) {
 
-        HealthCareDeliveryHistory existingHistory = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        HealthCareDeliveryHistory history = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
 
-        existingHistory.setDeliveryStatus(healthCareDeliveryHistoryRequest.getDeliveryStatus());
-        existingHistory.setHealthDescription(healthCareDeliveryHistoryRequest.getHealthDescription());
-        existingHistory.setEatingDescription(healthCareDeliveryHistoryRequest.getEatingDescription());
-        existingHistory.setRoute(healthCareDeliveryHistoryRequest.getRoute());
-        existingHistory.setUpdateAt(LocalDateTime.now());
-        existingHistory.setUpdateBy(accountUtils.getCurrentUser().getId());
+        history.setHealthDescription(request.getHealthDescription());
+        history.setEatingDescription(request.getEatingDescription());
+        history.setRoute(request.getRoute());
+        history.setUpdateAt(LocalDateTime.now());
+        history.setUpdateBy(accountUtils.getCurrentUser().getId());
 
-        existingHistory = healthCareDeliveryHistoryRepository.save(existingHistory);
-        return convertToHealthCareDeliveryHistoryResponse(existingHistory);
+        history = healthCareDeliveryHistoryRepository.save(history);
+        return convertToHealthCareDeliveryHistoryResponse(history);
     }
 
 
     public HealthCareDeliveryHistoryResponse remove(Integer id) {
-        HealthCareDeliveryHistory existingHistory = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        HealthCareDeliveryHistory history = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
 
-        existingHistory.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        existingHistory.setUpdateAt(LocalDateTime.now());
-        existingHistory.setUpdateBy(accountUtils.getCurrentUser().getId());
+        history.setStatus(SystemStatusEnum.NOT_AVAILABLE);
+        history.setUpdateAt(LocalDateTime.now());
+        history.setUpdateBy(accountUtils.getCurrentUser().getId());
 
-        existingHistory = healthCareDeliveryHistoryRepository.save(existingHistory);
-        return convertToHealthCareDeliveryHistoryResponse(existingHistory);
+        history = healthCareDeliveryHistoryRepository.save(history);
+        return convertToHealthCareDeliveryHistoryResponse(history);
     }
 
     public List<HealthCareDeliveryHistoryResponse> convertToListHealthCareDeliveryHistoryResponse(List<HealthCareDeliveryHistory> healthCareDeliveryHistoryList) {
@@ -135,7 +130,6 @@ public class HealthCareDeliveryHistoryService {
                 .route(healthCareDeliveryHistory.getRoute())
                 .healthDescription(healthCareDeliveryHistory.getHealthDescription())
                 .eatingDescription(healthCareDeliveryHistory.getEatingDescription())
-                .deliveryStatus(healthCareDeliveryHistory.getDeliveryStatus())
                 .createAt(healthCareDeliveryHistory.getCreateAt())
                 .createBy(healthCareDeliveryHistory.getCreateBy())
                 .updateAt(healthCareDeliveryHistory.getUpdateAt())

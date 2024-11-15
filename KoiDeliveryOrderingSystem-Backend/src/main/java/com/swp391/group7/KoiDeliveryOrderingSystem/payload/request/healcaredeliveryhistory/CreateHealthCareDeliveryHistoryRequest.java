@@ -15,6 +15,4 @@ public class CreateHealthCareDeliveryHistoryRequest {
     private String route;
     private String healthDescription;
     private String eatingDescription;
-    private DeliveryStatusEnum deliveryStatus;
-
 }

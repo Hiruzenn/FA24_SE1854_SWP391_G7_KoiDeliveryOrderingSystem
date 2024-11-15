@@ -46,10 +46,6 @@ public class HealthCareDeliveryHistory {
     @Column(name = "update_by")
     private Integer updateBy;
 
-    @Column(name = "delivery_status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private DeliveryStatusEnum deliveryStatus;
-
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private SystemStatusEnum status;

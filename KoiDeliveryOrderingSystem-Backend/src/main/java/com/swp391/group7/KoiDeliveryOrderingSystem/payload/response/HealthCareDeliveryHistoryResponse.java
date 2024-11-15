@@ -17,7 +17,6 @@ public class HealthCareDeliveryHistoryResponse {
     private String route;
     private String healthDescription;
     private String eatingDescription;
-    private DeliveryStatusEnum deliveryStatus;
     private LocalDateTime createAt;
     private Integer createBy;
     private LocalDateTime updateAt;

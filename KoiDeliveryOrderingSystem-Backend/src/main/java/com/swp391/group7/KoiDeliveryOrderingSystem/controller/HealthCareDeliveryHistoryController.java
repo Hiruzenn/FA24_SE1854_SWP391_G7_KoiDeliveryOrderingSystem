@@ -23,29 +23,27 @@ public class HealthCareDeliveryHistoryController {
     HealthCareDeliveryHistoryService healthCareDeliveryHistoryService;
 
     @GetMapping("view-all")
-    public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getAllHealthCareDeliveryHistories() {
-        List<HealthCareDeliveryHistoryResponse> histories = healthCareDeliveryHistoryService.viewAll();
-        ApiResponse<List<HealthCareDeliveryHistoryResponse>> response = ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
-                .code(HttpStatus.OK.value())
+    public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> viewAll() {
+        var result = healthCareDeliveryHistoryService.viewAll();
+        return ResponseEntity.ok(ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
+                .code(200)
                 .message("Healthcare delivery histories retrieved successfully")
-                .result(histories)
-                .build();
-        return ResponseEntity.ok(response);
+                .result(result)
+                .build());
     }
 
     @GetMapping("view-one/{id}")
-    public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> getHealthCareDeliveryHistoryById(@PathVariable int id) {
-        HealthCareDeliveryHistoryResponse historyResponse = healthCareDeliveryHistoryService.viewById(id);
-        ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
-                .code(HttpStatus.OK.value())
+    public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> viewOne(@PathVariable int id) {
+        var result = healthCareDeliveryHistoryService.viewById(id);
+        return ResponseEntity.ok(ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
+                .code(200)
                 .message("Healthcare delivery history retrieved successfully")
-                .result(historyResponse)
-                .build();
-        return ResponseEntity.ok(response);
+                .result(result)
+                .build());
     }
 
     @GetMapping("view-by-handover/{handoverDocumentId}")
-    public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getHealthCareDeliveryHistoryByHandoverDocument(@PathVariable("handoverDocumentId") Integer handoverDocumentId) {
+    public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> viewByHandover(@PathVariable("handoverDocumentId") Integer handoverDocumentId) {
         var result = healthCareDeliveryHistoryService.viewByHandoverDocument(handoverDocumentId);
         return ResponseEntity.ok(ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
                 .code(200)
@@ -54,48 +52,40 @@ public class HealthCareDeliveryHistoryController {
                 .build());
     }
 
-    // Create a new healthcare delivery history
     @PostMapping("create/{orderId}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> createHealthCareDeliveryHistory(
             @PathVariable("orderId") Integer orderId,
             @RequestBody CreateHealthCareDeliveryHistoryRequest request) {
-
         var result = healthCareDeliveryHistoryService.create(orderId, request);
-
-        ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
-                .code(HttpStatus.CREATED.value())
+        return ResponseEntity.ok(ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
+                .code(200)
                 .message("Healthcare delivery history created successfully")
                 .result(result)
-                .build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                .build());
+
     }
 
-    // Update an existing healthcare delivery history by ID
     @PutMapping("update/{id}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> updateHealthCareDeliveryHistory(
             @PathVariable Integer id,
             @RequestBody CreateHealthCareDeliveryHistoryRequest request) {
 
-        HealthCareDeliveryHistoryResponse updatedHistory = healthCareDeliveryHistoryService.update(id, request);
+        var result = healthCareDeliveryHistoryService.update(id, request);
 
-        ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
-                .code(HttpStatus.OK.value())
+        return ResponseEntity.ok(ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
+                .code(200)
                 .message("Healthcare delivery history updated successfully")
-                .result(updatedHistory)
-                .build();
-        return ResponseEntity.ok(response);
+                .result(result)
+                .build());
     }
 
-    // Delete a healthcare delivery history by ID
     @PutMapping("delete/{id}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> removeHealthCareDeliveryHistory(@PathVariable Integer id) {
-        HealthCareDeliveryHistoryResponse deletedHistory = healthCareDeliveryHistoryService.remove(id);
-
-        ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
+        var result = healthCareDeliveryHistoryService.remove(id);
+        return ResponseEntity.ok(ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Healthcare delivery history deleted successfully")
-                .result(deletedHistory)
-                .build();
-        return ResponseEntity.ok(response);
+                .result(result)
+                .build());
     }
 }

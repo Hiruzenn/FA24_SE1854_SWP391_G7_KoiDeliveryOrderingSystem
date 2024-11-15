@@ -1,14 +1,11 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.handovedocument.CreateHandoverDocumentRequest;
@@ -23,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +45,8 @@ public class HandoverDocumentService {
     public static final String RANDOM_STRING = "0123456789";
     @Autowired
     private HealthCareDeliveryHistoryRepository healthCareDeliveryHistoryRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     public HandoverDocumentResponse create(CreateHandoverDocumentRequest request) {
         Users users = accountUtils.getCurrentUser();
@@ -85,12 +85,23 @@ public class HandoverDocumentService {
                 .orElseThrow(() -> new AppException(ErrorCode.PACK_ORDER_BEFORE));
         HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+        Boolean checkHealthCareDeliveryHistory = healthCareDeliveryHistoryRepository.existsByHandoverDocument(handoverDocument);
+        if (!checkHealthCareDeliveryHistory) {
+            throw new AppException(ErrorCode.NEED_DELIVERY_HISTORY);
+        }
+
         if (orders.getPaymentStatus().equals(PaymentStatusEnum.UNPAID)) {
             orders.setPaymentStatus(PaymentStatusEnum.PAID);
-        }
-        Boolean checkHealthCareDeliveryHistory = healthCareDeliveryHistoryRepository.existsByHandoverDocument(handoverDocument);
-        if(!checkHealthCareDeliveryHistory){
-            throw new AppException(ErrorCode.NEED_DELIVERY_HISTORY);
+            Payment payment = Payment.builder()
+                    .users(orders.getUsers())
+                    .orders(orders)
+                    .paymentCode(orders.getOrderCode().substring(3))
+                    .paymentDate(LocalDate.now())
+                    .paymentStatus(PaymentStatusEnum.PAID)
+                    .paymentMethod("CAST")
+                    .amount(orders.getTotalAmount())
+                    .build();
+            paymentRepository.save(payment);
         }
         orders.setStatus(OrderStatusEnum.COMPLETED);
         handoverDocument.setHandoverDescription(request.getHandoverDescription());
@@ -100,6 +111,7 @@ public class HandoverDocumentService {
         handoverDocument.setUpdateBy(users.getId());
         handoverDocumentRepository.save(handoverDocument);
         orderRepository.save(orders);
+
         return convertToHandoverDocumentResponse(handoverDocument);
     }
 

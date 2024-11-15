@@ -32,9 +32,9 @@ public class HandoverDocumentController {
                 .build());
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<ApiResponse<HandoverDocumentResponse>> updateHandoverDocument(@Valid @PathVariable Integer id, @RequestBody UpdateHandoverDocumentRequest request) {
-        var result = handoverDocumentService.update(id, request);
+    @PutMapping("update/{orderId}")
+    public ResponseEntity<ApiResponse<HandoverDocumentResponse>> updateHandoverDocument(@Valid @PathVariable("orderId") Integer orderId, @RequestBody UpdateHandoverDocumentRequest request) {
+        var result = handoverDocumentService.update(orderId, request);
         return ResponseEntity.ok(ApiResponse.<HandoverDocumentResponse>builder()
                 .code(200)
                 .message("handover document updated")
