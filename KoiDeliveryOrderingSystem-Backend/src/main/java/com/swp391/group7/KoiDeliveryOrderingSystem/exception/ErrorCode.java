@@ -60,6 +60,7 @@ public enum ErrorCode {
     INTERNAL_SEVER_ERROR(1600, "Internal Sever Error"),
     ROLE_NOT_EXISTED(1601, "Role Not Existed"),
     NOT_ENOUGH_CHECKING_KOI_HEALTH(1602, "Not Enough Checking Koi Health"),
+    FEEDBACK_ORDER_COMPLETED(1603, "Only feedback order is completed")
     ;
 
     private final int code;

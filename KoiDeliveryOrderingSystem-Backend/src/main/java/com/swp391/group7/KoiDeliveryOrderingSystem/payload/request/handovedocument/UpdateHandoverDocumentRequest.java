@@ -14,6 +14,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateHandoverDocumentRequest {
     private String handoverDescription;
-    private HandoverStatusEnum handoverStatus;
     private String image;
 }

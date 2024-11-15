@@ -86,11 +86,6 @@ public class PackageService {
             handoverDocument.setHandoverStatus(HandoverStatusEnum.IN_PROGRESS);
             orders.setStatus(OrderStatusEnum.IN_PROGRESS);
         }
-        if (packages.getPackageStatus().equals(PackageStatusEnum.PACKING)) {
-            handoverDocument.setHandoverStatus(HandoverStatusEnum.PENDING);
-            orders.setStatus(OrderStatusEnum.AVAILABLE);
-        }
-
         packages.setPackageStatus(request.getPackageStatus());
         packages.setImage(request.getImage());
         packages.setUpdateAt(LocalDateTime.now());
