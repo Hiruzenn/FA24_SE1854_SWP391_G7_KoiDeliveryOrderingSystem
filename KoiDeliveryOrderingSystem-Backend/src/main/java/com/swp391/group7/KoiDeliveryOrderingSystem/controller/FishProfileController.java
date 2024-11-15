@@ -61,6 +61,16 @@ public class FishProfileController {
                 .build());
     }
 
+    @GetMapping("view-by-order/{orderId}")
+    public ResponseEntity<ApiResponse<List<FishProfileResponse>>> viewByOrder(@PathVariable("orderId") Integer orderId) {
+        var result = fishProfileService.viewByOrder(orderId);
+        return ResponseEntity.ok(ApiResponse.<List<FishProfileResponse>>builder()
+                .code(200)
+                .message("Fish Profile By Order Id")
+                .result(result)
+                .build());
+    }
+
     @PutMapping("delete/{fishProfileId}")
     public ResponseEntity<ApiResponse<FishProfileResponse>> deleteFishProfile(@PathVariable Integer fishProfileId) {
         var result = fishProfileService.deleteFishProfile(fishProfileId);

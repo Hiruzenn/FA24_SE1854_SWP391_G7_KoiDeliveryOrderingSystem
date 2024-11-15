@@ -20,8 +20,8 @@ public class DataLoader {
     @Bean
     CommandLineRunner initData(UserRepository userRepository, RoleRepository roleRepository,
                                DeliveryMethodRepository deliveryMethodRepository, FishCategoryRepository fishCategoryRepository,
-                               HealthServiceCategoryRepository healthServiceCategoryRepository
-    ) {
+                               HealthServiceCategoryRepository healthServiceCategoryRepository,
+                               FishProfileRepository fishProfileRepository) {
         return args -> {
             if (roleRepository.count() == 0) {
                 Role customer = Role.builder()
@@ -77,83 +77,129 @@ public class DataLoader {
                 userRepository.save(deliveryStaff);
             }
             if (deliveryMethodRepository.count() == 0) {
-                DeliveryMethod van = DeliveryMethod.builder()
-                        .name("VAN")
-                        .price(50f)
+                DeliveryMethod vehicle1 = DeliveryMethod.builder()
+                        .name("Xe Tải Chuyên Dụng")
+                        .description("Xe tải có hệ thống điều hòa nhiệt độ, bể chứa nước và các thiết bị kiểm soát môi trường, dành cho vận chuyển dài.")
+                        .price(250F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
-                DeliveryMethod plane = DeliveryMethod.builder()
-                        .name("PLANE")
-                        .price(200f)
+                DeliveryMethod vehicle2 = DeliveryMethod.builder()
+                        .name("Xe Van Điều Hòa")
+                        .description("Xe van nhỏ, trang bị điều hòa và thiết bị giữ nhiệt, thích hợp cho vận chuyển trong thành phố hoặc quãng đường ngắn.")
+                        .price(150F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
-                DeliveryMethod boat = DeliveryMethod.builder()
-                        .name("BOAT")
-                        .price(150f)
+                DeliveryMethod vehicle3 = DeliveryMethod.builder()
+                        .name("Container Chuyên Dụng")
+                        .description("Container có hệ thống cấp oxy và điều chỉnh nhiệt độ, phù hợp cho vận chuyển số lượng lớn hoặc quãng đường dài.")
+                        .price(350F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
-                DeliveryMethod train = DeliveryMethod.builder()
-                        .name("TRAIN")
-                        .price(100f)
+                DeliveryMethod vehicle4 = DeliveryMethod.builder()
+                        .name("Xe Ba Gác")
+                        .description("Phương tiện vận chuyển giá rẻ, thích hợp cho các chuyến giao hàng nội thành hoặc quãng đường ngắn, không cần điều hòa.")
+                        .price(70F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
-                deliveryMethodRepository.save(van);
-                deliveryMethodRepository.save(plane);
-                deliveryMethodRepository.save(boat);
-                deliveryMethodRepository.save(train);
+                DeliveryMethod vehicle5 = DeliveryMethod.builder()
+                        .name("Xe Máy")
+                        .description("Phương tiện nhỏ, sử dụng cho giao hàng nhanh, phù hợp với số lượng ít cá koi và quãng đường ngắn.")
+                        .price(30F)
+                        .status(SystemStatusEnum.AVAILABLE)
+                        .build();
+                DeliveryMethod vehicle6 = DeliveryMethod.builder()
+                        .name("Máy Bay Chuyên Dụng")
+                        .description("Dùng cho các chuyến vận chuyển quốc tế hoặc quãng đường dài, cá được bảo vệ trong các bồn oxy đặc biệt.")
+                        .price(500F)
+                        .status(SystemStatusEnum.AVAILABLE)
+                        .build();
+                deliveryMethodRepository.save(vehicle1);
+                deliveryMethodRepository.save(vehicle2);
+                deliveryMethodRepository.save(vehicle3);
+                deliveryMethodRepository.save(vehicle4);
+                deliveryMethodRepository.save(vehicle5);
+                deliveryMethodRepository.save(vehicle6);
             }
             if (fishCategoryRepository.count() == 0) {
-                FishCategory fishA = FishCategory.builder()
-                        .name("Type A")
-                        .description("Super A")
-                        .price(50000F)
+                FishCategory fish1 = FishCategory.builder()
+                        .name("Kohaku")
+                        .description("Thân màu trắng với các mảng đỏ (hi). Đây là loại Koi phổ biến và được yêu thích nhất.")
+                        .price(5000F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
-                FishCategory fishB = FishCategory.builder()
-                        .name("Type B")
-                        .description("Super B")
-                        .price(25000F)
-                        .status(SystemStatusEnum.AVAILABLE)
-                        .build();
-                FishCategory fishC = FishCategory.builder()
-                        .name("Type C")
-                        .description("Super C")
+                FishCategory fish2 = FishCategory.builder()
+                        .name("Taisho Sanke")
+                        .description("Giống Kohaku nhưng có thêm các mảng đen (sumi) cùng với màu đỏ và trắng.")
                         .price(10000F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
-                fishCategoryRepository.save(fishA);
-                fishCategoryRepository.save(fishB);
-                fishCategoryRepository.save(fishC);
+                FishCategory fish3 = FishCategory.builder()
+                        .name("Showa Sanshoku")
+                        .description("Thân đen với các mảng màu đỏ và trắng. Trông giống Sanke nhưng có nhiều màu đen hơn.")
+                        .price(10000F)
+                        .status(SystemStatusEnum.AVAILABLE)
+                        .build();
+                FishCategory fish4 = FishCategory.builder()
+                        .name("Utsurimono")
+                        .description("Cá Koi đen với các mảng trắng, đỏ, hoặc vàng. Tương phản mạnh giữa màu đen và các màu khác.")
+                        .price(8000F)
+                        .status(SystemStatusEnum.AVAILABLE)
+                        .build();
+                FishCategory fish5 = FishCategory.builder()
+                        .name("Shusui")
+                        .description("Thân màu xanh xám với các mảng đỏ và trắng. Không có vảy, có vẻ ngoài sạch sẽ và đặc biệt.")
+                        .price(6000F)
+                        .status(SystemStatusEnum.AVAILABLE)
+                        .build();
+                FishCategory fish6 = FishCategory.builder()
+                        .name("Asagi")
+                        .description("Thân màu xanh nhạt với hoa văn lưới trên lưng và vây cùng bụng màu đỏ. Độc đáo và thanh lịch.")
+                        .price(5000F)
+                        .status(SystemStatusEnum.AVAILABLE)
+                        .build();
+                FishCategory fish7 = FishCategory.builder()
+                        .name("Tancho")
+                        .description("Thân trắng với một điểm đỏ trên đầu, giống quốc kỳ Nhật Bản. Mang ý nghĩa biểu tượng và hiếm có.")
+                        .price(20000F)
+                        .status(SystemStatusEnum.AVAILABLE)
+                        .build();
+                fishCategoryRepository.save(fish1);
+                fishCategoryRepository.save(fish2);
+                fishCategoryRepository.save(fish3);
+                fishCategoryRepository.save(fish4);
+                fishCategoryRepository.save(fish5);
+                fishCategoryRepository.save(fish6);
+                fishCategoryRepository.save(fish7);
             }
             if (healthServiceCategoryRepository.count() == 0) {
                 HealthServiceCategory healthServiceCategoryA = HealthServiceCategory.builder()
-                        .serviceName("Prepare oxygen bag and pump")
-                        .serviceDescription("Ensure adequate oxygen and space for the fish.")
-                        .price(100000f)
+                        .serviceName("Gói Chăm Sóc Cơ Bản")
+                        .serviceDescription("Đóng gói túi nilon chịu lực cao với oxy bổ sung, kiểm tra kích thước và nhiệt độ phù hợp cho cá Koi nhỏ.")
+                        .price(10000F)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryB = HealthServiceCategory.builder()
-                        .serviceName("Add salt or anti-stress medication")
-                        .serviceDescription("Reduce stress and risk of infection.")
-                        .price(200000f)
+                        .serviceName("Gói Chăm Sóc Nâng Cao")
+                        .serviceDescription("Đóng gói túi đôi với oxy lâu dài, kiểm soát nhiệt độ và thêm dung dịch giảm căng thẳng cho cá.")
+                        .price(20000f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryC = HealthServiceCategory.builder()
-                        .serviceName("Maintain proper temperature and lighting")
-                        .serviceDescription("Stabilize the transport environment")
-                        .price(300000f)
+                        .serviceName("Gói Chăm Sóc Đặc Biệt")
+                        .serviceDescription("Thùng chuyên dụng với kiểm soát nhiệt độ, oxy liên tục, kiểm tra trước và sau bởi chuyên gia, có bảo hiểm.")
+                        .price(30000f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryD = HealthServiceCategory.builder()
-                        .serviceName("Use insulated boxes")
-                        .serviceDescription("Protect fish from thermal shock and vibration.")
-                        .price(400000f)
+                        .serviceName("Gói Kiểm Tra & Phục Hồi Sức Khỏe")
+                        .serviceDescription("Kiểm tra sức khỏe toàn diện sau vận chuyển, cung cấp hồ phục hồi với thuốc và hệ thống kiểm soát nước.")
+                        .price(40000f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryE = HealthServiceCategory.builder()
-                        .serviceName("Tracking and post-shipment support")
-                        .serviceDescription("Update information and instruct recipients on how to care for fish.")
-                        .price(500000f)
+                        .serviceName("Gói Vận Chuyển Quốc Tế")
+                        .serviceDescription("Đóng gói theo tiêu chuẩn quốc tế, xử lý thủ tục hải quan nhanh, kiểm soát nhiệt độ và oxy cho thời gian dài.")
+                        .price(50000f)
                         .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 healthServiceCategoryRepository.save(healthServiceCategoryA);

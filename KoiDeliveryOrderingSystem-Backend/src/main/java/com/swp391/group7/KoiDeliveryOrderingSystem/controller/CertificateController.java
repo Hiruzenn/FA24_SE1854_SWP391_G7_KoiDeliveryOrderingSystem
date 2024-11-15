@@ -41,6 +41,15 @@ public class CertificateController {
 
     }
 
+    @GetMapping("view-by-fish-profile/{fishProfileId}")
+    public ResponseEntity<ApiResponse<List<CertificateResponse>>> getCertificateByFishProfileId(@PathVariable int fishProfileId) {
+        var result = certificateService.viewCertificateByFishProfile(fishProfileId);
+        return ResponseEntity.ok(ApiResponse.<List<CertificateResponse>>builder()
+                .code(200)
+                .message("Certificate by Fish Profile")
+                .result(result)
+                .build());
+    }
     @PostMapping("/create/{fishProfileId}")
     public ResponseEntity<ApiResponse<CertificateResponse>> createCertificate(@Valid
             @RequestBody CreateCertificateRequest certificateRequest,

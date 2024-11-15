@@ -13,4 +13,5 @@ public interface FishCategoryRepository extends JpaRepository<FishCategory, Inte
     Optional<FishCategory> findByName(String name);
     Optional<FishCategory> findByIdAndStatus(Integer id, SystemStatusEnum status);
     List<FishCategory> findByStatus(SystemStatusEnum status);
+    Optional<FishCategory> findByNameAndStatus(String name,SystemStatusEnum status);
 }
