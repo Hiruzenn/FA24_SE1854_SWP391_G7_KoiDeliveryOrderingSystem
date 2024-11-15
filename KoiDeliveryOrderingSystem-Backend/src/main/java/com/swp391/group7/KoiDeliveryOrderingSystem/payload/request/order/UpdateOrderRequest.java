@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -51,4 +52,6 @@ public class UpdateOrderRequest {
     private LocalDateTime estimateDeliveryDate;
 
     private LocalDateTime receivingDate;
+
+    private PaymentStatusEnum paymentStatus;
 }
