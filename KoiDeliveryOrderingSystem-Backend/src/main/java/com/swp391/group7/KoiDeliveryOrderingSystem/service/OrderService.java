@@ -2,6 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.CreateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateOrderRequest;
@@ -63,6 +64,7 @@ public class OrderService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
+                .paymentStatus(PaymentStatusEnum.UNPAID)
                 .status(OrderStatusEnum.AVAILABLE)
                 .build();
         orderRepository.save(orders);
@@ -97,6 +99,7 @@ public class OrderService {
         orders.setDeparture(updateOrderRequest.getDeparture());
         orders.setDistance(updateOrderRequest.getDistance());
         orders.setPhone(updateOrderRequest.getPhone());
+        orders.setPaymentStatus(updateOrderRequest.getPaymentStatus());
         orders.setReceivingDate(updateOrderRequest.getReceivingDate());
         orders.setEstimateDeliveryDate(updateOrderRequest.getEstimateDeliveryDate());
         orders.setUpdateAt(LocalDateTime.now());

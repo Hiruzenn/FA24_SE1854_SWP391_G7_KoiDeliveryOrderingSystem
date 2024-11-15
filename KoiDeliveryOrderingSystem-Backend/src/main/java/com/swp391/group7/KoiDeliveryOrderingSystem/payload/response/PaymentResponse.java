@@ -13,14 +13,10 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentResponse {
     private Integer id;
-    private String paymentCode;
+    private String code;
     private Integer customerId;
     private Integer orderId;
     private Float amount;
-    private String paymentMethod;
-    private LocalDateTime createAt;
-    private Integer createBy;
-    private LocalDateTime updateAt;
-    private Integer updateBy;
-    private SystemStatusEnum statusEnum;
+    private String method;
+    private String status;
 }
