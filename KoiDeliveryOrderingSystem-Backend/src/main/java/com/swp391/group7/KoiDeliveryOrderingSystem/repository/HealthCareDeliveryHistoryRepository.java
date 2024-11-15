@@ -14,4 +14,5 @@ public interface HealthCareDeliveryHistoryRepository extends JpaRepository<Healt
     List<HealthCareDeliveryHistory> findByStatus(SystemStatusEnum status);
     Optional<HealthCareDeliveryHistory> findByIdAndStatus(Integer id, SystemStatusEnum status);
     List<HealthCareDeliveryHistory> findByHandoverDocumentAndStatus(HandoverDocument handoverDocument, SystemStatusEnum status);
+    Boolean existsByHandoverDocument(HandoverDocument handoverDocument);
 }

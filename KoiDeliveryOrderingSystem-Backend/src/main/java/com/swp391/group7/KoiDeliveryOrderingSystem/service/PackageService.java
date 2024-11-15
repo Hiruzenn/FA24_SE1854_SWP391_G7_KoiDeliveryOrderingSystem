@@ -82,7 +82,7 @@ public class PackageService {
         Package packages = packageRepository.findByOrders(orders).orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
         HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
-        if (packages.getPackageStatus().equals(PackageStatusEnum.PACKED)) {
+        if (request.getPackageStatus().equals(PackageStatusEnum.PACKED)) {
             handoverDocument.setHandoverStatus(HandoverStatusEnum.IN_PROGRESS);
             orders.setStatus(OrderStatusEnum.IN_PROGRESS);
         }

@@ -60,7 +60,9 @@ public enum ErrorCode {
     INTERNAL_SEVER_ERROR(1600, "Internal Sever Error"),
     ROLE_NOT_EXISTED(1601, "Role Not Existed"),
     NOT_ENOUGH_CHECKING_KOI_HEALTH(1602, "Not Enough Checking Koi Health"),
-    FEEDBACK_ORDER_COMPLETED(1603, "Only feedback order is completed")
+    FEEDBACK_ORDER_COMPLETED(1603, "Only feedback order is completed"),
+    NEED_DELIVERY_HISTORY(1604, "You need to create delivery histroy before complete handover document"),
+    PACK_ORDER_BEFORE(1605, "Package status must be PACKED before complete ORDER")
     ;
 
     private final int code;

@@ -1,7 +1,9 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CreateHealthCareDeliveryHistoryRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
@@ -10,6 +12,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthCareDeliveryHistoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.HandoverDocumentRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.HealthCareDeliveryHistoryRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +37,11 @@ public class HealthCareDeliveryHistoryService {
 
     @Autowired
     AccountUtils accountUtils;
+    @Autowired
+    private OrderRepository orderRepository;
 
     // Retrieve the list of all healthcare delivery histories
-    public List<HealthCareDeliveryHistoryResponse> getListHealthCareDeliveryHistories() {
+    public List<HealthCareDeliveryHistoryResponse> viewAll() {
         List<HealthCareDeliveryHistory> healthCareDeliveryHistories = healthCareDeliveryHistoryRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         if (healthCareDeliveryHistories.isEmpty()) {
             throw new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND);
@@ -45,13 +50,13 @@ public class HealthCareDeliveryHistoryService {
     }
 
     // Retrieve a specific healthcare delivery history by its ID
-    public HealthCareDeliveryHistoryResponse getHealthCareDeliveryHistoryById(int id) {
+    public HealthCareDeliveryHistoryResponse viewById(int id) {
         HealthCareDeliveryHistory healthCareDeliveryHistory = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
         return convertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory);
     }
 
-    public List<HealthCareDeliveryHistoryResponse> getHealthCareDeliveryHistoryByHandoverDocument(Integer handoverDocumentId) {
+    public List<HealthCareDeliveryHistoryResponse> viewByHandoverDocument(Integer handoverDocumentId) {
         HandoverDocument handoverDocument = handoverDocumentRepository.findById(handoverDocumentId)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
         List<HealthCareDeliveryHistory> healthCareDeliveryHistories = healthCareDeliveryHistoryRepository
@@ -59,17 +64,17 @@ public class HealthCareDeliveryHistoryService {
         return convertToListHealthCareDeliveryHistoryResponse(healthCareDeliveryHistories);
     }
 
-    public HealthCareDeliveryHistoryResponse createHealthCareDeliveryHistory(
-            CreateHealthCareDeliveryHistoryRequest request) {
+    public HealthCareDeliveryHistoryResponse create(Integer orderId, CreateHealthCareDeliveryHistoryRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        HandoverDocument document = handoverDocumentRepository.findById(request.getHandoverDocumentId())
-                .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
-
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.IN_PROGRESS)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
+                .orElseThrow(()-> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
         HealthCareDeliveryHistory healthCareDeliveryHistory = HealthCareDeliveryHistory.builder()
-                .handoverDocument(document)
+                .handoverDocument(handoverDocument)
                 .route(request.getRoute())
                 .healthDescription(request.getHealthDescription())
                 .eatingDescription(request.getEatingDescription())
@@ -86,7 +91,7 @@ public class HealthCareDeliveryHistoryService {
     }
 
 
-    public HealthCareDeliveryHistoryResponse updateHealthCareDeliveryHistory(Integer id, CreateHealthCareDeliveryHistoryRequest healthCareDeliveryHistoryRequest) {
+    public HealthCareDeliveryHistoryResponse update(Integer id, CreateHealthCareDeliveryHistoryRequest healthCareDeliveryHistoryRequest) {
 
         HealthCareDeliveryHistory existingHistory = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
@@ -103,7 +108,7 @@ public class HealthCareDeliveryHistoryService {
     }
 
 
-    public HealthCareDeliveryHistoryResponse removeHealthCareDeliveryHistory(Integer id) {
+    public HealthCareDeliveryHistoryResponse remove(Integer id) {
         HealthCareDeliveryHistory existingHistory = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
 
