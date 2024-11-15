@@ -1,10 +1,8 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -18,5 +16,5 @@ public class PaymentResponse {
     private Integer orderId;
     private Float amount;
     private String method;
-    private String status;
+    private PaymentStatusEnum status;
 }

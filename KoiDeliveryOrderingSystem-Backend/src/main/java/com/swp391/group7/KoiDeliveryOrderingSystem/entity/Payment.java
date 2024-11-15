@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,7 +36,7 @@ public class Payment {
     private LocalDate paymentDate;
 
     @Column(name="payment_status")
-    private String paymentStatus;
+    private PaymentStatusEnum paymentStatus;
 
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;

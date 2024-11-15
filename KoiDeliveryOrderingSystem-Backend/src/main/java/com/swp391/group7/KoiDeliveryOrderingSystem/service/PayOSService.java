@@ -71,7 +71,7 @@ public class PayOSService {
                 .orders(orders)
                 .paymentCode(orders.getOrderCode().substring(3))
                 .paymentDate(LocalDate.now())
-                .paymentStatus("SUCCESS")
+                .paymentStatus(PaymentStatusEnum.PAID)
                 .paymentMethod("PAYOS")
                 .amount(orders.getTotalAmount())
                 .build();
@@ -88,7 +88,7 @@ public class PayOSService {
                 .orders(orders)
                 .paymentCode(orders.getOrderCode().substring(3))
                 .paymentDate(LocalDate.now())
-                .paymentStatus("FAIL")
+                .paymentStatus(PaymentStatusEnum.UNPAID)
                 .paymentMethod("PAYOS")
                 .amount(orders.getTotalAmount())
                 .build();
@@ -104,7 +104,7 @@ public class PayOSService {
                 .orders(orders)
                 .paymentCode(orders.getOrderCode().substring(3))
                 .paymentDate(LocalDate.now())
-                .paymentStatus("SUCCESS")
+                .paymentStatus(PaymentStatusEnum.UNPAID)
                 .paymentMethod("CAST")
                 .amount(orders.getTotalAmount())
                 .build();
@@ -142,6 +142,5 @@ public class PayOSService {
             paymentResponseList.add(convertToPaymentResponse(paymentResponse));
         }
         return paymentResponseList;
-
     }
 }

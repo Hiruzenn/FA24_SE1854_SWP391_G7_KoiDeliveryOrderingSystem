@@ -31,17 +31,18 @@ public class FeedbackService {
     @Autowired
     private AccountUtils accountUtils;
 
-    public FeedbackResponse createFeedback(Integer orderId, CreateFeedbackRequest createFeedbackRequest) {
+    public FeedbackResponse createFeedback(Integer orderId, CreateFeedbackRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.COMPLETED).orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_ORDER_COMPLETED));
 
         Feedback feedback = Feedback.builder()
                 .users(users)
                 .orders(orders)
-                .feedbackDescription(createFeedbackRequest.getFeedbackDescription())
+                .feedbackDescription(request.getFeedbackDescription())
+                .rating((request.getRating()))
                 .build();
         feedbackRepository.save(feedback);
         return convertToFeedbackResponse(feedback);
@@ -53,7 +54,7 @@ public class FeedbackService {
     }
 
     public List<FeedbackResponse> viewFeedbackByOrderId(Integer orderId) {
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.COMPLETED).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         List<Feedback> feedbacks = feedbackRepository.findByOrders(orders);
         return convertToListFeedbackResponse(feedbacks);
     }

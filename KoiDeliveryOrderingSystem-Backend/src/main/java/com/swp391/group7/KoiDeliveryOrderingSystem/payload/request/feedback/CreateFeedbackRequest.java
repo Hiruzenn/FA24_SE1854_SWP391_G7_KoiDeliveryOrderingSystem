@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateFeedbackRequest {
     private String feedbackDescription;
+    private Integer rating;
 }
