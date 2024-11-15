@@ -2,6 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.CreateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
@@ -12,7 +13,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
-import com.swp391.group7.KoiDeliveryOrderingSystem.utils.CalculateMoney;
+import com.swp391.group7.KoiDeliveryOrderingSystem.utils.Calculate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -40,17 +41,15 @@ public class OrderService {
     private AccountUtils accountUtils;
 
     @Autowired
-    private CalculateMoney calculateMoney;
+    private Calculate calculate;
 
     public OrderResponse createOrder(CreateOrderRequest createOrderRequest) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByName(createOrderRequest.getDeliveryMethod());
-        if (deliveryMethod == null) {
-            throw new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND);
-        }
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByNameAndStatus(createOrderRequest.getDeliveryMethod(), SystemStatusEnum.AVAILABLE)
+                .orElseThrow(()-> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
         Orders orders = Orders.builder()
                 .orderCode(generateOrderCode())
                 .users(users)
@@ -58,7 +57,7 @@ public class OrderService {
                 .orderDate(LocalDateTime.now())
                 .destination(createOrderRequest.getDestination())
                 .departure(createOrderRequest.getDeparture())
-                .distance(calculateMoney.calculateDistance(createOrderRequest.getDeparture(), createOrderRequest.getDestination()))
+                .distance(calculate.calculateDistance(createOrderRequest.getDeparture(), createOrderRequest.getDestination()))
                 .phone(createOrderRequest.getPhone())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
@@ -77,10 +76,10 @@ public class OrderService {
         }
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        orders.setAmount(calculateMoney.calculateMoney(orders.getId()));
+        orders.setAmount(calculate.calculateMoney(orders.getId()));
         orders.setVat(0.1f);
-        orders.setVatAmount(calculateMoney.calculateMoney(orders.getId()) * 0.1f);
-        orders.setTotalAmount(calculateMoney.calculateMoney(orders.getId()) * 1.1f);
+        orders.setVatAmount(calculate.calculateMoney(orders.getId()) * 0.1f);
+        orders.setTotalAmount(calculate.calculateMoney(orders.getId()) * 1.1f);
         orderRepository.save(orders);
         return convertOrderToResponse(orders);
     }
@@ -91,19 +90,13 @@ public class OrderService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Orders orders = orderRepository.findById(OrderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByName(updateOrderRequest.getDeliveryMethod());
-        if (deliveryMethod == null) {
-            throw new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND);
-        }
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByNameAndStatus(updateOrderRequest.getDeliveryMethod(), SystemStatusEnum.AVAILABLE)
+                .orElseThrow(()-> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
         orders.setDeliveryMethod(deliveryMethod);
         orders.setDestination(updateOrderRequest.getDestination());
         orders.setDeparture(updateOrderRequest.getDeparture());
         orders.setDistance(updateOrderRequest.getDistance());
         orders.setPhone(updateOrderRequest.getPhone());
-        orders.setAmount(updateOrderRequest.getAmount());
-        orders.setVat(updateOrderRequest.getVat());
-        orders.setVatAmount(updateOrderRequest.getVatAmount());
-        orders.setTotalAmount(updateOrderRequest.getTotalAmount());
         orders.setReceivingDate(updateOrderRequest.getReceivingDate());
         orders.setEstimateDeliveryDate(updateOrderRequest.getEstimateDeliveryDate());
         orders.setUpdateAt(LocalDateTime.now());

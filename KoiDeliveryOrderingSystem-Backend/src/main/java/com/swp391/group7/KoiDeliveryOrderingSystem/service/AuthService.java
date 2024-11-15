@@ -69,7 +69,7 @@ public class AuthService {
                     .email(registerCustomerRequest.getEmail())
                     .password(encodedPassword)
                     .name(registerCustomerRequest.getName())
-                    .role(roleRepository.findByName("CUSTOMERS"))
+                    .role(roleRepository.findByName("CUSTOMER"))
                     .createAt(LocalDateTime.now())
                     .customerStatus(CustomerStatusEnum.UNVERIFIED)
                     .build();

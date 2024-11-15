@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CalculateMoney {
+public class Calculate {
     @Autowired
     private OrderRepository orderRepository;
 
@@ -28,6 +28,10 @@ public class CalculateMoney {
     private HealthServiceOrderRepository healthServiceOrderRepository;
 
     private final Map<String, Float> fixedDistance = new HashMap<>();
+    @Autowired
+    private FishProfileRepository fishProfileRepository;
+    @Autowired
+    private FishCategoryRepository fishCategoryRepository;
 
     public Float calculateMoney(Integer orderId) {
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
@@ -41,11 +45,16 @@ public class CalculateMoney {
                             .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
                     return healthServiceCategory.getPrice();
                 })).sum();
-        Double total = (orders.getDistance() * deliveryMethod) + healthService;
+        double fishProfile = fishProfileRepository.findByOrders(orders).stream().mapToDouble(fishProfileList -> {
+            FishCategory fishCategory = fishCategoryRepository.findByNameAndStatus(fishProfileList.getFishCategory().getName(), SystemStatusEnum.AVAILABLE)
+                    .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
+            return fishCategory.getPrice();
+        }).sum();
+        Double total = (orders.getDistance() * deliveryMethod) + healthService + fishProfile;
         return Float.parseFloat(String.valueOf(total));
     }
 
-    public CalculateMoney() {
+    public Calculate() {
         //Trong Việt Nam
         fixedDistance.put("Hồ Chí Minh - Hà Nội", 1500f);
         fixedDistance.put("Hồ Chí Minh - Đà Nẵng", 800f);
@@ -66,7 +75,8 @@ public class CalculateMoney {
         String key = getCity(start) + " - " + getCity(end);
         return fixedDistance.getOrDefault(key, 0f);
     }
-    public String getCity(String location){
+
+    public String getCity(String location) {
         if (location.contains("Hồ Chí Minh")) return "Hồ Chí Minh";
         if (location.contains("Hà Nội")) return "Hà Nội";
         if (location.contains("Đà Nẵng")) return "Đà Nẵng";

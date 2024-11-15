@@ -96,12 +96,8 @@ public class FishProfileService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        List<FishProfile> fishProfiles = fishProfileRepository.findByStatus(SystemStatusEnum.AVAILABLE);
-        List<FishProfileResponse> fishProfileResponses = new ArrayList<>();
-        for (FishProfile fishProfile : fishProfiles) {
-            fishProfileResponses.add(convertToFishProfileResponse(fishProfile));
-        }
-        return fishProfileResponses;
+        List<FishProfile> fishProfiles = fishProfileRepository.findAll();
+        return convertToListFishProfileResponse(fishProfiles);
     }
 
     public FishProfileResponse viewOne(Integer fishProfileId) {
@@ -114,6 +110,12 @@ public class FishProfileService {
         return convertToFishProfileResponse(fishProfile);
     }
 
+    public List<FishProfileResponse> viewByOrder(Integer orderId){
+        Orders orders =  orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        List<FishProfile> fishProfileList = fishProfileRepository.findByOrders(orders);
+        return convertToListFishProfileResponse(fishProfileList);
+    }
     public FishProfileResponse deleteFishProfile(Integer fishProfileId) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
@@ -144,5 +146,12 @@ public class FishProfileService {
                 .updateBy(fishProfile.getUpdateBy())
                 .status(fishProfile.getStatus())
                 .build();
+    }
+    public List<FishProfileResponse> convertToListFishProfileResponse(List<FishProfile> fishProfileList) {
+        List<FishProfileResponse> fishProfileResponses = new ArrayList<>();
+        for (FishProfile fishProfile : fishProfileList) {
+            fishProfileResponses.add(convertToFishProfileResponse(fishProfile));
+        }
+        return fishProfileResponses;
     }
 }
