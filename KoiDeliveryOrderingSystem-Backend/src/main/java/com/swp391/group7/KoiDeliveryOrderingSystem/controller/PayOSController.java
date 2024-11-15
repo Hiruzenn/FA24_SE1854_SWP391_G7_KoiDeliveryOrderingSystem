@@ -3,6 +3,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.controller;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.PaymentResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.PayOSService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/payos")
 @RequiredArgsConstructor
+@Tag(name = "Payment")
 public class PayOSController {
     @Autowired
     private PayOSService payOSService;
@@ -65,5 +67,4 @@ public class PayOSController {
                 .result(result)
                 .build());
     }
-
 }

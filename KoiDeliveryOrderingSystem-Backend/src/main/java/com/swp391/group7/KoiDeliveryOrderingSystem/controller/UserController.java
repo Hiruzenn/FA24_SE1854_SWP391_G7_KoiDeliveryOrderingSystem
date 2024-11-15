@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.user.UpdatePr
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.UserResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/customer") // Base URL for the certificate endpoints
+@RequestMapping("/customer")
+@Tag(name = "Customer")
 public class UserController {
     @Autowired
     private UserService userService;

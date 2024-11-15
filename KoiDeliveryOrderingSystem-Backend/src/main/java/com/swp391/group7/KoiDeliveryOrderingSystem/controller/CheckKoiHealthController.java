@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.checkingkoihe
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CheckingKoiHealthResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.CheckingKoiHealthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("checking-koi-health")
+@Tag(name = "Checking Koi Health")
 public class CheckKoiHealthController {
     @Autowired
     private CheckingKoiHealthService checkingKoiHealthService;

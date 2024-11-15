@@ -4,6 +4,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CreateHealthCareD
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthCareDeliveryHistoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.HealthCareDeliveryHistoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("healthcare-delivery-histories")
 @RequiredArgsConstructor
+@Tag(name = "Health Care Delivery History")
 public class HealthCareDeliveryHistoryController {
 
     @Autowired

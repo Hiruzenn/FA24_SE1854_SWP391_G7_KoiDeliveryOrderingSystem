@@ -7,6 +7,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.DeliveryMethodResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.DeliveryMethodService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/delivery-method")
 @RequiredArgsConstructor
+@Tag(name = "Delivery Method")
 public class DeliveryMethodController {
     @Autowired
     private final DeliveryMethodService deliveryMethodService;

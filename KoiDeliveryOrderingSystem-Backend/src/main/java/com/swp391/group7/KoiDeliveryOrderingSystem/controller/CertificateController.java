@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.U
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CertificateResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.CertificateService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("certificates")
+@Tag(name = "Certificate")
 public class CertificateController {
 
     @Autowired

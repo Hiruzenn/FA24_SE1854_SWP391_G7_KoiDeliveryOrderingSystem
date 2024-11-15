@@ -56,6 +56,10 @@ public class Orders {
     @JsonBackReference
     private List<Feedback> feedbacks;
 
+    @OneToMany(mappedBy = "orders")
+    @JsonBackReference
+    private List<Report> reports;
+
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonManagedReference

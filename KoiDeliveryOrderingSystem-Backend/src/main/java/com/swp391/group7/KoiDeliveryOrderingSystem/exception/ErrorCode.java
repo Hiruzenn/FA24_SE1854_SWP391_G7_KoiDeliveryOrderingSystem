@@ -61,8 +61,9 @@ public enum ErrorCode {
     ROLE_NOT_EXISTED(1601, "Role Not Existed"),
     NOT_ENOUGH_CHECKING_KOI_HEALTH(1602, "Not Enough Checking Koi Health"),
     FEEDBACK_ORDER_COMPLETED(1603, "Only feedback order is completed"),
-    NEED_DELIVERY_HISTORY(1604, "You need to create delivery histroy before complete handover document"),
-    PACK_ORDER_BEFORE(1605, "Package status must be PACKED before complete ORDER")
+    NEED_DELIVERY_HISTORY(1604, "You need to create delivery history before complete handover document"),
+    PACK_ORDER_BEFORE(1605, "Package status must be PACKED before complete ORDER"),
+    REPORT_NOT_FOUND(1606, "Report not Found")
     ;
 
     private final int code;

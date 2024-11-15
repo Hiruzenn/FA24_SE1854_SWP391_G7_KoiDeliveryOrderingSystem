@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.customsdeclar
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CustomsDeclarationResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.CustomsDeclarationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("customs-declaration")
+@Tag(name = "Customs Declaration")
 public class CustomsDeclarationController {
     @Autowired
     CustomsDeclarationService customsDeclarationService;
