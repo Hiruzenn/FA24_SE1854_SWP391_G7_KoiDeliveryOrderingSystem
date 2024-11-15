@@ -6,7 +6,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
@@ -19,7 +18,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -34,9 +32,6 @@ public class HandoverDocumentService {
 
     @Autowired
     private HandoverDocumentRepository handoverDocumentRepository;
-
-    @Autowired
-    PackageRepository packageRepository;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -72,26 +67,30 @@ public class HandoverDocumentService {
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
                 .handoverStatus(HandoverStatusEnum.PENDING)
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
         handoverDocumentRepository.save(handoverDocument);
         return convertToHandoverDocumentResponse(handoverDocument);
     }
 
-    public HandoverDocumentResponse update(Integer id, UpdateHandoverDocumentRequest request) {
+    public HandoverDocumentResponse update(Integer orderId, UpdateHandoverDocumentRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        HandoverDocument handoverDocument = handoverDocumentRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.IN_PROGRESS)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+        if(request.getHandoverStatus().equals(HandoverStatusEnum.COMPLETED)){
+            orders.setStatus(OrderStatusEnum.COMPLETED);
+        }
         handoverDocument.setHandoverDescription(request.getHandoverDescription());
-        handoverDocument.setVehicle(request.getVehicle());
-        handoverDocument.setDestination(request.getDestination());
-        handoverDocument.setDeparture(request.getDeparture());
+        handoverDocument.setHandoverStatus(request.getHandoverStatus());
+        handoverDocument.setImage(request.getImage());
         handoverDocument.setUpdateAt(LocalDateTime.now());
         handoverDocument.setUpdateBy(users.getId());
         handoverDocumentRepository.save(handoverDocument);
+        orderRepository.save(orders);
         return convertToHandoverDocumentResponse(handoverDocument);
     }
 
@@ -100,34 +99,32 @@ public class HandoverDocumentService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        HandoverDocument handoverDocument = handoverDocumentRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        HandoverDocument handoverDocument = handoverDocumentRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
-        handoverDocument.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        handoverDocument.setUpdateAt(LocalDateTime.now());
-        handoverDocument.setUpdateBy(users.getId());
-        handoverDocumentRepository.save(handoverDocument);
+        handoverDocumentRepository.delete(handoverDocument);
         return convertToHandoverDocumentResponse(handoverDocument);
     }
 
     public List<HandoverDocumentResponse> getAll() {
-        List<HandoverDocument> handoverDocumentList = handoverDocumentRepository.findByStatus(SystemStatusEnum.AVAILABLE);
+        List<HandoverDocument> handoverDocumentList = handoverDocumentRepository.findAll();
         return convertToListHandoverDocumentResponse(handoverDocumentList);
     }
 
-    public List<HandoverDocumentResponse> viewByUsers(){
+    public List<HandoverDocumentResponse> viewByDeliveryStaff(){
         Users users = accountUtils.getCurrentUser();
         if (users == null){
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        List<HandoverDocument> handoverDocumentList = handoverDocumentRepository.findByUsersAndStatus(users, SystemStatusEnum.AVAILABLE);
+        List<HandoverDocument> handoverDocumentList = handoverDocumentRepository.findByUsers(users);
         return convertToListHandoverDocumentResponse(handoverDocumentList);
     }
 
-    public List<HandoverDocumentResponse> viewByOrder(Integer orderId){
+    public HandoverDocumentResponse viewByOrder(Integer orderId){
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        List<HandoverDocument> handoverDocumentList = handoverDocumentRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
-        return convertToListHandoverDocumentResponse(handoverDocumentList);
+        HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
+                .orElseThrow(()-> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+        return convertToHandoverDocumentResponse(handoverDocument);
     }
     public List<HandoverDocumentResponse> convertToListHandoverDocumentResponse(List<HandoverDocument> handoverDocumentList) {
         List<HandoverDocumentResponse> handoverDocumentResponses = new ArrayList<>();
@@ -138,7 +135,7 @@ public class HandoverDocumentService {
     }
 
     public HandoverDocumentResponse viewOne(Integer id){
-        HandoverDocument handoverDocument = handoverDocumentRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        HandoverDocument handoverDocument = handoverDocumentRepository.findById(id)
                 .orElseThrow(()-> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
         return convertToHandoverDocumentResponse(handoverDocument);
     }
@@ -154,12 +151,12 @@ public class HandoverDocumentService {
                 .destination(handoverDocument.getDestination())
                 .departure(handoverDocument.getDeparture())
                 .totalPrice(handoverDocument.getTotalPrice())
+                .image(handoverDocument.getImage())
                 .createAt(handoverDocument.getCreateAt())
                 .createBy(handoverDocument.getCreateBy())
                 .updateAt(handoverDocument.getUpdateAt())
                 .updateBy(handoverDocument.getUpdateBy())
                 .handoverStatusEnum(handoverDocument.getHandoverStatus())
-                .status(handoverDocument.getStatus())
                 .build();
     }
 

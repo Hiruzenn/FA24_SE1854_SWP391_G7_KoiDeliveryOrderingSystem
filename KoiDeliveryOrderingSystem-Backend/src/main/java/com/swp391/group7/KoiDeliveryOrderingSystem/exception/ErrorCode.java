@@ -59,6 +59,7 @@ public enum ErrorCode {
     CHECKING_KOI_HEALTH_NOT_FOUND(1507, "Checking Koi Health Not Found"),
     INTERNAL_SEVER_ERROR(1600, "Internal Sever Error"),
     ROLE_NOT_EXISTED(1601, "Role Not Existed"),
+    NOT_ENOUGH_CHECKING_KOI_HEALTH(1602, "Not Enough Checking Koi Health"),
     ;
 
     private final int code;

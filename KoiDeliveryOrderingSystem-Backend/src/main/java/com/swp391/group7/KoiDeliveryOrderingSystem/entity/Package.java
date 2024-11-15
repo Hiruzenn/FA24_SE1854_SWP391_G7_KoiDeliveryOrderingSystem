@@ -22,7 +22,7 @@ public class Package {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     @JsonManagedReference
     private Orders orders;
@@ -33,15 +33,9 @@ public class Package {
     @Column(name = "package_description", columnDefinition = "NVARCHAR(255)")
     private String packageDescription;
 
-    @Column(name = "package_date", nullable = false)
-    private LocalDateTime packageDate;
-
     @Column(name = "package_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private PackageStatusEnum packageStatus;
-
-    @Column(name = "package_by", nullable = false)
-    private String packageBy;
 
     @Column(name = "image")
     private String image;
@@ -57,8 +51,4 @@ public class Package {
 
     @Column(name = "update_by")
     private Integer updateBy;
-
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SystemStatusEnum status;
 }

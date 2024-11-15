@@ -28,9 +28,9 @@ public class PackageController {
                 .build());
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<ApiResponse<PackageResponse>> updatePackage(@Valid @PathVariable Integer id, @RequestBody UpdatePackageRequest updatePackageRequest) {
-        var result = packageService.updatePackage(id, updatePackageRequest);
+    @PutMapping("update/{orderId}")
+    public ResponseEntity<ApiResponse<PackageResponse>> updatePackage(@Valid @PathVariable Integer orderId, @RequestBody UpdatePackageRequest updatePackageRequest) {
+        var result = packageService.updatePackage(orderId, updatePackageRequest);
         return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
                 .code(200)
                 .message("Package Updated")
@@ -58,7 +58,7 @@ public class PackageController {
                 .build());
     }
 
-    @PutMapping("delete/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<ApiResponse<PackageResponse>> deletePackage(@Valid @PathVariable Integer id) {
         var result = packageService.deletePackage(id);
         return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
@@ -68,4 +68,13 @@ public class PackageController {
                 .build());
     }
 
+    @GetMapping("view-by-order/{orderId}")
+    public ResponseEntity<ApiResponse<PackageResponse>> viewPackageByOrder(@Valid @PathVariable Integer orderId) {
+        var result = packageService.viewPackageByOrder(orderId);
+        return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
+                .code(200)
+                .message("Package by Order")
+                .result(result)
+                .build());
+    }
 }

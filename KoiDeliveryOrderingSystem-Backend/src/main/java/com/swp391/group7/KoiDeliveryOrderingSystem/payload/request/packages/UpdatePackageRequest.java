@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdatePackageRequest {
+    private String description;
     private PackageStatusEnum packageStatus;
     private String image;
 }

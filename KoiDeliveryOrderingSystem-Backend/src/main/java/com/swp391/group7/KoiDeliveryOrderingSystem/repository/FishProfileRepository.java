@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface FishProfileRepository extends JpaRepository<FishProfile, Integer> {
 Optional<FishProfile> findByIdAndStatus(Integer id, SystemStatusEnum status);
 List<FishProfile> findByStatus(SystemStatusEnum status);
-List<FishProfile> findByOrders(Orders order);
+List<FishProfile> findByOrdersAndStatus(Orders order, SystemStatusEnum status);
 }

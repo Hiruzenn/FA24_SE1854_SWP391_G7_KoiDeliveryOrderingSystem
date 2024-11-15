@@ -40,6 +40,10 @@ public class Orders {
     @JsonBackReference
     private HandoverDocument handoverDocuments;
 
+    @OneToOne(mappedBy = "orders")
+    @JsonBackReference
+    private Package Packages;
+
     @OneToMany(mappedBy = "orders")
     @JsonBackReference
     private List<Payment> payments;
