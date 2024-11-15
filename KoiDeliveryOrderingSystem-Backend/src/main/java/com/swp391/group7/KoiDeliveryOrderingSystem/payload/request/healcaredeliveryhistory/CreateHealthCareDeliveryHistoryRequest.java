@@ -11,8 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateHealthCareDeliveryHistoryRequest {
-    private Integer invoiceId;
-    private Integer handoverDocumentId;
+    private Integer orderId;
     private String route;
     private String healthDescription;
     private String eatingDescription;

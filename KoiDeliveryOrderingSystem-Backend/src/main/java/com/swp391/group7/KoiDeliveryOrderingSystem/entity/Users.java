@@ -35,6 +35,10 @@ public class Users {
 
     @OneToMany(mappedBy = "users")
     @JsonBackReference
+    private List<Report> reports;
+
+    @OneToMany(mappedBy = "users")
+    @JsonBackReference
     private List<Orders> orders ;
 
     @ManyToOne

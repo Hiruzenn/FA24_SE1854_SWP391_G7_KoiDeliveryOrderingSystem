@@ -6,6 +6,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.healthservice
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthServiceOrderResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.HealthServiceOrderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("health-service-order")
 @RequiredArgsConstructor
+@Tag(name = "Health Service Order")
 public class HealthServiceOrderController {
     @Autowired
     private HealthServiceOrderService healthServiceOrderService;

@@ -6,6 +6,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.handovedocume
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HandoverDocumentResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.HandoverDocumentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("handover-documents")
 @RequiredArgsConstructor
+@Tag(name = "Handover Document")
 public class HandoverDocumentController {
 
     private final HandoverDocumentService handoverDocumentService;

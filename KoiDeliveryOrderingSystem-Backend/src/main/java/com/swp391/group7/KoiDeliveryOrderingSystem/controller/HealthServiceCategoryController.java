@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.healthyservic
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthServiceCategoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.HealthServiceCategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("heal-service-category")
 @RequiredArgsConstructor
+@Tag(name = "Health Service Category")
 public class HealthServiceCategoryController {
     @Autowired
     private HealthServiceCategoryService healthServiceCategoryService;

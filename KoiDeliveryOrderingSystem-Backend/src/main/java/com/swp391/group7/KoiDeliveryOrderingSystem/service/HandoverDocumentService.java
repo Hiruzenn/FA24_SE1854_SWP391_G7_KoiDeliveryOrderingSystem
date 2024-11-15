@@ -6,6 +6,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
@@ -44,6 +45,8 @@ public class HandoverDocumentService {
     private UserRepository userRepository;
 
     public static final String RANDOM_STRING = "0123456789";
+    @Autowired
+    private HealthCareDeliveryHistoryRepository healthCareDeliveryHistoryRepository;
 
     public HandoverDocumentResponse create(CreateHandoverDocumentRequest request) {
         Users users = accountUtils.getCurrentUser();
@@ -79,11 +82,15 @@ public class HandoverDocumentService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.IN_PROGRESS)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.PACK_ORDER_BEFORE));
         HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
         if (orders.getPaymentStatus().equals(PaymentStatusEnum.UNPAID)) {
             orders.setPaymentStatus(PaymentStatusEnum.PAID);
+        }
+        Boolean checkHealthCareDeliveryHistory = healthCareDeliveryHistoryRepository.existsByHandoverDocument(handoverDocument);
+        if(!checkHealthCareDeliveryHistory){
+            throw new AppException(ErrorCode.NEED_DELIVERY_HISTORY);
         }
         orders.setStatus(OrderStatusEnum.COMPLETED);
         handoverDocument.setHandoverDescription(request.getHandoverDescription());

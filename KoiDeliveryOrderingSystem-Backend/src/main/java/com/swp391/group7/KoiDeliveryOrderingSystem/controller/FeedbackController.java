@@ -4,6 +4,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.feedback.Crea
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FeedbackResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.FeedbackService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("feedback")
+@Tag(name = "Feedback")
 public class FeedbackController {
     @Autowired
     private FeedbackService feedbackService;

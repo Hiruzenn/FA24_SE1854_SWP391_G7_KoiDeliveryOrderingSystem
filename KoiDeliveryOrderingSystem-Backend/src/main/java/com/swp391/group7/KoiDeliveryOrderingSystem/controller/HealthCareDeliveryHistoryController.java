@@ -4,6 +4,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.dto.CreateHealthCareD
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthCareDeliveryHistoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.HealthCareDeliveryHistoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("healthcare-delivery-histories")
 @RequiredArgsConstructor
+@Tag(name = "Health Care Delivery History")
 public class HealthCareDeliveryHistoryController {
 
     @Autowired
@@ -22,7 +24,7 @@ public class HealthCareDeliveryHistoryController {
 
     @GetMapping("view-all")
     public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getAllHealthCareDeliveryHistories() {
-        List<HealthCareDeliveryHistoryResponse> histories = healthCareDeliveryHistoryService.getListHealthCareDeliveryHistories();
+        List<HealthCareDeliveryHistoryResponse> histories = healthCareDeliveryHistoryService.viewAll();
         ApiResponse<List<HealthCareDeliveryHistoryResponse>> response = ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .message("Healthcare delivery histories retrieved successfully")
@@ -33,7 +35,7 @@ public class HealthCareDeliveryHistoryController {
 
     @GetMapping("view-one/{id}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> getHealthCareDeliveryHistoryById(@PathVariable int id) {
-        HealthCareDeliveryHistoryResponse historyResponse = healthCareDeliveryHistoryService.getHealthCareDeliveryHistoryById(id);
+        HealthCareDeliveryHistoryResponse historyResponse = healthCareDeliveryHistoryService.viewById(id);
         ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Healthcare delivery history retrieved successfully")
@@ -44,7 +46,7 @@ public class HealthCareDeliveryHistoryController {
 
     @GetMapping("view-by-handover/{handoverDocumentId}")
     public ResponseEntity<ApiResponse<List<HealthCareDeliveryHistoryResponse>>> getHealthCareDeliveryHistoryByHandoverDocument(@PathVariable("handoverDocumentId") Integer handoverDocumentId) {
-        var result = healthCareDeliveryHistoryService.getHealthCareDeliveryHistoryByHandoverDocument(handoverDocumentId);
+        var result = healthCareDeliveryHistoryService.viewByHandoverDocument(handoverDocumentId);
         return ResponseEntity.ok(ApiResponse.<List<HealthCareDeliveryHistoryResponse>>builder()
                 .code(200)
                 .message("View By Handover Documents")
@@ -53,11 +55,12 @@ public class HealthCareDeliveryHistoryController {
     }
 
     // Create a new healthcare delivery history
-    @PostMapping("create")
+    @PostMapping("create/{orderId}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> createHealthCareDeliveryHistory(
+            @PathVariable("orderId") Integer orderId,
             @RequestBody CreateHealthCareDeliveryHistoryRequest request) {
 
-        var result = healthCareDeliveryHistoryService.createHealthCareDeliveryHistory(request);
+        var result = healthCareDeliveryHistoryService.create(orderId, request);
 
         ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
                 .code(HttpStatus.CREATED.value())
@@ -73,7 +76,7 @@ public class HealthCareDeliveryHistoryController {
             @PathVariable Integer id,
             @RequestBody CreateHealthCareDeliveryHistoryRequest request) {
 
-        HealthCareDeliveryHistoryResponse updatedHistory = healthCareDeliveryHistoryService.updateHealthCareDeliveryHistory(id, request);
+        HealthCareDeliveryHistoryResponse updatedHistory = healthCareDeliveryHistoryService.update(id, request);
 
         ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
                 .code(HttpStatus.OK.value())
@@ -86,7 +89,7 @@ public class HealthCareDeliveryHistoryController {
     // Delete a healthcare delivery history by ID
     @PutMapping("delete/{id}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> removeHealthCareDeliveryHistory(@PathVariable Integer id) {
-        HealthCareDeliveryHistoryResponse deletedHistory = healthCareDeliveryHistoryService.removeHealthCareDeliveryHistory(id);
+        HealthCareDeliveryHistoryResponse deletedHistory = healthCareDeliveryHistoryService.remove(id);
 
         ApiResponse<HealthCareDeliveryHistoryResponse> response = ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
                 .code(HttpStatus.OK.value())
