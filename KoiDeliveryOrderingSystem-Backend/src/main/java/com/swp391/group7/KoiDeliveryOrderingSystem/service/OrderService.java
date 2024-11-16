@@ -109,7 +109,7 @@ public class OrderService {
         return convertOrderToResponse(orders);
     }
 
-    public List<OrderResponse> getAll() {
+    public List<OrderResponse> viewAvailableOrder() {
         List<Orders> orders = orderRepository.findByStatus(OrderStatusEnum.AVAILABLE);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : orders) {
