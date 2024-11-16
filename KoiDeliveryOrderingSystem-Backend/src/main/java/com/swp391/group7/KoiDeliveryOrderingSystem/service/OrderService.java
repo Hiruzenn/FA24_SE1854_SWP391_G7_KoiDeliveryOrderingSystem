@@ -123,7 +123,7 @@ public class OrderService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        List<Orders> ordersList = orderRepository.findByUsersAndStatus(users, OrderStatusEnum.AVAILABLE);
+        List<Orders> ordersList = orderRepository.findByUsers(users);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Orders order : ordersList) {
             orderResponses.add(convertOrderToResponse(order));
