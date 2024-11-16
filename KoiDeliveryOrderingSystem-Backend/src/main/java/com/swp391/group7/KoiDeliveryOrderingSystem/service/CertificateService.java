@@ -57,8 +57,8 @@ public class CertificateService {
     }
 
     public List<CertificateResponse> viewCertificateByFishProfile(Integer fishProfileId){
-        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
-        List<Certificate> certificate = certificateRepository.findByFishProfile(fishProfile);
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        List<Certificate> certificate = certificateRepository.findByFishProfileAndStatus(fishProfile, SystemStatusEnum.AVAILABLE);
         return convertToListCertificateResponse(certificate);
     }
     public CertificateResponse creatCertificate(Integer fishProfileId, CreateCertificateRequest request) {

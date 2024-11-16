@@ -12,7 +12,5 @@ import java.util.Optional;
 
 @Repository
 public interface HealthServiceOrderRepository extends JpaRepository<HealthServiceOrder, Integer> {
-    List<HealthServiceOrder> findByOrdersAndStatus(Orders orders, SystemStatusEnum status);
-    Boolean existsHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(HealthServiceCategory healthServiceCategory, Orders orders, SystemStatusEnum status);
-    Optional<HealthServiceOrder> findByIdAndStatus(Integer id, SystemStatusEnum statusEnum);
+    List<HealthServiceOrder> findByOrders(Orders orders);
 }

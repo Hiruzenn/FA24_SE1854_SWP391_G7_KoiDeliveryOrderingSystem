@@ -47,40 +47,12 @@ public class HealthServiceOrderService {
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(request.getHealthServiceCategoryId(), SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
-        if (healthServiceOrderRepository.existsHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(healthServiceCategory, orders, SystemStatusEnum.AVAILABLE)) {
-            throw new AppException(ErrorCode.HEALTH_SERVICE_ORDER_IS_EXISTED);
-        }
         HealthServiceOrder healthServiceOrder = HealthServiceOrder.builder()
                 .orders(orders)
                 .healthServiceCategory(healthServiceCategory)
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
-                .updateAt(LocalDateTime.now())
-                .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
-        healthServiceOrderRepository.save(healthServiceOrder);
-        return convertToHealthServiceOrderResponse(healthServiceOrder);
-    }
-
-    public HealthServiceOrderResponse updateHealthServiceOrder(Integer id, UpdateHealthServiceOrderRequest request) {
-        Users users = accountUtils.getCurrentUser();
-        if (users == null) {
-            throw new AppException(ErrorCode.NOT_LOGIN);
-        }
-        Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), OrderStatusEnum.AVAILABLE)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(request.getHealthServiceCategoryId(), SystemStatusEnum.AVAILABLE)
-                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
-        HealthServiceOrder healthServiceOrder = healthServiceOrderRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
-                .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_ORDER_NOT_FOUND));
-        if (healthServiceOrderRepository.existsHealthServiceOrderByHealthServiceCategoryAndOrdersAndStatus(healthServiceCategory, orders, SystemStatusEnum.AVAILABLE)) {
-            throw new AppException(ErrorCode.HEALTH_SERVICE_ORDER_IS_EXISTED);
-        }
-        healthServiceOrder.setOrders(orders);
-        healthServiceOrder.setHealthServiceCategory(healthServiceCategory);
-        healthServiceOrder.setUpdateAt(LocalDateTime.now());
-        healthServiceOrder.setUpdateBy(users.getId());
         healthServiceOrderRepository.save(healthServiceOrder);
         return convertToHealthServiceOrderResponse(healthServiceOrder);
     }
@@ -93,7 +65,7 @@ public class HealthServiceOrderService {
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         List<HealthServiceOrderResponse> healthServiceOrderResponses = new ArrayList<>();
-        List<HealthServiceOrder> healthServiceOrders = healthServiceOrderRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
+        List<HealthServiceOrder> healthServiceOrders = healthServiceOrderRepository.findByOrders(orders);
         for (HealthServiceOrder healthServiceOrder : healthServiceOrders) {
             healthServiceOrderResponses.add(convertToHealthServiceOrderResponse(healthServiceOrder));
         }
@@ -106,11 +78,9 @@ public class HealthServiceOrderService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         HealthServiceOrder healthServiceOrder = healthServiceOrderRepository
-                .findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+                .findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_ORDER_NOT_FOUND));
-        healthServiceOrder.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        healthServiceOrder.setUpdateAt(LocalDateTime.now());
-        healthServiceOrder.setUpdateBy(users.getId());
+        healthServiceOrderRepository.delete(healthServiceOrder);
         return convertToHealthServiceOrderResponse(healthServiceOrder);
     }
 
@@ -121,9 +91,6 @@ public class HealthServiceOrderService {
                 .healthServiceCategoryId(healthServiceOrder.getHealthServiceCategory().getId())
                 .createAt(healthServiceOrder.getCreateAt())
                 .createBy(healthServiceOrder.getCreateBy())
-                .updateAt(healthServiceOrder.getUpdateAt())
-                .updateBy(healthServiceOrder.getUpdateBy())
-                .status(healthServiceOrder.getStatus())
                 .build();
     }
 }

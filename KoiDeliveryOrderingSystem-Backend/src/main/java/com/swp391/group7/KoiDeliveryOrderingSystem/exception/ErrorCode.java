@@ -63,7 +63,8 @@ public enum ErrorCode {
     FEEDBACK_ORDER_COMPLETED(1603, "Only feedback order is completed"),
     NEED_DELIVERY_HISTORY(1604, "You need to create delivery history before complete handover document"),
     PACK_ORDER_BEFORE(1605, "Package status must be PACKED before complete ORDER"),
-    REPORT_NOT_FOUND(1606, "Report not Found")
+    REPORT_NOT_FOUND(1606, "Report not Found"),
+    DELETE_HANDOVER_PENDING(1607, "Only Delete Handover with status Pending"),
     ;
 
     private final int code;

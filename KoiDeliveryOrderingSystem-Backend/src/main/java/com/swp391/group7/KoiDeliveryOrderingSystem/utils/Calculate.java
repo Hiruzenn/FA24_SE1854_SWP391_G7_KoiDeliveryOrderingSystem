@@ -39,9 +39,9 @@ public class Calculate {
         float deliveryMethod = deliveryMethodRepository
                 .findByNameAndStatus(orders.getDeliveryMethod().getName(), SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND)).getPrice();
-        double healthService = healthServiceOrderRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE)
+        double healthService = healthServiceOrderRepository.findByOrders(orders)
                 .stream().mapToDouble((healthServiceOrder1 -> {
-                    HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(healthServiceOrder1.getHealthServiceCategory().getId(), SystemStatusEnum.AVAILABLE)
+                    HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(healthServiceOrder1.getHealthServiceCategory().getId())
                             .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
                     return healthServiceCategory.getPrice();
                 })).sum();

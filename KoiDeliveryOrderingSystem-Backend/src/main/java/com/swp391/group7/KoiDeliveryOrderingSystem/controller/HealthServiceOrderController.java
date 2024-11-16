@@ -42,18 +42,6 @@ public class HealthServiceOrderController {
                 .build());
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<ApiResponse<HealthServiceOrderResponse>> updateHealServiceOrder(
-            @PathVariable("id") Integer id,
-            @RequestBody UpdateHealthServiceOrderRequest updateHealthServiceOrder) {
-        var result = healthServiceOrderService.updateHealthServiceOrder(id, updateHealthServiceOrder);
-        return ResponseEntity.ok(ApiResponse.<HealthServiceOrderResponse>builder()
-                .code(200)
-                .message("Health Service Order Deleted")
-                .result(result)
-                .build());
-    }
-
     @PutMapping("delete/{id}")
     public ResponseEntity<ApiResponse<HealthServiceOrderResponse>> deleteHealServiceOrder(@PathVariable("id") Integer id) {
         var result = healthServiceOrderService.deleteHealthServiceOrder(id);
