@@ -104,6 +104,7 @@ public class HandoverDocumentService {
             paymentRepository.save(payment);
         }
         orders.setStatus(OrderStatusEnum.COMPLETED);
+        orders.setReceivingDate(LocalDateTime.now());
         handoverDocument.setHandoverDescription(request.getHandoverDescription());
         handoverDocument.setHandoverStatus(HandoverStatusEnum.COMPLETED);
         handoverDocument.setImage(request.getImage());
