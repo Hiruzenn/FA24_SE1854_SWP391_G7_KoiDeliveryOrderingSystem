@@ -120,12 +120,29 @@ public class AuthService {
         String subject = "Xác thực tài khoản của bạn";
 
         String message = "<html>" +
-                "<body>" +
-                "<h2>Xác thực tài khoản của bạn</h2>" +
-                "<p>Chào " + users.getName() + ",</p>" +
-                "<p>Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để hoàn tất quá trình đăng ký, vui lòng nhấn vào liên kết bên dưới để xác thực tài khoản của bạn:</p>" +
-                "<p><a href=\"" + url + "\" style=\"background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;\">Xác thực tài khoản</a></p>" +
-                "<p>Trân trọng,<br>Đội ngũ hỗ trợ</p>" +
+                "<body style='font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;'>" +
+                "<table align='center' width='600' style='border-collapse: collapse; background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 20px auto;'>" +
+                "    <tr>" +
+                "        <td style='padding: 20px; text-align: center; background-color: #4CAF50; color: #ffffff;'>" +
+                "            <h2 style='margin: 0;'>Xác thực tài khoản của bạn</h2>" +
+                "        </td>" +
+                "    </tr>" +
+                "    <tr>" +
+                "        <td style='padding: 20px; font-size: 16px; color: #333333;'>" +
+                "            <p>Chào <strong>" + users.getName() + "</strong>,</p>" +
+                "            <p>Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để hoàn tất quá trình đăng ký, vui lòng nhấn vào nút bên dưới để xác thực tài khoản của bạn:</p>" +
+                "            <p style='text-align: center; margin: 20px 0;'>" +
+                "                <a href='" + url + "' style='background-color: #4CAF50; color: white; padding: 15px 25px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;'>Xác thực tài khoản</a>" +
+                "            </p>" +
+                "            <p>Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.</p>" +
+                "        </td>" +
+                "    </tr>" +
+                "    <tr>" +
+                "        <td style='padding: 20px; text-align: center; font-size: 14px; color: #555555; background-color: #f4f4f4;'>" +
+                "            <p style='margin: 0;'>Trân trọng,<br><strong>Đội ngũ hỗ trợ</strong></p>" +
+                "        </td>" +
+                "    </tr>" +
+                "</table>" +
                 "</body>" +
                 "</html>";
 
@@ -154,13 +171,30 @@ public class AuthService {
         String subject = "Yêu cầu reset mật khẩu";
 
         String message = "<html>" +
-                "<body>" +
-                "<h2>Yêu cầu reset mật khẩu</h2>" +
-                "<p>Chào " + users.getName() + ",</p>" +
-                "<p>Chúng tôi đã nhận được yêu cầu reset mật khẩu cho tài khoản của bạn. Để đặt lại mật khẩu, vui lòng nhấn vào liên kết bên dưới:</p>" +
-                "<p><a href=\"" + url + "\" style=\"background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;\">Reset mật khẩu</a></p>" +
-                "<p>Nếu bạn không yêu cầu reset mật khẩu, bạn có thể bỏ qua email này.</p>" +
-                "<p>Trân trọng,<br>Đội ngũ hỗ trợ</p>" +
+                "<body style='font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;'>" +
+                "<table align='center' width='600' style='border-collapse: collapse; background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 20px auto;'>" +
+                "    <tr>" +
+                "        <td style='padding: 20px; text-align: center; background-color: #E74C3C; color: #ffffff;'>" +
+                "            <h2 style='margin: 0;'>Yêu cầu đặt lại mật khẩu</h2>" +
+                "        </td>" +
+                "    </tr>" +
+                "    <tr>" +
+                "        <td style='padding: 20px; font-size: 16px; color: #333333;'>" +
+                "            <p>Chào <strong>" + users.getName() + "</strong>,</p>" +
+                "            <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.</p>" +
+                "            <p>Để đặt lại mật khẩu, vui lòng nhấn vào nút bên dưới:</p>" +
+                "            <p style='text-align: center; margin: 20px 0;'>" +
+                "                <a href='" + url + "' style='background-color: #E74C3C; color: white; padding: 15px 25px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;'>Đặt lại mật khẩu</a>" +
+                "            </p>" +
+                "            <p style='color: #555555;'>Nếu bạn không yêu cầu đặt lại mật khẩu, bạn có thể bỏ qua email này.</p>" +
+                "        </td>" +
+                "    </tr>" +
+                "    <tr>" +
+                "        <td style='padding: 20px; text-align: center; font-size: 14px; color: #555555; background-color: #f4f4f4;'>" +
+                "            <p style='margin: 0;'>Trân trọng,<br><strong>Đội ngũ hỗ trợ</strong></p>" +
+                "        </td>" +
+                "    </tr>" +
+                "</table>" +
                 "</body>" +
                 "</html>";
 
