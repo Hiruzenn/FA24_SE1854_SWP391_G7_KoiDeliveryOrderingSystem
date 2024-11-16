@@ -6,6 +6,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ReportResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.ReportService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class ReportController {
     }
 
     @PutMapping("answer/{reportId}")
-    public ResponseEntity<ApiResponse<ReportResponse>> answer(@PathVariable("reportId") Integer reportId, @RequestBody AnswerReportRequest request) {
+    public ResponseEntity<ApiResponse<ReportResponse>> answer(@PathVariable("reportId") Integer reportId, @RequestBody AnswerReportRequest request) throws MessagingException {
         var result = reportService.answerReport(reportId, request);
         return ResponseEntity.ok(ApiResponse.<ReportResponse>builder()
                 .code(200)

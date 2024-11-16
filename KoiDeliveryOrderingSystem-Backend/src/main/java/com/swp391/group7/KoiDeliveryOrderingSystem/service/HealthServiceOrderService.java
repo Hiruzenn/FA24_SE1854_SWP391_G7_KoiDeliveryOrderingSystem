@@ -88,7 +88,7 @@ public class HealthServiceOrderService {
         return HealthServiceOrderResponse.builder()
                 .id(healthServiceOrder.getId())
                 .orderId(healthServiceOrder.getOrders().getId())
-                .healthServiceCategoryId(healthServiceOrder.getHealthServiceCategory().getId())
+                .healthServiceCategory(healthServiceOrder.getHealthServiceCategory())
                 .createAt(healthServiceOrder.getCreateAt())
                 .createBy(healthServiceOrder.getCreateBy())
                 .build();
