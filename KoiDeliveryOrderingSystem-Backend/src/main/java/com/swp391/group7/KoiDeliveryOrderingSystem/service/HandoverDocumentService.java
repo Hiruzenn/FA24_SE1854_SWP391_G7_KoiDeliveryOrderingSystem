@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -116,13 +117,14 @@ public class HandoverDocumentService {
         return convertToHandoverDocumentResponse(handoverDocument);
     }
 
-    public HandoverDocumentResponse delete(Integer id) {
+    public HandoverDocumentResponse delete(Integer orderId) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        HandoverDocument handoverDocument = handoverDocumentRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        HandoverDocument handoverDocument = handoverDocumentRepository.findByOrdersAndHandoverStatus(orders, HandoverStatusEnum.PENDING)
+                .orElseThrow(() -> new AppException(ErrorCode.DELETE_HANDOVER_PENDING));
         handoverDocumentRepository.delete(handoverDocument);
         return convertToHandoverDocumentResponse(handoverDocument);
     }

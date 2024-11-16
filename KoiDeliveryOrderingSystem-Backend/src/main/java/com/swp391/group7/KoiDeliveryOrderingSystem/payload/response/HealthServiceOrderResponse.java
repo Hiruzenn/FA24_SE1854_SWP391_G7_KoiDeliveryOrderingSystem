@@ -18,7 +18,4 @@ public class HealthServiceOrderResponse {
     private Integer orderId;
     private LocalDateTime createAt;
     private Integer createBy;
-    private LocalDateTime updateAt;
-    private Integer updateBy;
-    private SystemStatusEnum status;
 }

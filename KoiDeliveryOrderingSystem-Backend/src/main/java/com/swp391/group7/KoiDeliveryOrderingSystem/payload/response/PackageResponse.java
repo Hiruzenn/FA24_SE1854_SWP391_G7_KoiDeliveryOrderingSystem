@@ -23,5 +23,4 @@ public class PackageResponse {
     private Integer createBy;
     private LocalDateTime updateAt;
     private Integer updateBy;
-    private SystemStatusEnum status;
 }

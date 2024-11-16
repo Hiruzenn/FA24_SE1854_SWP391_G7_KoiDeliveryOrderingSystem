@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.repository;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -14,4 +15,5 @@ import java.util.Optional;
 public interface HandoverDocumentRepository extends JpaRepository<HandoverDocument, Integer> {
     List<HandoverDocument> findByUsers(Users user);
     Optional<HandoverDocument> findByOrders(Orders order);
+    Optional<HandoverDocument> findByOrdersAndHandoverStatus(Orders order, HandoverStatusEnum status);
 }
