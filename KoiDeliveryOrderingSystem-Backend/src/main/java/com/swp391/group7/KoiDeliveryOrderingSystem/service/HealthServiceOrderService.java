@@ -47,6 +47,9 @@ public class HealthServiceOrderService {
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(request.getHealthServiceCategoryId(), SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
+        if (healthServiceOrderRepository.existsByOrdersAndHealthServiceCategory(orders, healthServiceCategory)) {
+            throw new AppException(ErrorCode.HEALTH_SERVICE_ORDER_IS_EXISTED);z
+        }
         HealthServiceOrder healthServiceOrder = HealthServiceOrder.builder()
                 .orders(orders)
                 .healthServiceCategory(healthServiceCategory)
