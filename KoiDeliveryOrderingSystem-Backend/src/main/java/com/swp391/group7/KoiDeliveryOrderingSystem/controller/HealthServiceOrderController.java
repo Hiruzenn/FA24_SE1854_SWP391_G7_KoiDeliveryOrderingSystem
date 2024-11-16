@@ -42,7 +42,7 @@ public class HealthServiceOrderController {
                 .build());
     }
 
-    @PutMapping("delete/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<ApiResponse<HealthServiceOrderResponse>> deleteHealServiceOrder(@PathVariable("id") Integer id) {
         var result = healthServiceOrderService.deleteHealthServiceOrder(id);
         return ResponseEntity.ok(ApiResponse.<HealthServiceOrderResponse>builder()

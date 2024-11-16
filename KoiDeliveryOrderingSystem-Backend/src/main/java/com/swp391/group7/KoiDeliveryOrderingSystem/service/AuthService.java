@@ -164,8 +164,6 @@ public class AuthService {
     public void sendResetPasswordEmail(String email) throws MessagingException {
         Users users = usersRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        // Tạo token cho việc reset mật khẩu
         String token = generateToken(users);
         String url = "http://localhost:8080/auth/reset-password?token=" + token;
         String subject = "Yêu cầu reset mật khẩu";

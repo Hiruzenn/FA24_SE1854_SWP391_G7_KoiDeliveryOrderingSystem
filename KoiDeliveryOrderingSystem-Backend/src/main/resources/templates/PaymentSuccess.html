@@ -6,8 +6,8 @@
     <title>Xác thực thành công</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #DFFFD6, #A3E4D7);
             margin: 0;
             padding: 0;
             display: flex;
@@ -17,26 +17,57 @@
             text-align: center;
         }
         .container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 400px;
-            margin: 20px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 1s ease-in-out;
         }
         h1 {
-            color: #4CAF50;
+            color: #28A745;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 1rem;
+            color: #555555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            background: #28A745;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background: #218838;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
-    <script>
-        setTimeout(function() {
-            window.location.href = "http://localhost:5173/";
-        }, 5000);
-    </script>
 </head>
 <body>
 <div class="container">
     <h1>Bạn đã thanh toán thành công</h1>
+    <p class="message">Cảm ơn bạn đã tin tưởng sử dụng dịch vụ của chúng tôi. Vui lòng nhấn nút dưới đây để quay lại trang chủ.</p>
+    <a href="http://localhost:5173/" class="btn">Trở về Trang chủ</a>
 </div>
 </body>
 </html>

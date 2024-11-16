@@ -6,8 +6,8 @@
     <title>Xác thực thành công</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #A8D5BA, #E2F1E7);
             margin: 0;
             padding: 0;
             display: flex;
@@ -15,27 +15,66 @@
             align-items: center;
             height: 100vh;
             text-align: center;
+            color: #333;
         }
+
         .container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 400px;
-            margin: 20px;
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            animation: fadeIn 1s ease-in-out;
         }
+
         h1 {
-            color: #4CAF50;
+            color: #28A745;
+            font-size: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
+
         p {
+            font-size: 16px;
             color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Xác thực thành công!</h1>
     <p>Cảm ơn bạn đã xác thực tài khoản của mình. Bạn có thể đăng nhập ngay bây giờ.</p>
+    <a href="http://localhost:5173/login" class="btn">Đăng nhập ngay</a>
 </div>
 </body>
 </html>
