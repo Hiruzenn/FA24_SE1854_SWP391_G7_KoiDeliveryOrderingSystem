@@ -16,4 +16,5 @@ public interface HandoverDocumentRepository extends JpaRepository<HandoverDocume
     List<HandoverDocument> findByUsers(Users user);
     Optional<HandoverDocument> findByOrders(Orders order);
     Optional<HandoverDocument> findByOrdersAndHandoverStatus(Orders order, HandoverStatusEnum status);
+    Boolean existsByOrders(Orders order);
 }

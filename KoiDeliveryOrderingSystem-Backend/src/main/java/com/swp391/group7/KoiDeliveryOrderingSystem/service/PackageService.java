@@ -56,6 +56,9 @@ public class PackageService {
         if (!existedCheckingKoiHealth) {
             throw new AppException(ErrorCode.NOT_ENOUGH_CHECKING_KOI_HEALTH);
         }
+        if (handoverDocumentRepository.existsByOrders(orders)) {
+            throw new AppException(ErrorCode.REQUIRED_HANDOVER_DOCUMENT);
+        }
         Package packages = Package.builder()
                 .orders(orders)
                 .packageNo(generatePackageNo())

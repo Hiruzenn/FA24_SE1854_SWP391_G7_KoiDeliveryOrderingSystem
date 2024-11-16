@@ -45,7 +45,7 @@ public class FishProfileService {
         }
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        FishCategory fishCategory = fishCategoryRepository.findByName(request.getType())
+        FishCategory fishCategory = fishCategoryRepository.findByName(request.getSpecies())
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
         if (fishCategory == null) {
             throw new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND);
@@ -74,7 +74,7 @@ public class FishProfileService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        FishCategory fishCategory = fishCategoryRepository.findByName(updateFishProfileRequest.getType())
+        FishCategory fishCategory = fishCategoryRepository.findByName(updateFishProfileRequest.getSpecies())
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
         if (fishCategory == null) {
             throw new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND);
