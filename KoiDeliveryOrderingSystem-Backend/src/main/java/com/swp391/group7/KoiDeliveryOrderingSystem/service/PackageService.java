@@ -84,6 +84,7 @@ public class PackageService {
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
         if (request.getPackageStatus().equals(PackageStatusEnum.PACKED)) {
             handoverDocument.setHandoverStatus(HandoverStatusEnum.IN_PROGRESS);
+            orders.setEstimateDeliveryDate(LocalDateTime.now());
             orders.setStatus(OrderStatusEnum.IN_PROGRESS);
         }
         packages.setPackageStatus(request.getPackageStatus());

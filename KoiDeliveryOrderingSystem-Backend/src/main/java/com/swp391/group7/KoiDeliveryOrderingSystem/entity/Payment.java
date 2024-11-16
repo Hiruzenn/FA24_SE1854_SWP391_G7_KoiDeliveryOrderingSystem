@@ -36,6 +36,7 @@ public class Payment {
     private LocalDate paymentDate;
 
     @Column(name="payment_status")
+    @Enumerated(EnumType.STRING)
     private PaymentStatusEnum paymentStatus;
 
     @Column(name = "payment_method", nullable = false)
