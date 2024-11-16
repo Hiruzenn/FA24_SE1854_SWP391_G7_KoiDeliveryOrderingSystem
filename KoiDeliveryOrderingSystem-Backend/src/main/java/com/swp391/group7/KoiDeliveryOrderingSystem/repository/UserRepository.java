@@ -4,7 +4,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnu
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Role;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 
 
@@ -16,4 +15,5 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
     Optional<Users> findByEmail(String email);
     Users findByIdAndRole(int id, Role role);
     Optional<Users> findByEmailAndCustomerStatus(String username, CustomerStatusEnum status);
+    List<Users> findByRoleAndCustomerStatus(Role role, CustomerStatusEnum status);
 }

@@ -103,6 +103,13 @@ public class UserService {
         userRepository.save(usersManagement);
         return convertToUserResponse(usersManagement);
     }
+
+    public List<UserResponse> viewDeliveryStaff(){
+        Role role = roleRepository.findByName("DELIVERY_STAFF");
+        List<Users> deliveryStaff = userRepository.findByRoleAndCustomerStatus(role, CustomerStatusEnum.VERIFIED);
+        return convertToListUserResponse(deliveryStaff);
+    }
+
     public UserResponse convertToUserResponse(Users users) {
         return UserResponse.builder()
                 .id(users.getId())

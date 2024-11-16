@@ -79,9 +79,31 @@ public class DataLoader {
                         .role(roleRepository.findByName("MANAGER"))
                         .customerStatus(CustomerStatusEnum.VERIFIED)
                         .build();
-                Users deliveryStaff = Users.builder()
-                        .name("DeliveryStaff")
-                        .email("DeliveryStaff@gmail.com")
+                Users deliveryStaff1 = Users.builder()
+                        .name("DeliveryStaff1")
+                        .email("DeliveryStaff1@gmail.com")
+                        .password(encodedPassword)
+                        .phone("123456789")
+                        .address("Dia Chi 123")
+                        .createAt(LocalDateTime.now())
+                        .updateAt(LocalDateTime.now())
+                        .role(roleRepository.findByName("DELIVERY_STAFF"))
+                        .customerStatus(CustomerStatusEnum.VERIFIED)
+                        .build();
+                Users deliveryStaff2 = Users.builder()
+                        .name("DeliveryStaff2")
+                        .email("DeliveryStaff2@gmail.com")
+                        .password(encodedPassword)
+                        .phone("123456789")
+                        .address("Dia Chi 123")
+                        .createAt(LocalDateTime.now())
+                        .updateAt(LocalDateTime.now())
+                        .role(roleRepository.findByName("DELIVERY_STAFF"))
+                        .customerStatus(CustomerStatusEnum.VERIFIED)
+                        .build();
+                Users deliveryStaff3 = Users.builder()
+                        .name("DeliveryStaff3")
+                        .email("DeliveryStaff3@gmail.com")
                         .password(encodedPassword)
                         .phone("123456789")
                         .address("Dia Chi 123")
@@ -93,7 +115,9 @@ public class DataLoader {
                 userRepository.save(user);
                 userRepository.save(staff);
                 userRepository.save(manager);
-                userRepository.save(deliveryStaff);
+                userRepository.save(deliveryStaff1);
+                userRepository.save(deliveryStaff2);
+                userRepository.save(deliveryStaff3);
             }
             if (deliveryMethodRepository.count() == 0) {
                 DeliveryMethod vehicle1 = DeliveryMethod.builder()

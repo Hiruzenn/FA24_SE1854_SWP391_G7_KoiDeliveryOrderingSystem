@@ -49,6 +49,16 @@ public class UserController {
                 .build());
     }
 
+    @GetMapping("view-delivery-staff")
+    public ResponseEntity<ApiResponse<List<UserResponse>>> viewDeliveryStaff() {
+        var result = userService.viewDeliveryStaff();
+        return ResponseEntity.ok(ApiResponse.<List<UserResponse>>builder()
+                .code(200)
+                .message("View All Delivery Staff")
+                .result(result)
+                .build());
+    }
+
     @PostMapping("create-user")
     public ResponseEntity<ApiResponse<UserResponse>> createUser(@RequestBody CreateUserRequest request) {
         var result = userService.createUser(request);
