@@ -25,15 +25,15 @@ public class DashboardService {
     public DashboardResponse dashboard() {
         Integer totalUser = userRepository.findAll().stream().toList().size(); //Tìm tất cả,
         Integer totalOrders = orderRepository.findByStatus(OrderStatusEnum.AVAILABLE).stream().toList().size();
-        Integer orderInWeek = orderRepository.findByStatusAndCreateAtBetween(OrderStatusEnum.AVAILABLE,
+        Integer orderInWeek = orderRepository.findByStatusAndCreateAtBetween(OrderStatusEnum.COMPLETED,
                 LocalDateTime.now().minusWeeks(1), LocalDateTime.now()).size();
-        Integer orderInMonth = orderRepository.findByStatusAndCreateAtBetween(OrderStatusEnum.AVAILABLE,
+        Integer orderInMonth = orderRepository.findByStatusAndCreateAtBetween(OrderStatusEnum.COMPLETED,
                 LocalDateTime.now().minusMonths(1), LocalDateTime.now()).size();
-        Double profitInWeek = orderRepository.findByStatusAndCreateAtBetween(OrderStatusEnum.AVAILABLE,
+        Double profitInWeek = orderRepository.findByStatusAndCreateAtBetween(OrderStatusEnum.COMPLETED,
                 LocalDateTime.now().minusWeeks(1), LocalDateTime.now()).stream().mapToDouble(Orders::getTotalAmount).sum();
-        Double profitInMonth = orderRepository.findByStatusAndCreateAtBetween(OrderStatusEnum.AVAILABLE,
+        Double profitInMonth = orderRepository.findByStatusAndCreateAtBetween(OrderStatusEnum.COMPLETED,
                 LocalDateTime.now().minusMonths(1), LocalDateTime.now()).stream().mapToDouble(Orders::getTotalAmount).sum();
-        Double totalProfit = orderRepository.findByStatus(OrderStatusEnum.AVAILABLE)
+        Double totalProfit = orderRepository.findByStatus(OrderStatusEnum.COMPLETED)
                 .stream().mapToDouble(Orders::getTotalAmount).sum();
         return DashboardResponse.builder()
                 .totalUser(totalUser)
