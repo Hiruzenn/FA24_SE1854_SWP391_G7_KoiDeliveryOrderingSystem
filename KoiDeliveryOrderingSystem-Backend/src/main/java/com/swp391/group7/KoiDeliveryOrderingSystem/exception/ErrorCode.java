@@ -65,6 +65,7 @@ public enum ErrorCode {
     PACK_ORDER_BEFORE(1605, "Package status must be PACKED before complete ORDER"),
     REPORT_NOT_FOUND(1606, "Report not Found"),
     DELETE_HANDOVER_PENDING(1607, "Only Delete Handover with status Pending"),
+    REQUIRED_HANDOVER_DOCUMENT(1608, "Required Handover document when create package"),
     ;
 
     private final int code;

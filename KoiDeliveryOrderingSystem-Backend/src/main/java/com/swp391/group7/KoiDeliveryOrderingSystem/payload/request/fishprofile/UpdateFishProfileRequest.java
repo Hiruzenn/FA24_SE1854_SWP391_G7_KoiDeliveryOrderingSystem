@@ -16,8 +16,8 @@ public class UpdateFishProfileRequest {
     @NotBlank(message =  "Description is required")
     private String description;
 
-    @NotBlank(message =  "Type is required")
-    private String type;
+    @NotBlank(message =  "Species is required")
+    private String species;
 
     @NotBlank(message =  "Size is required")
     private String size;
