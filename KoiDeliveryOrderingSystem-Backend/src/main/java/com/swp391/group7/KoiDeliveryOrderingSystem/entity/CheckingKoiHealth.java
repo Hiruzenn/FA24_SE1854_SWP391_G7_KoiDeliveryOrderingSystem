@@ -34,14 +34,14 @@ public class CheckingKoiHealth {
     @Column(name = "weight", nullable = false)
     private Float weight;
 
+    @Column(name = "sex", columnDefinition = "NVARCHAR(255)")
+    private String sex;
+
     @Column(name = "color", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String color;
 
     @Column(name = "type", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String type;
-
-    @Column(name = "age", nullable = false)
-    private Integer age;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;

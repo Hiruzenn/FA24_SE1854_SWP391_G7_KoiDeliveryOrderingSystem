@@ -55,8 +55,12 @@ public class FishProfileService {
                 .name(request.getName())
                 .description(request.getDescription())
                 .fishCategory(fishCategory)
+                .sex(request.getSex())
                 .size(request.getSize())
+                .age(request.getAge())
                 .origin(request.getOrigin())
+                .weight(request.getWeight())
+                .color(request.getColor())
                 .image(request.getImage())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
@@ -68,23 +72,27 @@ public class FishProfileService {
         return convertToFishProfileResponse(fishProfile);
     }
 
-    public FishProfileResponse updateFishProfile(Integer fishProfileId, UpdateFishProfileRequest updateFishProfileRequest) {
+    public FishProfileResponse updateFishProfile(Integer fishProfileId, UpdateFishProfileRequest request) {
         Users users = accountUtils.getCurrentUser();
         FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        FishCategory fishCategory = fishCategoryRepository.findByName(updateFishProfileRequest.getSpecies())
+        FishCategory fishCategory = fishCategoryRepository.findByName(request.getSpecies())
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
         if (fishCategory == null) {
             throw new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND);
         }
-        fishProfile.setName(updateFishProfileRequest.getName());
-        fishProfile.setDescription(updateFishProfileRequest.getDescription());
+        fishProfile.setName(request.getName());
+        fishProfile.setDescription(request.getDescription());
         fishProfile.setFishCategory(fishCategory);
-        fishProfile.setSize(updateFishProfileRequest.getSize());
-        fishProfile.setOrigin(updateFishProfileRequest.getOrigin());
-        fishProfile.setImage(updateFishProfileRequest.getImage());
+        fishProfile.setSex(request.getSex());
+        fishProfile.setSize(request.getSize());
+        fishProfile.setAge(request.getAge());
+        fishProfile.setOrigin(request.getOrigin());
+        fishProfile.setWeight(request.getWeight());
+        fishProfile.setColor(request.getColor());
+        fishProfile.setImage(request.getImage());
         fishProfile.setUpdateAt(LocalDateTime.now());
         fishProfile.setUpdateBy(users.getId());
         fishProfileRepository.save(fishProfile);
@@ -136,11 +144,15 @@ public class FishProfileService {
         return FishProfileResponse.builder()
                 .id(fishProfile.getId())
                 .orderId(fishProfile.getOrders().getId())
-                .fishCategory(fishProfile.getFishCategory().getName())
+                .species(fishProfile.getFishCategory().getName())
                 .name(fishProfile.getName())
                 .description(fishProfile.getDescription())
+                .sex(fishProfile.getSex())
                 .size(fishProfile.getSize())
+                .age(fishProfile.getAge())
                 .origin(fishProfile.getOrigin())
+                .weight(fishProfile.getWeight())
+                .color(fishProfile.getColor())
                 .image(fishProfile.getImage())
                 .createAt(fishProfile.getCreateAt())
                 .createBy(fishProfile.getCreateBy())

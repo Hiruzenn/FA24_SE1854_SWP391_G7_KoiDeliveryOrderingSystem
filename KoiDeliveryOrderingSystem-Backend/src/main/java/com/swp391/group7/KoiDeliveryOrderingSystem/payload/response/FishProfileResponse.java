@@ -14,11 +14,15 @@ import java.time.LocalDateTime;
 public class FishProfileResponse {
     private Integer id;
     private Integer orderId;
-    private String fishCategory;
+    private String species;
     private String name;
     private String description;
+    private String sex;
     private String size;
+    private Integer age;
     private String origin;
+    private Float weight;
+    private String color;
     private String image;
     private LocalDateTime createAt;
     private Integer createBy;
