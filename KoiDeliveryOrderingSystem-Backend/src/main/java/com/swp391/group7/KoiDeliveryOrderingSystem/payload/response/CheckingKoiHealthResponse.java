@@ -19,7 +19,7 @@ public class CheckingKoiHealthResponse {
     private String healthStatusDescription;
     private Float weight;
     private String color;
-    private String type;
+    private String species;
     private String sex;
     private LocalDateTime createAt;
     private Integer createBy;

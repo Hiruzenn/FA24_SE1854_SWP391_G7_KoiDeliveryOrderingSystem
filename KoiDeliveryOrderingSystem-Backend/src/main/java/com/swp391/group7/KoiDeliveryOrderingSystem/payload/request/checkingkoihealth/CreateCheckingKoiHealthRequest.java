@@ -24,7 +24,7 @@ public class CreateCheckingKoiHealthRequest {
     private Float weight;
 
     @NotBlank(message = "Type is required")
-    private String type;
+    private String species;
 
     @NotBlank(message = "Color is required")
     private String color;
