@@ -119,10 +119,13 @@ public class PackageService {
     public PackageResponse deletePackage(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Package packages = packageRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_FOUND));
+        if (packages.getPackageStatus().equals(PackageStatusEnum.PACKED)) {
+            throw new AppException(ErrorCode.NOT_DELETE_PACKED);
+        }
         packageRepository.delete(packages);
         return convertToPackageResponse(packages);
     }

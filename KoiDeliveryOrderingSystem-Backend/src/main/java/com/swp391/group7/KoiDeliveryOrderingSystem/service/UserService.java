@@ -44,6 +44,12 @@ public class UserService {
         return convertToUserResponse(users);
     }
 
+    public UserResponse viewById(Integer userId) {
+        Users users = userRepository.findByIdAndCustomerStatus(userId, CustomerStatusEnum.VERIFIED)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return convertToUserResponse(users);
+    }
+
     public UserResponse updateProfile(UpdateProfileRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
@@ -89,7 +95,7 @@ public class UserService {
         return convertToUserResponse(createUser);
     }
 
-    public UserResponse blockUnblockUser(Integer userId){
+    public UserResponse blockUnblockUser(Integer userId) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
@@ -97,14 +103,14 @@ public class UserService {
         Users usersManagement = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         if (usersManagement.getCustomerStatus() == CustomerStatusEnum.VERIFIED) {
             usersManagement.setCustomerStatus(CustomerStatusEnum.UNVERIFIED);
-        }else if(usersManagement.getCustomerStatus() == CustomerStatusEnum.UNVERIFIED){
+        } else if (usersManagement.getCustomerStatus() == CustomerStatusEnum.UNVERIFIED) {
             usersManagement.setCustomerStatus(CustomerStatusEnum.VERIFIED);
         }
         userRepository.save(usersManagement);
         return convertToUserResponse(usersManagement);
     }
 
-    public List<UserResponse> viewDeliveryStaff(){
+    public List<UserResponse> viewDeliveryStaff() {
         Role role = roleRepository.findByName("DELIVERY_STAFF");
         List<Users> deliveryStaff = userRepository.findByRoleAndCustomerStatus(role, CustomerStatusEnum.VERIFIED);
         return convertToListUserResponse(deliveryStaff);

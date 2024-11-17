@@ -29,6 +29,16 @@ public class UserController {
                 .build());
     }
 
+    @GetMapping("view-by-id/{userId}")
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable Integer userId) {
+        var result = userService.viewById(userId);
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+                .code(200)
+                .message("Get Profile By Id")
+                .result(result)
+                .build());
+    }
+
     @PutMapping("update-profile")
     public ResponseEntity<ApiResponse<UserResponse>> updateProfile(@RequestBody UpdateProfileRequest request) {
         var result = userService.updateProfile(request);

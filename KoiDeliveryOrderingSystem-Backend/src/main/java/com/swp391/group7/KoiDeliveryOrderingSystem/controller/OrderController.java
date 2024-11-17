@@ -77,6 +77,26 @@ public class OrderController {
                 .build());
     }
 
+    @GetMapping("view-deleted-order")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getDeletedOrders() {
+        var result = orderService.viewOrderDeletedByCustomer();
+        return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder()
+                .code(200)
+                .message("Deleted Order List By Customer")
+                .result(result)
+                .build());
+    }
+
+    @PutMapping("roll-back-order/{orderId}")
+    public ResponseEntity<ApiResponse<OrderResponse>> rollBackOrder(@PathVariable Integer orderId) {
+        var result = orderService.rollBackOrder(orderId);
+        return ResponseEntity.ok(ApiResponse.<OrderResponse>builder()
+                .code(200)
+                .message("Order Available List")
+                .result(result)
+                .build());
+    }
+
     @PutMapping("delete/{orderId}")
     public ResponseEntity<ApiResponse<OrderResponse>> deleteOrder(@PathVariable Integer orderId) {
         var result = orderService.deleteOrder(orderId);
