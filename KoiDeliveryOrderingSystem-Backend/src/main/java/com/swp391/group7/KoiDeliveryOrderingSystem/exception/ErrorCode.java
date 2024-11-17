@@ -42,6 +42,7 @@ public enum ErrorCode {
     ROLE_NOT_EXISTED(1034, "Role not found"),
     INTERNAL_SERVER_ERROR(1035, "Internal server error"),
     FEEDBACK_ORDER_COMPLETED(1036, "Feedback only allowed for completed orders"),
+    NOT_DELETE_PACKED(1037, "Can't deleted package with status packed"),
     ;
 
     private final int code;

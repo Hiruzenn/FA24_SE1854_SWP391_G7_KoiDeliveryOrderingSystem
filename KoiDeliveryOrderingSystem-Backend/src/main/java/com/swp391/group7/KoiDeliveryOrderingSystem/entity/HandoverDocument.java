@@ -42,7 +42,7 @@ public class HandoverDocument {
     @Column(name = "handover_description", columnDefinition = "NVARCHAR(255)")
     private String handoverDescription;
 
-    @Column(name = "vehicle", nullable = false)
+    @Column(name = "vehicle", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String vehicle;
 
     @Column(name = "destination", nullable = false, columnDefinition = "NVARCHAR(255)")

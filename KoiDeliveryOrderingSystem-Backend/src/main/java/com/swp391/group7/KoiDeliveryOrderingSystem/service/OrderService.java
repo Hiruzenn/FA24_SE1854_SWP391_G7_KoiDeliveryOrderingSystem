@@ -50,7 +50,7 @@ public class OrderService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         DeliveryMethod deliveryMethod = deliveryMethodRepository.findByNameAndStatus(createOrderRequest.getDeliveryMethod(), SystemStatusEnum.AVAILABLE)
-                .orElseThrow(()-> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
         Orders orders = Orders.builder()
                 .orderCode(generateOrderCode())
                 .users(users)
@@ -93,7 +93,7 @@ public class OrderService {
         }
         Orders orders = orderRepository.findById(OrderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         DeliveryMethod deliveryMethod = deliveryMethodRepository.findByNameAndStatus(updateOrderRequest.getDeliveryMethod(), SystemStatusEnum.AVAILABLE)
-                .orElseThrow(()-> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
         orders.setDeliveryMethod(deliveryMethod);
         orders.setDestination(updateOrderRequest.getDestination());
         orders.setDeparture(updateOrderRequest.getDeparture());
@@ -111,11 +111,7 @@ public class OrderService {
 
     public List<OrderResponse> viewAvailableOrder() {
         List<Orders> orders = orderRepository.findByStatus(OrderStatusEnum.AVAILABLE);
-        List<OrderResponse> orderResponses = new ArrayList<>();
-        for (Orders order : orders) {
-            orderResponses.add(convertOrderToResponse(order));
-        }
-        return orderResponses;
+        return convertToListOrderResponse(orders);
     }
 
     public List<OrderResponse> getOrderByCustomerId() {
@@ -124,11 +120,7 @@ public class OrderService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         List<Orders> ordersList = orderRepository.findByUsers(users);
-        List<OrderResponse> orderResponses = new ArrayList<>();
-        for (Orders order : ordersList) {
-            orderResponses.add(convertOrderToResponse(order));
-        }
-        return orderResponses;
+        return convertToListOrderResponse(ordersList);
     }
 
     public OrderResponse deleteOrder(Integer OrderId) {
@@ -139,6 +131,28 @@ public class OrderService {
         Orders orders = orderRepository.findByIdAndStatus(OrderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         orders.setStatus(OrderStatusEnum.NOT_AVAILABLE);
+        orders.setUpdateAt(LocalDateTime.now());
+        orders.setUpdateBy(users.getId());
+        orderRepository.save(orders);
+        return convertOrderToResponse(orders);
+    }
+
+    public List<OrderResponse> viewOrderDeletedByCustomer() {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        List<Orders> orderList = orderRepository.findByUsersAndStatus(users, OrderStatusEnum.NOT_AVAILABLE);
+        return convertToListOrderResponse(orderList);
+    }
+
+    public OrderResponse rollBackOrder(Integer orderId) {
+        Users users = accountUtils.getCurrentUser();
+        if (users == null) {
+            throw new AppException(ErrorCode.NOT_LOGIN);
+        }
+        Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        orders.setStatus(OrderStatusEnum.AVAILABLE);
         orders.setUpdateAt(LocalDateTime.now());
         orders.setUpdateBy(users.getId());
         orderRepository.save(orders);
@@ -167,6 +181,14 @@ public class OrderService {
                 .updateBy(orders.getUpdateBy())
                 .status(orders.getStatus())
                 .build();
+    }
+
+    public List<OrderResponse> convertToListOrderResponse(List<Orders> ordersList) {
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Orders order : ordersList) {
+            orderResponses.add(convertOrderToResponse(order));
+        }
+        return orderResponses;
     }
 
     private String generateOrderCode() {
