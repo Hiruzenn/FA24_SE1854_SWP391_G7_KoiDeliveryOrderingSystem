@@ -20,7 +20,7 @@ public class CheckingKoiHealthResponse {
     private Float weight;
     private String color;
     private String type;
-    private Integer age;
+    private String sex;
     private LocalDateTime createAt;
     private Integer createBy;
     private LocalDateTime updateAt;

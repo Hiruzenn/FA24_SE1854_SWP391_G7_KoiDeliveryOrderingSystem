@@ -46,9 +46,9 @@ public class CheckingKoiHealthService {
                 .healthStatus(request.getHealthStatus())
                 .healthStatusDescription(request.getHealthStatusDescription())
                 .weight(request.getWeight())
+                .sex(request.getSex())
                 .color(request.getColor())
                 .type(request.getType())
-                .age(request.getAge())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -59,19 +59,19 @@ public class CheckingKoiHealthService {
         return convertToCheckingKoiHealthResponse(checkingKoiHealth);
     }
 
-    public CheckingKoiHealthResponse updateCheckingKoiHealth(Integer id, UpdateCheckingKoiHealthRequest updateCheckingKoiHealthRequest) {
+    public CheckingKoiHealthResponse updateCheckingKoiHealth(Integer id, UpdateCheckingKoiHealthRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
         CheckingKoiHealth checkingKoiHealth = checkingKoiHealthRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.CHECKING_KOI_HEALTH_NOT_FOUND));
-        checkingKoiHealth.setHealthStatus(updateCheckingKoiHealthRequest.getHealthStatus());
-        checkingKoiHealth.setHealthStatusDescription(updateCheckingKoiHealthRequest.getHealthStatusDescription());
-        checkingKoiHealth.setWeight(updateCheckingKoiHealthRequest.getWeight());
-        checkingKoiHealth.setColor(updateCheckingKoiHealthRequest.getColor());
-        checkingKoiHealth.setType(updateCheckingKoiHealthRequest.getType());
-        checkingKoiHealth.setAge(updateCheckingKoiHealthRequest.getAge());
+        checkingKoiHealth.setHealthStatus(request.getHealthStatus());
+        checkingKoiHealth.setHealthStatusDescription(request.getHealthStatusDescription());
+        checkingKoiHealth.setWeight(request.getWeight());
+        checkingKoiHealth.setSex(request.getSex());
+        checkingKoiHealth.setColor(request.getColor());
+        checkingKoiHealth.setType(request.getType());
         checkingKoiHealth.setUpdateAt(LocalDateTime.now());
         checkingKoiHealth.setUpdateBy(users.getId());
         checkingKoiHealthRepository.save(checkingKoiHealth);
@@ -120,9 +120,9 @@ public class CheckingKoiHealthService {
                 .healthStatus(checkingKoi.getHealthStatus())
                 .healthStatusDescription(checkingKoi.getHealthStatusDescription())
                 .weight(checkingKoi.getWeight())
+                .sex(checkingKoi.getSex())
                 .color(checkingKoi.getColor())
                 .type(checkingKoi.getType())
-                .age(checkingKoi.getAge())
                 .createAt(checkingKoi.getCreateAt())
                 .createBy(checkingKoi.getCreateBy())
                 .updateAt(checkingKoi.getUpdateAt())

@@ -29,6 +29,6 @@ public class UpdateCheckingKoiHealthRequest {
     @NotBlank(message = "Color is required")
     private String color;
 
-    @NotNull(message = "Age is required")
-    private Integer age;
+    @NotBlank(message = "Age is required")
+    private String sex;
 }

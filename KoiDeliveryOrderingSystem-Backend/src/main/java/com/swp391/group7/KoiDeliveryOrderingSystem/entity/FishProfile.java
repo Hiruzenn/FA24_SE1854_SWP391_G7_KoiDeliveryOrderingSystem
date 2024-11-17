@@ -45,11 +45,23 @@ public class FishProfile {
     @Column(name = "description", columnDefinition = "NVARCHAR(255)")
     private String description;
 
+    @Column(name = "sex", columnDefinition = "NVARCHAR(255)")
+    private String sex;
+
     @Column(name = "size", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String size;
 
+    @Column(name = "age")
+    private Integer age;
+
     @Column(name = "origin", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String origin;
+
+    @Column(name = "weight", nullable = false)
+    private Float weight;
+
+    @Column(name = "color", nullable = false, columnDefinition = "NVARCHAR(255)")
+    private String color;
 
     @Column(name = "image", nullable = false)
     private String image;
