@@ -40,8 +40,8 @@ public class CheckingKoiHealth {
     @Column(name = "color", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String color;
 
-    @Column(name = "type", nullable = false, columnDefinition = "NVARCHAR(255)")
-    private String type;
+    @Column(name = "species", nullable = false, columnDefinition = "NVARCHAR(255)")
+    private String species;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;

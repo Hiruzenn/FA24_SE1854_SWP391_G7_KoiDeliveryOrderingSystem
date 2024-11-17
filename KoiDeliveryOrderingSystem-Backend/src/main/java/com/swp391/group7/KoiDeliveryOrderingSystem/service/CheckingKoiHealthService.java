@@ -40,7 +40,7 @@ public class CheckingKoiHealthService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
-                .orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         CheckingKoiHealth checkingKoiHealth = CheckingKoiHealth.builder()
                 .fishProfile(fishProfile)
                 .healthStatus(request.getHealthStatus())
@@ -48,7 +48,7 @@ public class CheckingKoiHealthService {
                 .weight(request.getWeight())
                 .sex(request.getSex())
                 .color(request.getColor())
-                .type(request.getType())
+                .species(request.getSpecies())
                 .createAt(LocalDateTime.now())
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
@@ -71,7 +71,7 @@ public class CheckingKoiHealthService {
         checkingKoiHealth.setWeight(request.getWeight());
         checkingKoiHealth.setSex(request.getSex());
         checkingKoiHealth.setColor(request.getColor());
-        checkingKoiHealth.setType(request.getType());
+        checkingKoiHealth.setSpecies(request.getSpecies());
         checkingKoiHealth.setUpdateAt(LocalDateTime.now());
         checkingKoiHealth.setUpdateBy(users.getId());
         checkingKoiHealthRepository.save(checkingKoiHealth);
@@ -86,7 +86,7 @@ public class CheckingKoiHealthService {
 
     public List<CheckingKoiHealthResponse> viewCheckingKoiHealthByFishProfile(Integer fishProfileId) {
         FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
-                .orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         List<CheckingKoiHealth> checkingKoiHealthList = checkingKoiHealthRepository.findByFishProfileAndStatus(fishProfile, SystemStatusEnum.AVAILABLE);
         return convertToListCheckingKoiHealthResponse(checkingKoiHealthList);
     }
@@ -122,7 +122,7 @@ public class CheckingKoiHealthService {
                 .weight(checkingKoi.getWeight())
                 .sex(checkingKoi.getSex())
                 .color(checkingKoi.getColor())
-                .type(checkingKoi.getType())
+                .species(checkingKoi.getSpecies())
                 .createAt(checkingKoi.getCreateAt())
                 .createBy(checkingKoi.getCreateBy())
                 .updateAt(checkingKoi.getUpdateAt())
