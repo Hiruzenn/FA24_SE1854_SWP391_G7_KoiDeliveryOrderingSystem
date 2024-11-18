@@ -1,7 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.CheckingKoiHealth;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
@@ -38,7 +37,7 @@ public class CheckingKoiHealthService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        FishProfile fishProfile = fishProfileRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         CheckingKoiHealth checkingKoiHealth = CheckingKoiHealth.builder()
                 .fishProfile(fishProfile)
@@ -52,7 +51,6 @@ public class CheckingKoiHealthService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
         checkingKoiHealthRepository.save(checkingKoiHealth);
         return convertToCheckingKoiHealthResponse(checkingKoiHealth);
@@ -63,7 +61,7 @@ public class CheckingKoiHealthService {
         if (users == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
-        CheckingKoiHealth checkingKoiHealth = checkingKoiHealthRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        CheckingKoiHealth checkingKoiHealth = checkingKoiHealthRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CHECKING_KOI_HEALTH_NOT_FOUND));
         checkingKoiHealth.setHealthStatus(request.getHealthStatus());
         checkingKoiHealth.setHealthStatusDescription(request.getHealthStatusDescription());
@@ -78,36 +76,32 @@ public class CheckingKoiHealthService {
     }
 
     public List<CheckingKoiHealthResponse> getAllCheckingKoiHealth() {
-        List<CheckingKoiHealth> checkingKoiHealthList = checkingKoiHealthRepository.findByStatus(SystemStatusEnum.AVAILABLE);
+        List<CheckingKoiHealth> checkingKoiHealthList = checkingKoiHealthRepository.findAll();
         return convertToListCheckingKoiHealthResponse(checkingKoiHealthList);
     }
 
 
     public List<CheckingKoiHealthResponse> viewCheckingKoiHealthByFishProfile(Integer fishProfileId) {
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
-        List<CheckingKoiHealth> checkingKoiHealthList = checkingKoiHealthRepository.findByFishProfileAndStatus(fishProfile, SystemStatusEnum.AVAILABLE);
+        List<CheckingKoiHealth> checkingKoiHealthList = checkingKoiHealthRepository.findByFishProfile(fishProfile);
         return convertToListCheckingKoiHealthResponse(checkingKoiHealthList);
     }
 
     public Boolean existedCheckingKoiHealth(Integer fishProfileId) {
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
-        return checkingKoiHealthRepository.existsByFishProfileAndStatus(fishProfile, SystemStatusEnum.AVAILABLE);
+        return checkingKoiHealthRepository.existsByFishProfile(fishProfile);
     }
 
-    public CheckingKoiHealthResponse deleteCheckingKoiHealth(Integer id) {
+    public void deleteCheckingKoiHealth(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        CheckingKoiHealth checkingKoiHealth = checkingKoiHealthRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        CheckingKoiHealth checkingKoiHealth = checkingKoiHealthRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CHECKING_KOI_HEALTH_NOT_FOUND));
-        checkingKoiHealth.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        checkingKoiHealth.setUpdateAt(LocalDateTime.now());
-        checkingKoiHealth.setUpdateBy(users.getId());
-        checkingKoiHealthRepository.save(checkingKoiHealth);
-        return convertToCheckingKoiHealthResponse(checkingKoiHealth);
+        checkingKoiHealthRepository.delete(checkingKoiHealth);
     }
 
     public List<CheckingKoiHealthResponse> convertToListCheckingKoiHealthResponse(List<CheckingKoiHealth> checkingKoiHealths) {
@@ -132,7 +126,6 @@ public class CheckingKoiHealthService {
                 .createBy(checkingKoi.getCreateBy())
                 .updateAt(checkingKoi.getUpdateAt())
                 .updateBy(checkingKoi.getUpdateBy())
-                .status(checkingKoi.getStatus())
                 .build();
     }
 }

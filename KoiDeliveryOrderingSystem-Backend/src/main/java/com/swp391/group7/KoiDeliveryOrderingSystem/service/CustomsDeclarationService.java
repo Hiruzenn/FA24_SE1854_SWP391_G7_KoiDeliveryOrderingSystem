@@ -2,7 +2,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.CustomsDeclaration;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
@@ -16,7 +15,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +52,6 @@ public class CustomsDeclarationService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
         customsDeclarationRepository.save(customsDeclaration);
         return covertToCustomsDeclarationResponse(customsDeclaration);
@@ -65,7 +62,7 @@ public class CustomsDeclarationService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        CustomsDeclaration customsDeclaration = customsDeclarationRepository.findCustomsDeclarationByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        CustomsDeclaration customsDeclaration = customsDeclarationRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOM_DECLARATION_NOT_EXISTED));
 
         customsDeclaration.setDeclarationNo(customsDeclarationRequest.getDeclarationNo());
@@ -83,7 +80,7 @@ public class CustomsDeclarationService {
     }
 
     public List<CustomsDeclarationResponse> getListCustomDeclaration() {
-        List<CustomsDeclaration> customsDeclarationList = customsDeclarationRepository.findCustomsDeclarationsByStatus(SystemStatusEnum.AVAILABLE);
+        List<CustomsDeclaration> customsDeclarationList = customsDeclarationRepository.findAll();
         if (customsDeclarationList.isEmpty()) {
             throw new AppException(ErrorCode.CUSTOM_DECLARATION_NOT_EXISTED);
         }
@@ -91,30 +88,26 @@ public class CustomsDeclarationService {
     }
 
     public CustomsDeclarationResponse getCustomsDeclaration(int id) {
-        CustomsDeclaration customsDeclaration = customsDeclarationRepository.findCustomsDeclarationByIdAndStatus(id, SystemStatusEnum.AVAILABLE).
+        CustomsDeclaration customsDeclaration = customsDeclarationRepository.findById(id).
                 orElseThrow(() -> new AppException(ErrorCode.CUSTOM_DECLARATION_NOT_EXISTED));
         return covertToCustomsDeclarationResponse(customsDeclaration);
     }
 
     public CustomsDeclarationResponse getCustomsDeclarationByOrder(Integer orderId) {
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        CustomsDeclaration customsDeclaration = customsDeclarationRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE)
+        CustomsDeclaration customsDeclaration = customsDeclarationRepository.findByOrders(orders)
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOM_DECLARATION_NOT_EXISTED));
         return covertToCustomsDeclarationResponse(customsDeclaration);
     }
 
-    public CustomsDeclarationResponse removeCustomDeclaration(int id) {
+    public void removeCustomDeclaration(int id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         CustomsDeclaration customsDeclaration = customsDeclarationRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOM_DECLARATION_NOT_EXISTED));
-        customsDeclaration.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        customsDeclaration.setUpdateAt(LocalDateTime.now());
-        customsDeclaration.setUpdateBy(users.getId());
-        customsDeclarationRepository.save(customsDeclaration);
-        return covertToCustomsDeclarationResponse(customsDeclaration);
+        customsDeclarationRepository.delete(customsDeclaration);
     }
 
 
@@ -141,7 +134,6 @@ public class CustomsDeclarationService {
                 .createBy(customsDeclaration.getCreateBy())
                 .updateAt(customsDeclaration.getUpdateAt())
                 .updateBy(customsDeclaration.getUpdateBy())
-                .status(customsDeclaration.getStatus())
                 .build();
     }
 

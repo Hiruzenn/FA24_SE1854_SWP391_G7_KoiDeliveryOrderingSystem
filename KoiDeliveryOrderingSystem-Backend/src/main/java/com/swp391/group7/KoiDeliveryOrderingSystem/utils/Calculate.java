@@ -3,7 +3,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.utils;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.*;
@@ -33,7 +32,7 @@ public class Calculate {
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         float deliveryMethod = deliveryMethodRepository
-                .findByNameAndStatus(orders.getDeliveryMethod().getName(), SystemStatusEnum.AVAILABLE)
+                .findByName(orders.getDeliveryMethod().getName())
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND)).getPrice();
         double healthService = healthServiceOrderRepository.findByOrders(orders)
                 .stream().mapToDouble((healthServiceOrder1 -> {
@@ -41,8 +40,8 @@ public class Calculate {
                             .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
                     return healthServiceCategory.getPrice();
                 })).sum();
-        double fishProfile = fishProfileRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE).stream().mapToDouble(fishProfileList -> {
-            FishCategory fishCategory = fishCategoryRepository.findByNameAndStatus(fishProfileList.getFishCategory().getName(), SystemStatusEnum.AVAILABLE)
+        double fishProfile = fishProfileRepository.findByOrders(orders).stream().mapToDouble(fishProfileList -> {
+            FishCategory fishCategory = fishCategoryRepository.findByName(fishProfileList.getFishCategory().getName())
                     .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
             return fishCategory.getPrice();
         }).sum();

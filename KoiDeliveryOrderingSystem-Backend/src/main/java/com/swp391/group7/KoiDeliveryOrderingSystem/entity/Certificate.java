@@ -2,7 +2,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -56,8 +55,4 @@ public class Certificate {
 
     @Column(name = "update_by")
     private Integer updateBy;
-
-    @Column(name = "cetificate_status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SystemStatusEnum status;
 }

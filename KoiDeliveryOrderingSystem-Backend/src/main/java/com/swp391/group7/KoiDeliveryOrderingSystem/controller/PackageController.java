@@ -61,12 +61,11 @@ public class PackageController {
     }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<ApiResponse<PackageResponse>> deletePackage(@Valid @PathVariable Integer id) {
-        var result = packageService.deletePackage(id);
-        return ResponseEntity.ok(ApiResponse.<PackageResponse>builder()
+    public ResponseEntity<ApiResponse<Void>> deletePackage(@Valid @PathVariable Integer id) {
+        packageService.deletePackage(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Package Deleted")
-                .result(result)
                 .build());
     }
 

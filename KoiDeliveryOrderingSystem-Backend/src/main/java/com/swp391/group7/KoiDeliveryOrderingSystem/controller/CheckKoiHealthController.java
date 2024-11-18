@@ -43,13 +43,12 @@ public class CheckKoiHealthController {
                 .build());
     }
 
-    @PutMapping("delete/{id}")
-    public ResponseEntity<ApiResponse<CheckingKoiHealthResponse>> deleteCheckingKoiHealth(@PathVariable("id") Integer id) {
-        var result = checkingKoiHealthService.deleteCheckingKoiHealth(id);
-        return ResponseEntity.ok(ApiResponse.<CheckingKoiHealthResponse>builder()
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteCheckingKoiHealth(@PathVariable("id") Integer id) {
+        checkingKoiHealthService.deleteCheckingKoiHealth(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Checking Koi Health Updated")
-                .result(result)
                 .build());
     }
 

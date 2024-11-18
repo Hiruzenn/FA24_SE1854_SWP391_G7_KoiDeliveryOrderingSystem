@@ -2,11 +2,9 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.config;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -128,7 +126,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod vehicle2 = DeliveryMethod.builder()
                         .name("Xe Van Điều Hòa")
@@ -138,7 +135,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod vehicle3 = DeliveryMethod.builder()
                         .name("Container Chuyên Dụng")
@@ -148,7 +144,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod vehicle4 = DeliveryMethod.builder()
                         .name("Xe Ba Gác")
@@ -158,7 +153,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod vehicle5 = DeliveryMethod.builder()
                         .name("Xe Máy")
@@ -168,7 +162,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 DeliveryMethod vehicle6 = DeliveryMethod.builder()
                         .name("Máy Bay Chuyên Dụng")
@@ -178,7 +171,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 deliveryMethodRepository.save(vehicle1);
                 deliveryMethodRepository.save(vehicle2);
@@ -196,7 +188,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fish2 = FishCategory.builder()
                         .name("Taisho Sanke")
@@ -206,7 +197,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fish3 = FishCategory.builder()
                         .name("Showa Sanshoku")
@@ -216,7 +206,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fish4 = FishCategory.builder()
                         .name("Utsurimono")
@@ -226,7 +215,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fish5 = FishCategory.builder()
                         .name("Shusui")
@@ -236,7 +224,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fish6 = FishCategory.builder()
                         .name("Asagi")
@@ -246,7 +233,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 FishCategory fish7 = FishCategory.builder()
                         .name("Tancho")
@@ -256,7 +242,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 fishCategoryRepository.save(fish1);
                 fishCategoryRepository.save(fish2);
@@ -275,7 +260,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryB = HealthServiceCategory.builder()
                         .serviceName("Gói Chăm Sóc Nâng Cao")
@@ -285,7 +269,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryC = HealthServiceCategory.builder()
                         .serviceName("Gói Chăm Sóc Đặc Biệt")
@@ -295,7 +278,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryD = HealthServiceCategory.builder()
                         .serviceName("Gói Kiểm Tra & Phục Hồi Sức Khỏe")
@@ -305,7 +287,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 HealthServiceCategory healthServiceCategoryE = HealthServiceCategory.builder()
                         .serviceName("Gói Vận Chuyển Quốc Tế")
@@ -315,7 +296,6 @@ public class DataLoader {
                         .createBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
                         .updateAt(LocalDateTime.now())
                         .updateBy(userRepository.findByEmail("Manager@gmail.com").get().getId())
-                        .status(SystemStatusEnum.AVAILABLE)
                         .build();
                 healthServiceCategoryRepository.save(healthServiceCategoryA);
                 healthServiceCategoryRepository.save(healthServiceCategoryB);

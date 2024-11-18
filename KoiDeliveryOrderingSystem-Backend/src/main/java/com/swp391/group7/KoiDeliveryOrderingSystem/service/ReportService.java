@@ -122,10 +122,9 @@ public class ReportService {
         return convertToListReportResponse(reportList);
     }
 
-    public ReportResponse deleteReport(Integer reportId) {
+    public void deleteReport(Integer reportId) {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new AppException(ErrorCode.REPORT_NOT_FOUND));
         reportRepository.delete(report);
-        return convertToReportResponse(report);
     }
 
     public ReportResponse convertToReportResponse(Report report) {

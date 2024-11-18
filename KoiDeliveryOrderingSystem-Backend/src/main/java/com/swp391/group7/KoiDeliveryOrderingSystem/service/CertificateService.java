@@ -1,6 +1,5 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.CreateCertificateRequest;
@@ -11,7 +10,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.U
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.CertificateResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.CertificateRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishProfileRepository;
-import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +34,7 @@ public class CertificateService {
     private FishProfileRepository fishProfileRepository;
 
     public List<CertificateResponse> getListCertificate() {
-        List<Certificate> certificateList = certificateRepository.findCertificateByStatus(SystemStatusEnum.AVAILABLE);
+        List<Certificate> certificateList = certificateRepository.findAll();
         if (certificateList.isEmpty()) {
             throw new AppException(ErrorCode.CERTIFICATE_NOT_FOUND);
         }
@@ -44,15 +42,15 @@ public class CertificateService {
     }
 
     public CertificateResponse getCertificateById(int id) {
-        Certificate certificate = certificateRepository.findCertificateByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
         return covertToCertificateResponse(certificate);
 
     }
 
     public List<CertificateResponse> viewCertificateByFishProfile(Integer fishProfileId) {
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
-        List<Certificate> certificate = certificateRepository.findByFishProfileAndStatus(fishProfile, SystemStatusEnum.AVAILABLE);
+        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        List<Certificate> certificate = certificateRepository.findByFishProfile(fishProfile);
         return convertToListCertificateResponse(certificate);
     }
 
@@ -61,7 +59,7 @@ public class CertificateService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         Certificate certificate = Certificate.builder()
                 .fishProfile(fishProfile)
@@ -76,7 +74,6 @@ public class CertificateService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
         certificateRepository.save(certificate);
         return covertToCertificateResponse(certificate);
@@ -87,7 +84,7 @@ public class CertificateService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Certificate certificate = certificateRepository.findCertificateByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
 
         certificate.setName(request.getName());
@@ -107,20 +104,14 @@ public class CertificateService {
 
     }
 
-    public CertificateResponse deleteCertificate(Integer id) {
+    public void deleteCertificate(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
-
-        certificate.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        certificate.setUpdateAt(LocalDateTime.now());
-        certificate.setUpdateBy(users.getId());
-        certificateRepository.save(certificate);
-        return covertToCertificateResponse(certificate);
-
+        certificateRepository.delete(certificate);
     }
 
 
@@ -147,7 +138,6 @@ public class CertificateService {
                 .createBy(certificate.getCreateBy())
                 .updateAt(certificate.getUpdateAt())
                 .updateBy(certificate.getUpdateBy())
-                .status(certificate.getStatus())
                 .build();
     }
 }

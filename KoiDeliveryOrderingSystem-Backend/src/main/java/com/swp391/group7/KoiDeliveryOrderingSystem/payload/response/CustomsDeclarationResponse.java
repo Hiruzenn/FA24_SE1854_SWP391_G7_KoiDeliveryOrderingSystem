@@ -1,7 +1,5 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -25,5 +23,4 @@ public class CustomsDeclarationResponse {
     private Integer createBy;
     private LocalDateTime updateAt;
     private Integer updateBy;
-    private SystemStatusEnum status;
 }

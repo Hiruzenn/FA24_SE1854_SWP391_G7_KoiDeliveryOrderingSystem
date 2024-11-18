@@ -73,13 +73,12 @@ public class FishProfileController {
                 .build());
     }
 
-    @PutMapping("delete/{fishProfileId}")
-    public ResponseEntity<ApiResponse<FishProfileResponse>> deleteFishProfile(@PathVariable Integer fishProfileId) {
-        var result = fishProfileService.deleteFishProfile(fishProfileId);
-        return ResponseEntity.ok(ApiResponse.<FishProfileResponse>builder()
+    @DeleteMapping("delete/{fishProfileId}")
+    public ResponseEntity<ApiResponse<Void>> deleteFishProfile(@PathVariable Integer fishProfileId) {
+        fishProfileService.deleteFishProfile(fishProfileId);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Fish profile list")
-                .result(result)
                 .build());
     }
 }

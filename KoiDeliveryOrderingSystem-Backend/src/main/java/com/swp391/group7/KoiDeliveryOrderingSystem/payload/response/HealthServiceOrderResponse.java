@@ -1,9 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceCategory;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceOrder;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

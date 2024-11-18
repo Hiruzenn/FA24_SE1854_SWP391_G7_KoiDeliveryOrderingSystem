@@ -4,7 +4,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PackageStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
@@ -49,8 +48,8 @@ public class PackageService {
         }
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        boolean existedCheckingKoiHealth = fishProfileRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE)
-                .stream().allMatch(fish -> checkingKoiHealthRepository.existsByFishProfileAndStatus(fish, SystemStatusEnum.AVAILABLE));
+        boolean existedCheckingKoiHealth = fishProfileRepository.findByOrders(orders)
+                .stream().allMatch(checkingKoiHealthRepository::existsByFishProfile);
         if (!existedCheckingKoiHealth) {
             throw new AppException(ErrorCode.NOT_ENOUGH_CHECKING_KOI_HEALTH);
         }
@@ -114,7 +113,7 @@ public class PackageService {
         return convertToPackageResponse(packages);
     }
 
-    public PackageResponse deletePackage(Integer id) {
+    public void deletePackage(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
@@ -125,7 +124,6 @@ public class PackageService {
             throw new AppException(ErrorCode.NOT_DELETE_PACKED);
         }
         packageRepository.delete(packages);
-        return convertToPackageResponse(packages);
     }
 
     public List<PackageResponse> convertToListPackageResponse(List<Package> packageList) {

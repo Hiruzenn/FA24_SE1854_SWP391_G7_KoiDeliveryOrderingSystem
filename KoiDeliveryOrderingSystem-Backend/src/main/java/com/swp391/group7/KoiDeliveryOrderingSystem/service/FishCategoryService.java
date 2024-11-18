@@ -1,6 +1,5 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
@@ -39,7 +38,6 @@ public class FishCategoryService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
         fishCategoryRepository.save(fishCategory);
         return convertToFishCategoryResponse(fishCategory);
@@ -50,7 +48,7 @@ public class FishCategoryService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        FishCategory fishCategory = fishCategoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        FishCategory fishCategory = fishCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
         fishCategory.setName(updateFishCategoryRequest.getFishCategoryName());
         fishCategory.setDescription(updateFishCategoryRequest.getFishCategoryDescription());
@@ -63,7 +61,7 @@ public class FishCategoryService {
     }
 
     public List<FishCategoryResponse> viewAllFishCategories() {
-        List<FishCategory> fishCategories = fishCategoryRepository.findByStatus(SystemStatusEnum.AVAILABLE);
+        List<FishCategory> fishCategories = fishCategoryRepository.findAll();
         List<FishCategoryResponse> fishCategoryResponses = new ArrayList<>();
         for (FishCategory fishCategory : fishCategories) {
             fishCategoryResponses.add(convertToFishCategoryResponse(fishCategory));
@@ -71,18 +69,14 @@ public class FishCategoryService {
         return fishCategoryResponses;
     }
 
-    public FishCategoryResponse deleteFishCategory(Integer id) {
+    public void deleteFishCategory(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        FishCategory fishCategory = fishCategoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        FishCategory fishCategory = fishCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
-        fishCategory.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        fishCategory.setUpdateAt(LocalDateTime.now());
-        fishCategory.setUpdateBy(users.getId());
-        fishCategoryRepository.save(fishCategory);
-        return convertToFishCategoryResponse(fishCategory);
+        fishCategoryRepository.delete(fishCategory);
     }
 
     private FishCategoryResponse convertToFishCategoryResponse(FishCategory fishCategory) {
@@ -94,7 +88,6 @@ public class FishCategoryService {
                 .createBy(fishCategory.getCreateBy())
                 .updateAt(fishCategory.getUpdateAt())
                 .updateBy(fishCategory.getUpdateBy())
-                .status(fishCategory.getStatus())
                 .build();
     }
 }

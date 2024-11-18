@@ -74,13 +74,12 @@ public class CustomsDeclarationController {
 
     }
 
-    @PutMapping("/delete/{id}") // Endpoint to delete a customs declaration by ID
-    public ResponseEntity<ApiResponse<CustomsDeclarationResponse>> deleteCustomDeclaration(@PathVariable Integer id) {
-        var result = customsDeclarationService.removeCustomDeclaration(id);
-        return ResponseEntity.ok(ApiResponse.<CustomsDeclarationResponse>builder()
+    @DeleteMapping("/delete/{id}") // Endpoint to delete a customs declaration by ID
+    public ResponseEntity<ApiResponse<Void>> deleteCustomDeclaration(@PathVariable Integer id) {
+        customsDeclarationService.removeCustomDeclaration(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Health Service Order Deleted")
-                .result(result)
                 .build());
     }
 

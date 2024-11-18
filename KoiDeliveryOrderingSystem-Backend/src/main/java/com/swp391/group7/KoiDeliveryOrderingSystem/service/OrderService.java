@@ -3,7 +3,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.CreateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.order.UpdateOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.OrderResponse;
@@ -45,7 +44,7 @@ public class OrderService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByNameAndStatus(createOrderRequest.getDeliveryMethod(), SystemStatusEnum.AVAILABLE)
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByName(createOrderRequest.getDeliveryMethod())
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
         Orders orders = Orders.builder()
                 .orderCode(generateOrderCode())
@@ -88,7 +87,7 @@ public class OrderService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Orders orders = orderRepository.findById(OrderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByNameAndStatus(updateOrderRequest.getDeliveryMethod(), SystemStatusEnum.AVAILABLE)
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByName(updateOrderRequest.getDeliveryMethod())
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
         orders.setDeliveryMethod(deliveryMethod);
         orders.setDestination(updateOrderRequest.getDestination());

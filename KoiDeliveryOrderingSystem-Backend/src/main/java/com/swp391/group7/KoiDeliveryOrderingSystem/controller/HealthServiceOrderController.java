@@ -43,12 +43,11 @@ public class HealthServiceOrderController {
     }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<ApiResponse<HealthServiceOrderResponse>> deleteHealServiceOrder(@PathVariable("id") Integer id) {
-        var result = healthServiceOrderService.deleteHealthServiceOrder(id);
-        return ResponseEntity.ok(ApiResponse.<HealthServiceOrderResponse>builder()
+    public ResponseEntity<ApiResponse<Void>> deleteHealServiceOrder(@PathVariable("id") Integer id) {
+        healthServiceOrderService.deleteHealthServiceOrder(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Health Service Order Deleted")
-                .result(result)
                 .build());
     }
 

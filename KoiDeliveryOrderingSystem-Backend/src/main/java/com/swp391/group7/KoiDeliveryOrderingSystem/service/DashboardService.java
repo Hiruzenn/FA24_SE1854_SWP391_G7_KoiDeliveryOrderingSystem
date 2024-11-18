@@ -3,7 +3,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.dashboard.CustomerDashboardResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.dashboard.ManagerDashboardResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.*;
@@ -64,7 +63,7 @@ public class DashboardService {
         Integer availableOrder = orderRepository.findByUsersAndStatus(users, OrderStatusEnum.AVAILABLE).size();
         Integer inProgressOrder = orderRepository.findByUsersAndStatus(users, OrderStatusEnum.IN_PROGRESS).size();
         Integer completedOrder = orderRepository.findByUsersAndStatus(users, OrderStatusEnum.COMPLETED).size();
-        Integer totalFishProfile = fishProfileRepository.findByCreateByAndStatus(users.getId(), SystemStatusEnum.AVAILABLE).size();
+        Integer totalFishProfile = fishProfileRepository.findByCreateBy(users.getId()).size();
         Double totalPaid = paymentRepository.findByUsers(users).stream().mapToDouble(Payment::getAmount).sum();
         Integer totalReport = reportRepository.findByUsers(users).size();
         Integer totalFeedback = feedbackRepository.findByUsers(users).size();
