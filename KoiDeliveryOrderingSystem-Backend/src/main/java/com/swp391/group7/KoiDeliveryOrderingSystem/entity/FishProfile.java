@@ -22,7 +22,7 @@ public class FishProfile {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "type", nullable = false)
+    @JoinColumn(name = "species", nullable = false)
     @JsonManagedReference
     private FishCategory fishCategory;
 

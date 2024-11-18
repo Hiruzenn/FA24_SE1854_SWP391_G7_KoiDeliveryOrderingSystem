@@ -91,6 +91,12 @@ public class CheckingKoiHealthService {
         return convertToListCheckingKoiHealthResponse(checkingKoiHealthList);
     }
 
+    public Boolean existedCheckingKoiHealth(Integer fishProfileId){
+        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+                .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        return checkingKoiHealthRepository.existsByFishProfileAndStatus(fishProfile, SystemStatusEnum.AVAILABLE);
+    }
+
     public CheckingKoiHealthResponse deleteCheckingKoiHealth(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
