@@ -98,6 +98,7 @@ public class OrderService {
         orders.setPaymentStatus(updateOrderRequest.getPaymentStatus());
         orders.setReceivingDate(updateOrderRequest.getReceivingDate());
         orders.setEstimateDeliveryDate(updateOrderRequest.getEstimateDeliveryDate());
+        orders.setPaymentStatus(updateOrderRequest.getPaymentStatus());
         orders.setUpdateAt(LocalDateTime.now());
         orders.setUpdateBy(users.getId());
         orderRepository.save(orders);
@@ -176,6 +177,7 @@ public class OrderService {
                 .updateAt(orders.getUpdateAt())
                 .updateBy(orders.getUpdateBy())
                 .status(orders.getStatus())
+                .paymentStatus(orders.getPaymentStatus())
                 .build();
     }
 
