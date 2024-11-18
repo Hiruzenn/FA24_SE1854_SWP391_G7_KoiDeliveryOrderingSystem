@@ -1,5 +1,6 @@
-package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
+package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.dashboard;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,7 +9,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DashboardResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ManagerDashboardResponse {
     Integer totalUser;
     Integer orderInWeek;
     Integer orderInMonth;
@@ -16,4 +18,6 @@ public class DashboardResponse {
     Double profitInWeek;
     Double profitInMonth;
     Double totalProfit;
+    Integer totalReport;
+    Integer totalFeedback;
 }
