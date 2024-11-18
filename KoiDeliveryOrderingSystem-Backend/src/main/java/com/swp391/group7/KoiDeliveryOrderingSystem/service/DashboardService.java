@@ -13,12 +13,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 
-
 @Service
 public class DashboardService {
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private UserRepository userRepository;
 

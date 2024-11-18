@@ -12,5 +12,6 @@ import java.util.List;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
     List<Payment> findByOrders(Orders orders);
+
     List<Payment> findByUsers(Users users);
 }

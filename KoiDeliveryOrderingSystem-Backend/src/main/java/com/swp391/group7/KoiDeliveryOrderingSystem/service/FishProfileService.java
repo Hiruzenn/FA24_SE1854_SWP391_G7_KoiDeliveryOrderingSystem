@@ -118,8 +118,8 @@ public class FishProfileService {
         return convertToFishProfileResponse(fishProfile);
     }
 
-    public List<FishProfileResponse> viewByOrder(Integer orderId){
-        Orders orders =  orderRepository.findById(orderId)
+    public List<FishProfileResponse> viewByOrder(Integer orderId) {
+        Orders orders = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         List<FishProfile> fishProfileList = fishProfileRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
         return convertToListFishProfileResponse(fishProfileList);
@@ -161,6 +161,7 @@ public class FishProfileService {
                 .status(fishProfile.getStatus())
                 .build();
     }
+
     public List<FishProfileResponse> convertToListFishProfileResponse(List<FishProfile> fishProfileList) {
         List<FishProfileResponse> fishProfileResponses = new ArrayList<>();
         for (FishProfile fishProfile : fishProfileList) {

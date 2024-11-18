@@ -17,21 +17,17 @@ import java.util.Map;
 public class Calculate {
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private DeliveryMethodRepository deliveryMethodRepository;
-
     @Autowired
     private HealthServiceCategoryRepository healthServiceCategoryRepository;
-
     @Autowired
     private HealthServiceOrderRepository healthServiceOrderRepository;
-
-    private final Map<String, Float> fixedDistance = new HashMap<>();
     @Autowired
     private FishProfileRepository fishProfileRepository;
     @Autowired
     private FishCategoryRepository fishCategoryRepository;
+    private final Map<String, Float> fixedDistance = new HashMap<>();
 
     public Float calculateMoney(Integer orderId) {
         Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)

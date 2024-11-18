@@ -1,9 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.certificate.CreateCertificateRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Certificate;
@@ -32,10 +30,6 @@ import java.util.List;
 public class CertificateService {
     @Autowired
     private CertificateRepository certificateRepository;
-
-    @Autowired
-    private OrderRepository orderRepository;
-
     @Autowired
     private AccountUtils accountUtils;
     @Autowired
@@ -56,18 +50,19 @@ public class CertificateService {
 
     }
 
-    public List<CertificateResponse> viewCertificateByFishProfile(Integer fishProfileId){
+    public List<CertificateResponse> viewCertificateByFishProfile(Integer fishProfileId) {
         FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         List<Certificate> certificate = certificateRepository.findByFishProfileAndStatus(fishProfile, SystemStatusEnum.AVAILABLE);
         return convertToListCertificateResponse(certificate);
     }
+
     public CertificateResponse creatCertificate(Integer fishProfileId, CreateCertificateRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
-                .orElseThrow(()-> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         Certificate certificate = Certificate.builder()
                 .fishProfile(fishProfile)
                 .name(request.getName())

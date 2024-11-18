@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface HealthServiceCategoryRepository extends JpaRepository<HealthServiceCategory, Integer> {
     Optional<HealthServiceCategory> findByIdAndStatus(Integer id, SystemStatusEnum status);
+
     List<HealthServiceCategory> findByStatus(SystemStatusEnum status);
 }

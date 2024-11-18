@@ -22,7 +22,7 @@ public class CertificateController {
     private CertificateService certificateService;
 
 
-    @GetMapping ("view-all")
+    @GetMapping("view-all")
     public ResponseEntity<ApiResponse<List<CertificateResponse>>> getAllCertificates() {
         var result = certificateService.getListCertificate();
         return ResponseEntity.ok(ApiResponse.<List<CertificateResponse>>builder()
@@ -52,10 +52,11 @@ public class CertificateController {
                 .result(result)
                 .build());
     }
+
     @PostMapping("/create/{fishProfileId}")
     public ResponseEntity<ApiResponse<CertificateResponse>> createCertificate(@Valid
-            @RequestBody CreateCertificateRequest certificateRequest,
-            @PathVariable Integer fishProfileId) {
+                                                                              @RequestBody CreateCertificateRequest certificateRequest,
+                                                                              @PathVariable Integer fishProfileId) {
 
         var result = certificateService.creatCertificate(fishProfileId, certificateRequest);
         return ResponseEntity.ok(ApiResponse.<CertificateResponse>builder()
@@ -67,8 +68,8 @@ public class CertificateController {
 
     @PutMapping("update/{id}") // Endpoint to update a certificate by ID
     public ResponseEntity<ApiResponse<CertificateResponse>> updateCertificate(@Valid
-            @PathVariable Integer id,
-            @RequestBody UpdateCertificateRequest request) {
+                                                                              @PathVariable Integer id,
+                                                                              @RequestBody UpdateCertificateRequest request) {
         var result = certificateService.updateCertificate(id, request);
         return ResponseEntity.ok(ApiResponse.<CertificateResponse>builder()
                 .code(200)

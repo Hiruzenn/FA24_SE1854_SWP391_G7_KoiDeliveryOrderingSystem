@@ -23,9 +23,8 @@ import java.util.List;
 public class HealthServiceCategoryService {
     @Autowired
     private HealthServiceCategoryRepository healthServiceCategoryRepository;
-
     @Autowired
-    private final AccountUtils accountUtils;
+    private AccountUtils accountUtils;
 
     public HealthServiceCategoryResponse createHealthyServiceCategory(CreateHealthServiceCategoryRequest createHealthServiceCategoryRequest) {
         Users users = accountUtils.getCurrentUser();

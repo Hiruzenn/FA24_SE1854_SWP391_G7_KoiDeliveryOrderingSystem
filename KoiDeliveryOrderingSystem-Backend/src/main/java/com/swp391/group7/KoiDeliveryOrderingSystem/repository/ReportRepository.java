@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface ReportRepository extends JpaRepository<Report, Integer> {
     List<Report> findByOrders(Orders orders);
+
     List<Report> findByUsers(Users users);
 }

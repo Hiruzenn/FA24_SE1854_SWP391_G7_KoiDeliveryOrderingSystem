@@ -26,7 +26,6 @@ import java.util.List;
 public class DeliveryMethodService {
     @Autowired
     private DeliveryMethodRepository deliveryMethodRepository;
-
     @Autowired
     private AccountUtils accountUtils;
 
@@ -68,7 +67,7 @@ public class DeliveryMethodService {
     public List<DeliveryMethodResponse> viewAllDeliveryMethods() {
         List<DeliveryMethod> deliveryMethods = deliveryMethodRepository.findByStatus(SystemStatusEnum.AVAILABLE);
         List<DeliveryMethodResponse> deliveryMethodResponses = new ArrayList<>();
-        for(DeliveryMethod deliveryMethod :deliveryMethods){
+        for (DeliveryMethod deliveryMethod : deliveryMethods) {
             deliveryMethodResponses.add(convertToDeliveryMethodResponse(deliveryMethod));
         }
         return deliveryMethodResponses;

@@ -24,14 +24,14 @@ public class Certificate {
     @JsonManagedReference
     private FishProfile fishProfile;
 
-    @Column(name = "name",nullable = false, columnDefinition = "NVARCHAR(255)")
+    @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String name;
 
     @Column(name = "award", columnDefinition = "NVARCHAR(255)")
     private String award;
 
     @Column(name = "species", nullable = false, columnDefinition = "NVARCHAR(255)")
-    private String species ;
+    private String species;
 
     @Column(name = "sex", columnDefinition = "NVARCHAR(255)")
     private String sex;

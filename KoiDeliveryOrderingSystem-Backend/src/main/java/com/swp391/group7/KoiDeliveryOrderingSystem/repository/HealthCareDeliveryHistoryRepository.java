@@ -12,7 +12,10 @@ import java.util.Optional;
 @Repository
 public interface HealthCareDeliveryHistoryRepository extends JpaRepository<HealthCareDeliveryHistory, Integer> {
     List<HealthCareDeliveryHistory> findByStatus(SystemStatusEnum status);
+
     Optional<HealthCareDeliveryHistory> findByIdAndStatus(Integer id, SystemStatusEnum status);
+
     List<HealthCareDeliveryHistory> findByHandoverDocumentAndStatus(HandoverDocument handoverDocument, SystemStatusEnum status);
+
     Boolean existsByHandoverDocument(HandoverDocument handoverDocument);
 }

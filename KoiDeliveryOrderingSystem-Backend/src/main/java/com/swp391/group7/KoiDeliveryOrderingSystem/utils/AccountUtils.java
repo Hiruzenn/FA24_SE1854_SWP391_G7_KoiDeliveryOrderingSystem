@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 public class AccountUtils {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
     public AccountUtils(RoleRepository roleRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;

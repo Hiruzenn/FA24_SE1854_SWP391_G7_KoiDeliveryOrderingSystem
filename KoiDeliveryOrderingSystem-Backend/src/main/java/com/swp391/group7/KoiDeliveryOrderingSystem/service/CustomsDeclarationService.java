@@ -29,13 +29,11 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomsDeclarationService {
     @Autowired
-    CustomsDeclarationRepository customsDeclarationRepository;
+    private CustomsDeclarationRepository customsDeclarationRepository;
     @Autowired
-    OrderRepository orderRepository;
-
+    private OrderRepository orderRepository;
     @Autowired
-    AccountUtils accountUtils;
-    public static final String RANDOM_STRING = "0123456789";
+    private AccountUtils accountUtils;
 
     public CustomsDeclarationResponse createCustomsDeclaration(Integer orderId, CreateCustomsDeclarationRequest createCustomsDeclarationRequest) {
         Users users = accountUtils.getCurrentUser();

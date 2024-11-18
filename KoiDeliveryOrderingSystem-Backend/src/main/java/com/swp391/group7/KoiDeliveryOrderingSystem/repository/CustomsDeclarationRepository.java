@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface CustomsDeclarationRepository extends JpaRepository<CustomsDeclaration, Integer> {
     Optional<CustomsDeclaration> findCustomsDeclarationByIdAndStatus(int id, SystemStatusEnum status);
+
     List<CustomsDeclaration> findCustomsDeclarationsByStatus(SystemStatusEnum status);
+
     Optional<CustomsDeclaration> findByOrdersAndStatus(Orders orders, SystemStatusEnum status);
 }
