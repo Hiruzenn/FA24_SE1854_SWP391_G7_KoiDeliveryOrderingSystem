@@ -1,7 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
@@ -12,7 +11,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepo
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,7 +40,6 @@ public class DeliveryMethodService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
         deliveryMethodRepository.save(deliveryMethod);
         return convertToDeliveryMethodResponse(deliveryMethod);
@@ -53,7 +50,7 @@ public class DeliveryMethodService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
         deliveryMethod.setName(request.getName());
         deliveryMethod.setDescription(request.getDescription());
@@ -65,7 +62,7 @@ public class DeliveryMethodService {
     }
 
     public List<DeliveryMethodResponse> viewAllDeliveryMethods() {
-        List<DeliveryMethod> deliveryMethods = deliveryMethodRepository.findByStatus(SystemStatusEnum.AVAILABLE);
+        List<DeliveryMethod> deliveryMethods = deliveryMethodRepository.findAll();
         List<DeliveryMethodResponse> deliveryMethodResponses = new ArrayList<>();
         for (DeliveryMethod deliveryMethod : deliveryMethods) {
             deliveryMethodResponses.add(convertToDeliveryMethodResponse(deliveryMethod));
@@ -73,18 +70,14 @@ public class DeliveryMethodService {
         return deliveryMethodResponses;
     }
 
-    public DeliveryMethodResponse deleteDeliveryMethod(Integer id) {
+    public void deleteDeliveryMethod(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        DeliveryMethod deliveryMethod = deliveryMethodRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        DeliveryMethod deliveryMethod = deliveryMethodRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
-        deliveryMethod.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        deliveryMethod.setUpdateAt(LocalDateTime.now());
-        deliveryMethod.setUpdateBy(users.getId());
-        deliveryMethodRepository.save(deliveryMethod);
-        return convertToDeliveryMethodResponse(deliveryMethod);
+        deliveryMethodRepository.delete(deliveryMethod);
     }
 
     public DeliveryMethodResponse convertToDeliveryMethodResponse(DeliveryMethod deliveryMethod) {
@@ -97,7 +90,6 @@ public class DeliveryMethodService {
                 .createBy(deliveryMethod.getCreateBy())
                 .updateAt(deliveryMethod.getUpdateAt())
                 .updateBy(deliveryMethod.getUpdateBy())
-                .status(deliveryMethod.getStatus())
                 .build();
     }
 }

@@ -1,7 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
@@ -39,13 +38,13 @@ public class HealthCareDeliveryHistoryService {
 
     // Retrieve the list of all healthcare delivery histories
     public List<HealthCareDeliveryHistoryResponse> viewAll() {
-        List<HealthCareDeliveryHistory> healthCareDeliveryHistories = healthCareDeliveryHistoryRepository.findByStatus(SystemStatusEnum.AVAILABLE);
+        List<HealthCareDeliveryHistory> healthCareDeliveryHistories = healthCareDeliveryHistoryRepository.findAll();
         return convertToListHealthCareDeliveryHistoryResponse(healthCareDeliveryHistories);
     }
 
     // Retrieve a specific healthcare delivery history by its ID
     public HealthCareDeliveryHistoryResponse viewById(Integer id) {
-        HealthCareDeliveryHistory healthCareDeliveryHistory = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        HealthCareDeliveryHistory healthCareDeliveryHistory = healthCareDeliveryHistoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
         return convertToHealthCareDeliveryHistoryResponse(healthCareDeliveryHistory);
     }
@@ -54,7 +53,7 @@ public class HealthCareDeliveryHistoryService {
         HandoverDocument handoverDocument = handoverDocumentRepository.findById(handoverDocumentId)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
         List<HealthCareDeliveryHistory> healthCareDeliveryHistories = healthCareDeliveryHistoryRepository
-                .findByHandoverDocumentAndStatus(handoverDocument, SystemStatusEnum.AVAILABLE);
+                .findByHandoverDocument(handoverDocument);
         return convertToListHealthCareDeliveryHistoryResponse(healthCareDeliveryHistories);
     }
 
@@ -76,7 +75,6 @@ public class HealthCareDeliveryHistoryService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
 
         healthCareDeliveryHistoryRepository.save(healthCareDeliveryHistory);
@@ -86,7 +84,7 @@ public class HealthCareDeliveryHistoryService {
 
     public HealthCareDeliveryHistoryResponse update(Integer id, CreateHealthCareDeliveryHistoryRequest request) {
 
-        HealthCareDeliveryHistory history = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        HealthCareDeliveryHistory history = healthCareDeliveryHistoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
 
         history.setHealthDescription(request.getHealthDescription());
@@ -100,16 +98,10 @@ public class HealthCareDeliveryHistoryService {
     }
 
 
-    public HealthCareDeliveryHistoryResponse remove(Integer id) {
-        HealthCareDeliveryHistory history = healthCareDeliveryHistoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+    public void remove(Integer id) {
+        HealthCareDeliveryHistory history = healthCareDeliveryHistoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTHCARE_DELIVERY_HISTORY_NOT_FOUND));
-
-        history.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        history.setUpdateAt(LocalDateTime.now());
-        history.setUpdateBy(accountUtils.getCurrentUser().getId());
-
-        history = healthCareDeliveryHistoryRepository.save(history);
-        return convertToHealthCareDeliveryHistoryResponse(history);
+        healthCareDeliveryHistoryRepository.delete(history);
     }
 
     public List<HealthCareDeliveryHistoryResponse> convertToListHealthCareDeliveryHistoryResponse(List<HealthCareDeliveryHistory> healthCareDeliveryHistoryList) {
@@ -131,7 +123,6 @@ public class HealthCareDeliveryHistoryService {
                 .createBy(healthCareDeliveryHistory.getCreateBy())
                 .updateAt(healthCareDeliveryHistory.getUpdateAt())
                 .updateBy(healthCareDeliveryHistory.getUpdateBy())
-                .status(healthCareDeliveryHistory.getStatus())
                 .build();
     }
 }

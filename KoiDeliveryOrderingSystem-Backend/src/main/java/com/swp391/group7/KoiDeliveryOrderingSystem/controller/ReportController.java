@@ -71,12 +71,11 @@ public class ReportController {
     }
 
     @DeleteMapping("delete/{reportId}")
-    public ResponseEntity<ApiResponse<ReportResponse>> deleteReport(@PathVariable("reportId") Integer reportId) {
-        var result = reportService.deleteReport(reportId);
-        return ResponseEntity.ok(ApiResponse.<ReportResponse>builder()
+    public ResponseEntity<ApiResponse<Void>> deleteReport(@PathVariable("reportId") Integer reportId) {
+        reportService.deleteReport(reportId);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Delete Successfully")
-                .result(result)
                 .build());
     }
 }

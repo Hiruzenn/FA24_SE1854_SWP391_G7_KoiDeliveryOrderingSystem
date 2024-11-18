@@ -1,6 +1,5 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -28,5 +27,4 @@ public class FishProfileResponse {
     private Integer createBy;
     private LocalDateTime updateAt;
     private Integer updateBy;
-    private SystemStatusEnum status;
 }

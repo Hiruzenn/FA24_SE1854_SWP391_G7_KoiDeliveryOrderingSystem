@@ -1,10 +1,8 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,8 +43,4 @@ public class HealthServiceCategory {
 
     @Column(name = "update_by")
     private Integer updateBy;
-
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SystemStatusEnum status;
 }

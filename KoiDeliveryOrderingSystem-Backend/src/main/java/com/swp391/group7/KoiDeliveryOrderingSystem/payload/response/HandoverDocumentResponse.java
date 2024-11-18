@@ -1,15 +1,9 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthCareDeliveryHistory;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -32,5 +26,4 @@ public class HandoverDocumentResponse {
     private LocalDateTime updateAt;
     private Integer updateBy;
     private HandoverStatusEnum handoverStatusEnum;
-    private SystemStatusEnum status;
 }

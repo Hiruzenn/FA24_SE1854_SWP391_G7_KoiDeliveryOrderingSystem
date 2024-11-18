@@ -79,13 +79,12 @@ public class HealthCareDeliveryHistoryController {
                 .build());
     }
 
-    @PutMapping("delete/{id}")
-    public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> removeHealthCareDeliveryHistory(@PathVariable Integer id) {
-        var result = healthCareDeliveryHistoryService.remove(id);
-        return ResponseEntity.ok(ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
-                .code(HttpStatus.OK.value())
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<ApiResponse<Void>> removeHealthCareDeliveryHistory(@PathVariable Integer id) {
+        healthCareDeliveryHistoryService.remove(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .code(200)
                 .message("Healthcare delivery history deleted successfully")
-                .result(result)
                 .build());
     }
 }

@@ -2,12 +2,10 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Builder
 @NoArgsConstructor

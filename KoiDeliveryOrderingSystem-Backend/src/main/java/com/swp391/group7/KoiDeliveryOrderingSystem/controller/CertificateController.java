@@ -78,16 +78,14 @@ public class CertificateController {
                 .build());
     }
 
-    @PutMapping("delete/{id}")
-    public ResponseEntity<ApiResponse<CertificateResponse>> deleteCertificate(@PathVariable Integer id) {
-        var result = certificateService.deleteCertificate(id);
-        return ResponseEntity.ok(ApiResponse.<CertificateResponse>builder()
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteCertificate(@PathVariable Integer id) {
+        certificateService.deleteCertificate(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Certificate deleted successfully")
-                .result(result)
                 .build());
 
     }
-
 }
 

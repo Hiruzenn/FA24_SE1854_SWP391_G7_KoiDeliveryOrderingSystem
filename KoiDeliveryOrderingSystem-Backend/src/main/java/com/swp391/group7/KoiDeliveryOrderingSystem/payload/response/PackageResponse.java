@@ -1,7 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.payload.response;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PackageStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

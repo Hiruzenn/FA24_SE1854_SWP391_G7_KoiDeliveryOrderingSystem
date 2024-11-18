@@ -59,13 +59,12 @@ public class FishCategoryController {
                 .build());
     }
 
-    @PutMapping("delete/{id}")
-    public ResponseEntity<ApiResponse<FishCategoryResponse>> deleteFishCategory(@PathVariable int id) {
-        var result = fishCategoryService.deleteFishCategory(id);
-        return ResponseEntity.ok(ApiResponse.<FishCategoryResponse>builder()
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteFishCategory(@PathVariable int id) {
+        fishCategoryService.deleteFishCategory(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Fish Category Deleted")
-                .result(result)
                 .build());
     }
 }

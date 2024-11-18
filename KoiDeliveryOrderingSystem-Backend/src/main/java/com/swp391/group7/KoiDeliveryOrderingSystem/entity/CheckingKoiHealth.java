@@ -2,7 +2,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HealthStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -54,8 +53,4 @@ public class CheckingKoiHealth {
 
     @Column(name = "update_by")
     private Integer updateBy;
-
-    @Column(name = "checking_koi_health_status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SystemStatusEnum status;
 }

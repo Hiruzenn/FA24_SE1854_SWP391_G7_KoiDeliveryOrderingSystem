@@ -2,14 +2,12 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceOrder;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.healthserviceorder.CreateHealthServiceOrderRequest;
-import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.healthserviceorder.UpdateHealthServiceOrderRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthServiceOrderResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.HealthServiceCategoryRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.HealthServiceOrderRepository;
@@ -42,7 +40,7 @@ public class HealthServiceOrderService {
         }
         Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(request.getHealthServiceCategoryId(), SystemStatusEnum.AVAILABLE)
+        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(request.getHealthServiceCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
         if (healthServiceOrderRepository.existsByOrdersAndHealthServiceCategory(orders, healthServiceCategory)) {
             throw new AppException(ErrorCode.HEALTH_SERVICE_ORDER_IS_EXISTED);
@@ -72,7 +70,7 @@ public class HealthServiceOrderService {
         return healthServiceOrderResponses;
     }
 
-    public HealthServiceOrderResponse deleteHealthServiceOrder(Integer id) {
+    public void deleteHealthServiceOrder(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
@@ -81,7 +79,6 @@ public class HealthServiceOrderService {
                 .findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_ORDER_NOT_FOUND));
         healthServiceOrderRepository.delete(healthServiceOrder);
-        return convertToHealthServiceOrderResponse(healthServiceOrder);
     }
 
     public HealthServiceOrderResponse convertToHealthServiceOrderResponse(HealthServiceOrder healthServiceOrder) {

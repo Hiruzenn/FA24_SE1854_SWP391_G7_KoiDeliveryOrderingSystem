@@ -1,6 +1,5 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
@@ -39,7 +38,7 @@ public class HealthServiceCategoryService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE).build();
+                .build();
         healthServiceCategoryRepository.save(healthServiceCategory);
         return convertToHealthServiceCategoryResponse(healthServiceCategory);
     }
@@ -49,7 +48,7 @@ public class HealthServiceCategoryService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
 
         healthServiceCategory.setServiceName(updateHealthServiceCategoryRequest.getServiceName());
@@ -66,7 +65,7 @@ public class HealthServiceCategoryService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        List<HealthServiceCategory> healthServiceCategories = healthServiceCategoryRepository.findByStatus(SystemStatusEnum.AVAILABLE);
+        List<HealthServiceCategory> healthServiceCategories = healthServiceCategoryRepository.findAll();
         List<HealthServiceCategoryResponse> healthServiceCategoryResponses = new ArrayList<>();
         for (HealthServiceCategory healthServiceCategory : healthServiceCategories) {
             healthServiceCategoryResponses.add(convertToHealthServiceCategoryResponse(healthServiceCategory));
@@ -75,18 +74,14 @@ public class HealthServiceCategoryService {
 
     }
 
-    public HealthServiceCategoryResponse deleteHealthServiceCategory(Integer id) {
+    public void deleteHealthServiceCategory(Integer id) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
-        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findByIdAndStatus(id, SystemStatusEnum.AVAILABLE)
+        HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
-        healthServiceCategory.setUpdateAt(LocalDateTime.now());
-        healthServiceCategory.setUpdateBy(users.getId());
-        healthServiceCategory.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        healthServiceCategoryRepository.save(healthServiceCategory);
-        return convertToHealthServiceCategoryResponse(healthServiceCategory);
+        healthServiceCategoryRepository.delete(healthServiceCategory);
     }
 
     public HealthServiceCategoryResponse convertToHealthServiceCategoryResponse(HealthServiceCategory healthServiceCategory) {
@@ -99,7 +94,6 @@ public class HealthServiceCategoryService {
                 .createBy(healthServiceCategory.getCreateBy())
                 .updateAt(healthServiceCategory.getUpdateAt())
                 .updateBy(healthServiceCategory.getUpdateBy())
-                .status(healthServiceCategory.getStatus())
                 .build();
     }
 }

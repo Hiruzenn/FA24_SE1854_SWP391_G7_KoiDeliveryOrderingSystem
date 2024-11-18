@@ -7,7 +7,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.C
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishprofile.UpdateFishProfileRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishProfileResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
@@ -66,7 +65,6 @@ public class FishProfileService {
                 .createBy(users.getId())
                 .updateAt(LocalDateTime.now())
                 .updateBy(users.getId())
-                .status(SystemStatusEnum.AVAILABLE)
                 .build();
         fishProfileRepository.save(fishProfile);
         return convertToFishProfileResponse(fishProfile);
@@ -74,7 +72,8 @@ public class FishProfileService {
 
     public FishProfileResponse updateFishProfile(Integer fishProfileId, UpdateFishProfileRequest request) {
         Users users = accountUtils.getCurrentUser();
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE).orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
+        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId)
+                .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
@@ -113,7 +112,7 @@ public class FishProfileService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         return convertToFishProfileResponse(fishProfile);
     }
@@ -121,23 +120,19 @@ public class FishProfileService {
     public List<FishProfileResponse> viewByOrder(Integer orderId) {
         Orders orders = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        List<FishProfile> fishProfileList = fishProfileRepository.findByOrdersAndStatus(orders, SystemStatusEnum.AVAILABLE);
+        List<FishProfile> fishProfileList = fishProfileRepository.findByOrders(orders);
         return convertToListFishProfileResponse(fishProfileList);
     }
 
 
-    public FishProfileResponse deleteFishProfile(Integer fishProfileId) {
+    public void deleteFishProfile(Integer fishProfileId) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
+        FishProfile fishProfile = fishProfileRepository.findById(fishProfileId)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
-        fishProfile.setStatus(SystemStatusEnum.NOT_AVAILABLE);
-        fishProfile.setUpdateAt(LocalDateTime.now());
-        fishProfile.setUpdateBy(users.getId());
-        fishProfileRepository.save(fishProfile);
-        return convertToFishProfileResponse(fishProfile);
+        fishProfileRepository.delete(fishProfile);
     }
 
     public FishProfileResponse convertToFishProfileResponse(FishProfile fishProfile) {
@@ -158,7 +153,6 @@ public class FishProfileService {
                 .createBy(fishProfile.getCreateBy())
                 .updateAt(fishProfile.getUpdateAt())
                 .updateBy(fishProfile.getUpdateBy())
-                .status(fishProfile.getStatus())
                 .build();
     }
 

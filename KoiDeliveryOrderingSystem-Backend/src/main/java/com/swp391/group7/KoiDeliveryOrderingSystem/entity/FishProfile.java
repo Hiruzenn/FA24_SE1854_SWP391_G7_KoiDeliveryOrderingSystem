@@ -2,10 +2,8 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
-import org.aspectj.weaver.ast.Or;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -77,8 +75,4 @@ public class FishProfile {
 
     @Column(name = "update_by")
     private Integer updateBy;
-
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SystemStatusEnum status;
 }

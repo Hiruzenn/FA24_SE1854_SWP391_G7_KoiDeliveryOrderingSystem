@@ -5,7 +5,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.handovedocument.CreateHandoverDocumentRequest;
@@ -17,7 +16,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -112,7 +110,7 @@ public class HandoverDocumentService {
         return convertToHandoverDocumentResponse(handoverDocument);
     }
 
-    public HandoverDocumentResponse delete(Integer orderId) {
+    public void delete(Integer orderId) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
@@ -121,7 +119,6 @@ public class HandoverDocumentService {
         HandoverDocument handoverDocument = handoverDocumentRepository.findByOrdersAndHandoverStatus(orders, HandoverStatusEnum.PENDING)
                 .orElseThrow(() -> new AppException(ErrorCode.DELETE_HANDOVER_PENDING));
         handoverDocumentRepository.delete(handoverDocument);
-        return convertToHandoverDocumentResponse(handoverDocument);
     }
 
     public List<HandoverDocumentResponse> getAll() {

@@ -83,12 +83,11 @@ public class HandoverDocumentController {
     }
 
     @DeleteMapping("delete/{orderId}")
-    public ResponseEntity<ApiResponse<HandoverDocumentResponse>> deleteHandoverDocument(@Valid @PathVariable("orderId") Integer orderId) {
-        var result = handoverDocumentService.delete(orderId);
-        return ResponseEntity.ok(ApiResponse.<HandoverDocumentResponse>builder()
+    public ResponseEntity<ApiResponse<Void>> deleteHandoverDocument(@Valid @PathVariable("orderId") Integer orderId) {
+        handoverDocumentService.delete(orderId);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Handover document deleted")
-                .result(result)
                 .build());
     }
 }

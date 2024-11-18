@@ -52,13 +52,12 @@ public class HealthServiceCategoryController {
                 .build());
     }
 
-    @PutMapping("delete/{id}")
-    public ResponseEntity<ApiResponse<HealthServiceCategoryResponse>> deleteHealthServiceCategory(@PathVariable int id) {
-        var result = healthServiceCategoryService.deleteHealthServiceCategory(id);
-        return ResponseEntity.ok(ApiResponse.<HealthServiceCategoryResponse>builder()
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteHealthServiceCategory(@PathVariable int id) {
+        healthServiceCategoryService.deleteHealthServiceCategory(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Healthy Service Category Deleted")
-                .result(result)
                 .build());
     }
 }

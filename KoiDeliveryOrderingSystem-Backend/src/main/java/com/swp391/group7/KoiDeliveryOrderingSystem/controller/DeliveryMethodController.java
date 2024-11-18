@@ -55,13 +55,12 @@ public class DeliveryMethodController {
                 .build());
     }
 
-    @PutMapping("delete/{id}")
-    public ResponseEntity<ApiResponse<DeliveryMethodResponse>> deleteDeliveryMethod(@PathVariable int id) {
-        var result = deliveryMethodService.deleteDeliveryMethod(id);
-        return ResponseEntity.ok(ApiResponse.<DeliveryMethodResponse>builder()
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteDeliveryMethod(@PathVariable int id) {
+        deliveryMethodService.deleteDeliveryMethod(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Delivery Method Deleted")
-                .result(result)
                 .build());
     }
 }

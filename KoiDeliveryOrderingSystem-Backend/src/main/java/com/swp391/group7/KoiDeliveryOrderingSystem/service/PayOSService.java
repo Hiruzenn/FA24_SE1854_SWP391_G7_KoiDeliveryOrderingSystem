@@ -3,7 +3,6 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 import com.swp391.group7.KoiDeliveryOrderingSystem.config.PayOSConfig;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
-import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.SystemStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Payment;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import vn.payos.PayOS;
 import vn.payos.type.CheckoutResponseData;
 import vn.payos.type.PaymentData;
-import vn.payos.type.PaymentLinkData;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
