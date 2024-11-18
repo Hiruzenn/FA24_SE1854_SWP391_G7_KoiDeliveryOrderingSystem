@@ -72,4 +72,14 @@ public class CheckKoiHealthController {
                 .result(result)
                 .build());
     }
+
+    @GetMapping("existed-checking-koi-heath/{fishProfileId}")
+    public ResponseEntity<ApiResponse<Boolean>> existedCheckingKoiHealth(@PathVariable("fishProfileId") Integer FishProfileId) {
+        var result = checkingKoiHealthService.existedCheckingKoiHealth(FishProfileId);
+        return ResponseEntity.ok(ApiResponse.<Boolean>builder()
+                .code(200)
+                .message("Existed Checking Koi Health")
+                .result(result)
+                .build());
+    }
 }
