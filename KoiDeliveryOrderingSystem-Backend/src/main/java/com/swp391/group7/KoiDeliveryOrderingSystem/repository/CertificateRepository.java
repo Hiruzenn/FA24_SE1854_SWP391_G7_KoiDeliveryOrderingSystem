@@ -13,6 +13,8 @@ import java.util.Optional;
 @Repository
 public interface CertificateRepository extends JpaRepository<Certificate, Integer> {
     List<Certificate> findCertificateByStatus(SystemStatusEnum status);
+
     Optional<Certificate> findCertificateByIdAndStatus(Integer id, SystemStatusEnum status);
+
     List<Certificate> findByFishProfileAndStatus(FishProfile fishProfile, SystemStatusEnum status);
 }

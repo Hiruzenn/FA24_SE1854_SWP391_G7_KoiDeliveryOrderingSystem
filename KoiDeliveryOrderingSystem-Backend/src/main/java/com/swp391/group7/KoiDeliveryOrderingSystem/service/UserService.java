@@ -30,7 +30,6 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private AccountUtils accountUtils;
     @Autowired

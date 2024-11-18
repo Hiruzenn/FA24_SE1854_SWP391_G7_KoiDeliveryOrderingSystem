@@ -30,11 +30,8 @@ import java.util.List;
 public class PackageService {
     @Autowired
     private PackageRepository packageRepository;
-
     @Autowired
     private AccountUtils accountUtils;
-
-    public static final String RANDOM_STRING = "0123456789";
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -43,6 +40,7 @@ public class PackageService {
     private FishProfileRepository fishProfileRepository;
     @Autowired
     private CheckingKoiHealthRepository checkingKoiHealthRepository;
+    public static final String RANDOM_STRING = "0123456789";
 
     public PackageResponse createPackage(Integer orderId, CreatePackageRequest request) {
         Users users = accountUtils.getCurrentUser();

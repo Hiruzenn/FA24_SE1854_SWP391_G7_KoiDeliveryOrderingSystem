@@ -13,5 +13,6 @@ import java.util.Optional;
 @Repository
 public interface HealthServiceOrderRepository extends JpaRepository<HealthServiceOrder, Integer> {
     List<HealthServiceOrder> findByOrders(Orders orders);
+
     Boolean existsByOrdersAndHealthServiceCategory(Orders orders, HealthServiceCategory healthServiceCategory);
 }

@@ -30,24 +30,19 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HandoverDocumentService {
-
     @Autowired
     private HandoverDocumentRepository handoverDocumentRepository;
-
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private AccountUtils accountUtils;
-
     @Autowired
     private UserRepository userRepository;
-
-    public static final String RANDOM_STRING = "0123456789";
     @Autowired
     private HealthCareDeliveryHistoryRepository healthCareDeliveryHistoryRepository;
     @Autowired
     private PaymentRepository paymentRepository;
+    public static final String RANDOM_STRING = "0123456789";
 
     public HandoverDocumentResponse create(CreateHandoverDocumentRequest request) {
         Users users = accountUtils.getCurrentUser();

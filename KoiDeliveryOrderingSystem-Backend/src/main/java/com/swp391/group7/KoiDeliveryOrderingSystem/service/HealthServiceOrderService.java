@@ -28,13 +28,10 @@ import java.util.List;
 public class HealthServiceOrderService {
     @Autowired
     private HealthServiceOrderRepository healthServiceOrderRepository;
-
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private HealthServiceCategoryRepository healthServiceCategoryRepository;
-
     @Autowired
     private AccountUtils accountUtils;
 

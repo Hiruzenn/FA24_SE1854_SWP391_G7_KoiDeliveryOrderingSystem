@@ -10,8 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface DeliveryMethodRepository extends JpaRepository<DeliveryMethod, Integer> {
-    DeliveryMethod findByName(String deliveryMethod);
     Optional<DeliveryMethod> findByIdAndStatus(Integer id, SystemStatusEnum status);
+
     List<DeliveryMethod> findByStatus(SystemStatusEnum status);
+
     Optional<DeliveryMethod> findByNameAndStatus(String deliveryMethodName, SystemStatusEnum status);
 }

@@ -32,17 +32,13 @@ import java.util.List;
 public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private DeliveryMethodRepository deliveryMethodRepository;
-
-    public static final String RANDOM_STRING = "0123456789";
-
     @Autowired
     private AccountUtils accountUtils;
-
     @Autowired
     private Calculate calculate;
+    public static final String RANDOM_STRING = "0123456789";
 
     public OrderResponse createOrder(CreateOrderRequest createOrderRequest) {
         Users users = accountUtils.getCurrentUser();

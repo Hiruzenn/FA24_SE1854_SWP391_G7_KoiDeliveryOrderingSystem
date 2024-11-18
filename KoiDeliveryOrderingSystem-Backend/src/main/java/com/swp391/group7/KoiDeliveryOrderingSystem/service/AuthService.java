@@ -16,7 +16,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,47 +33,49 @@ import java.util.Date;
 
 
 @Service
-@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
-    @Autowired
     private UserRepository usersRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private AccountUtils accountUtils;
-
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private JavaMailSender mailSender;
-
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String signerKey;
 
+    @Autowired
+    public AuthService(UserRepository usersRepository, UserRepository userRepository, AccountUtils accountUtils, RoleRepository roleRepository, JavaMailSender mailSender) {
+        this.usersRepository = usersRepository;
+        this.userRepository = userRepository;
+        this.accountUtils = accountUtils;
+        this.roleRepository = roleRepository;
+        this.mailSender = mailSender;
+    }
+
 
     public void register(RegisterCustomerRequest registerCustomerRequest) throws MessagingException {
-            var customer = userRepository.findByEmail(registerCustomerRequest.getEmail());
-            if (customer.isPresent()) {
-                throw new AppException(ErrorCode.ACCOUNT_REGISTERED);
-            }
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-            String encodedPassword = passwordEncoder.encode(registerCustomerRequest.getPassword());
-            new Users();
-            Users newCustomer = Users.builder()
-                    .email(registerCustomerRequest.getEmail())
-                    .password(encodedPassword)
-                    .name(registerCustomerRequest.getName())
-                    .role(roleRepository.findByName("CUSTOMER"))
-                    .createAt(LocalDateTime.now())
-                    .customerStatus(CustomerStatusEnum.UNVERIFIED)
-                    .build();
-            userRepository.save(newCustomer);
-            sendVerificationEmail(registerCustomerRequest.getEmail());
+        var customer = userRepository.findByEmail(registerCustomerRequest.getEmail());
+        if (customer.isPresent()) {
+            throw new AppException(ErrorCode.ACCOUNT_REGISTERED);
+        }
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        String encodedPassword = passwordEncoder.encode(registerCustomerRequest.getPassword());
+        new Users();
+        Users newCustomer = Users.builder()
+                .email(registerCustomerRequest.getEmail())
+                .password(encodedPassword)
+                .name(registerCustomerRequest.getName())
+                .role(roleRepository.findByName("CUSTOMER"))
+                .createAt(LocalDateTime.now())
+                .customerStatus(CustomerStatusEnum.UNVERIFIED)
+                .build();
+        userRepository.save(newCustomer);
+        sendVerificationEmail(registerCustomerRequest.getEmail());
     }
 
     public AuthResponse login(AuthRequest authRequest) {
@@ -207,7 +208,7 @@ public class AuthService {
 
     public void resetPassword(String token, String newPassword, String confirmPassword) throws MessagingException {
         Users users = validateToken(token);
-        if(!newPassword.equals(confirmPassword)){
+        if (!newPassword.equals(confirmPassword)) {
 
             throw new AppException(ErrorCode.INVALID_REPEAT_PASSWORD);
         }

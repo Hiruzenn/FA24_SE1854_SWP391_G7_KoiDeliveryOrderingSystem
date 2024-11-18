@@ -24,10 +24,8 @@ import java.util.List;
 public class FeedbackService {
     @Autowired
     private FeedbackRepository feedbackRepository;
-
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private AccountUtils accountUtils;
 

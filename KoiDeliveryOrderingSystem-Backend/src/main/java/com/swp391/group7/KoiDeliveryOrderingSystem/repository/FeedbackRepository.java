@@ -11,5 +11,6 @@ import java.util.List;
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
     List<Feedback> findByOrders(Orders orders);
+
     List<Feedback> findByUsers(Users users);
 }

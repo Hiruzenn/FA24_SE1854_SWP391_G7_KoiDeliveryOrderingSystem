@@ -28,15 +28,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HealthCareDeliveryHistoryService {
-
     @Autowired
     private HealthCareDeliveryHistoryRepository healthCareDeliveryHistoryRepository;
-
     @Autowired
-    HandoverDocumentRepository handoverDocumentRepository;
-
+    private HandoverDocumentRepository handoverDocumentRepository;
     @Autowired
-    AccountUtils accountUtils;
+    private AccountUtils accountUtils;
     @Autowired
     private OrderRepository orderRepository;
 

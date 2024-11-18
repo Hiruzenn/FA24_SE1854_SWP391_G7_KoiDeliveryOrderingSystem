@@ -21,10 +21,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FishCategoryService {
-
     @Autowired
     private FishCategoryRepository fishCategoryRepository;
-
     @Autowired
     private AccountUtils accountUtils;
 

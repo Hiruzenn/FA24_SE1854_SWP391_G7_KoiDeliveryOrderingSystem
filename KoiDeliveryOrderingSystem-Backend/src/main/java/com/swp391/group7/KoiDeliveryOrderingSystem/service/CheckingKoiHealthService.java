@@ -28,7 +28,6 @@ import java.util.List;
 public class CheckingKoiHealthService {
     @Autowired
     private CheckingKoiHealthRepository checkingKoiHealthRepository;
-
     @Autowired
     private AccountUtils accountUtils;
     @Autowired
@@ -91,7 +90,7 @@ public class CheckingKoiHealthService {
         return convertToListCheckingKoiHealthResponse(checkingKoiHealthList);
     }
 
-    public Boolean existedCheckingKoiHealth(Integer fishProfileId){
+    public Boolean existedCheckingKoiHealth(Integer fishProfileId) {
         FishProfile fishProfile = fishProfileRepository.findByIdAndStatus(fishProfileId, SystemStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_PROFILE_NOT_FOUND));
         return checkingKoiHealthRepository.existsByFishProfileAndStatus(fishProfile, SystemStatusEnum.AVAILABLE);
