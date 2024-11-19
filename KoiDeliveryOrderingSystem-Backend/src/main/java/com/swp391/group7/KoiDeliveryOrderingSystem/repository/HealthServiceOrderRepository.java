@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.repository;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceOrder;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -13,4 +14,6 @@ public interface HealthServiceOrderRepository extends JpaRepository<HealthServic
     List<HealthServiceOrder> findByOrders(Orders orders);
 
     Boolean existsByOrdersAndHealthServiceCategory(Orders orders, HealthServiceCategory healthServiceCategory);
+
+    Boolean existsByHealthServiceCategory(HealthServiceCategory healthServiceCategory);
 }

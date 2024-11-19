@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.repository;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -24,5 +25,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
     List<Orders> findByStatusAndCreateAtBetween(OrderStatusEnum status, LocalDateTime start, LocalDateTime end);
 
     List<Orders> findByUsersAndStatus(Users users, OrderStatusEnum status);
+
+    boolean existsByDeliveryMethodAndStatusNot(DeliveryMethod deliveryMethod, OrderStatusEnum status);
 
 }
