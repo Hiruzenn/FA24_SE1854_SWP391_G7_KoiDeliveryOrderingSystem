@@ -81,9 +81,7 @@ public class DeliveryMethodService {
         }
         DeliveryMethod deliveryMethod = deliveryMethodRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
-        boolean isDeliveryMethodInUse = orderRepository.existsByDeliveryMethodAndStatusNot(
-                deliveryMethod, OrderStatusEnum.COMPLETED
-        );
+        boolean isDeliveryMethodInUse = orderRepository.existsByDeliveryMethod(deliveryMethod);
         if (isDeliveryMethodInUse) {
             throw new AppException(ErrorCode.DELIVERY_METHOD_IN_USE);
         }
