@@ -2,6 +2,7 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HealthStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PackageStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
@@ -22,6 +23,7 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +42,8 @@ public class PackageService {
     @Autowired
     private CheckingKoiHealthRepository checkingKoiHealthRepository;
     public static final String RANDOM_STRING = "0123456789";
+    @Autowired
+    private CheckingKoiHealthService checkingKoiHealthService;
 
     public PackageResponse createPackage(Integer orderId, CreatePackageRequest request) {
         Users users = accountUtils.getCurrentUser();
@@ -52,6 +56,13 @@ public class PackageService {
                 .stream().allMatch(checkingKoiHealthRepository::existsByFishProfile);
         if (!existedCheckingKoiHealth) {
             throw new AppException(ErrorCode.NOT_ENOUGH_CHECKING_KOI_HEALTH);
+        }
+        boolean checkingKoiHealthy = fishProfileRepository.findByOrders(orders).stream().allMatch(fishProfile -> {
+            Optional<CheckingKoiHealth> latestCheck = checkingKoiHealthRepository.findTopByFishProfileOrderByCreateAtDesc(fishProfile);
+            return latestCheck.isPresent() && latestCheck.get().getHealthStatus() == HealthStatusEnum.HEALTHY;
+        });
+        if (!checkingKoiHealthy) {
+            throw new AppException(ErrorCode.PACKAGE_FISH_HEALTHY);
         }
         if (!handoverDocumentRepository.existsByOrders(orders)) {
             throw new AppException(ErrorCode.REQUIRED_HANDOVER_DOCUMENT);

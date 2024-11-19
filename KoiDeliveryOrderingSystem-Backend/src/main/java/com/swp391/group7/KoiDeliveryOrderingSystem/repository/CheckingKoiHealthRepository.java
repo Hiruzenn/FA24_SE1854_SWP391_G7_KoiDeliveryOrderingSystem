@@ -13,4 +13,6 @@ public interface CheckingKoiHealthRepository extends JpaRepository<CheckingKoiHe
     List<CheckingKoiHealth> findByFishProfile(FishProfile fishProfile);
 
     boolean existsByFishProfile(FishProfile fishProfile);
+
+    Optional<CheckingKoiHealth> findTopByFishProfileOrderByCreateAtDesc(FishProfile fishProfile);
 }

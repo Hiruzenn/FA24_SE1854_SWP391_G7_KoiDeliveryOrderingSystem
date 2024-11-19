@@ -136,7 +136,7 @@ public class HandoverDocumentService {
     }
 
     public HandoverDocumentResponse viewByOrder(Integer orderId) {
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.AVAILABLE)
+        Orders orders = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));

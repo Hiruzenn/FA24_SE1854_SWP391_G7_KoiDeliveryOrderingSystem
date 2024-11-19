@@ -43,7 +43,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(1035, "Internal server error"),
     FEEDBACK_ORDER_COMPLETED(1036, "Feedback only allowed for completed orders"),
     NOT_DELETE_PACKED(1037, "Can't deleted package with status packed"),
-    ;
+    PACKAGE_FISH_HEALTHY(1038, "Only create package when all fish is HEALTHY");
 
     private final int code;
     private final String message;
