@@ -4,6 +4,8 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +18,6 @@ public class PaymentResponse {
     private Integer orderId;
     private Float amount;
     private String method;
+    private LocalDate paymentDate;
     private PaymentStatusEnum status;
 }

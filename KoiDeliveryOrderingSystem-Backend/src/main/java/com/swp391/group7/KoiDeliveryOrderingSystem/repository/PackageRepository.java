@@ -5,6 +5,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Package;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -15,4 +16,6 @@ public interface PackageRepository extends JpaRepository<Package, Integer> {
     Package findByPackageNo(String packageNo);
 
     Optional<Package> findByOrders(Orders order);
+
+    List<Package> findByCreateBy(Integer createBy);
 }
