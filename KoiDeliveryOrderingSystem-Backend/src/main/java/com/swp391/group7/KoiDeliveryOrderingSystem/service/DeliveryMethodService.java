@@ -1,6 +1,7 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.DeliveryMethod;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
@@ -8,6 +9,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.deliverymetho
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.deliverymethod.UpdateDeliveryMethodRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.DeliveryMethodResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.DeliveryMethodRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class DeliveryMethodService {
     private DeliveryMethodRepository deliveryMethodRepository;
     @Autowired
     private AccountUtils accountUtils;
+    @Autowired
+    private OrderRepository orderRepository;
 
     public DeliveryMethodResponse createDeliveryMethod(CreateDeliveryMethodRequest request) {
         Users users = accountUtils.getCurrentUser();
@@ -77,6 +81,12 @@ public class DeliveryMethodService {
         }
         DeliveryMethod deliveryMethod = deliveryMethodRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.DELIVERY_METHOD_NOT_FOUND));
+        boolean isDeliveryMethodInUse = orderRepository.existsByDeliveryMethodAndStatusNot(
+                deliveryMethod, OrderStatusEnum.COMPLETED
+        );
+        if (isDeliveryMethodInUse) {
+            throw new AppException(ErrorCode.DELIVERY_METHOD_IN_USE);
+        }
         deliveryMethodRepository.delete(deliveryMethod);
     }
 

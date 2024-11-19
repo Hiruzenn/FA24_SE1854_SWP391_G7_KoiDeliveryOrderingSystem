@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HealthServiceCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
@@ -8,6 +9,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.healthyservic
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.healthyservicecategory.UpdateHealthServiceCategoryRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.HealthServiceCategoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.HealthServiceCategoryRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.HealthServiceOrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class HealthServiceCategoryService {
     private HealthServiceCategoryRepository healthServiceCategoryRepository;
     @Autowired
     private AccountUtils accountUtils;
+    @Autowired
+    private HealthServiceOrderRepository healthServiceOrderRepository;
 
     public HealthServiceCategoryResponse createHealthyServiceCategory(CreateHealthServiceCategoryRequest createHealthServiceCategoryRequest) {
         Users users = accountUtils.getCurrentUser();
@@ -81,6 +85,11 @@ public class HealthServiceCategoryService {
         }
         HealthServiceCategory healthServiceCategory = healthServiceCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_NOT_FOUND));
+        boolean isHealthServiceCategoryInUse = healthServiceOrderRepository
+                .existsByHealthServiceCategory(healthServiceCategory);
+        if (isHealthServiceCategoryInUse) {
+            throw new AppException(ErrorCode.HEALTH_SERVICE_CATEGORY_IN_USE);
+        }
         healthServiceCategoryRepository.delete(healthServiceCategory);
     }
 

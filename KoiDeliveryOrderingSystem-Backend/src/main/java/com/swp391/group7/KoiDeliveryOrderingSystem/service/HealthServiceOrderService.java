@@ -75,8 +75,7 @@ public class HealthServiceOrderService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        HealthServiceOrder healthServiceOrder = healthServiceOrderRepository
-                .findById(id)
+        HealthServiceOrder healthServiceOrder = healthServiceOrderRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HEALTH_SERVICE_ORDER_NOT_FOUND));
         healthServiceOrderRepository.delete(healthServiceOrder);
     }
