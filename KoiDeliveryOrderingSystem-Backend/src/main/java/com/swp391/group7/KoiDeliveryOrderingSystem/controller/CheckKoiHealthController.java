@@ -48,7 +48,7 @@ public class CheckKoiHealthController {
         checkingKoiHealthService.deleteCheckingKoiHealth(id);
         return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
-                .message("Checking Koi Health Updated")
+                .message("Checking Koi Health Deleted")
                 .build());
     }
 

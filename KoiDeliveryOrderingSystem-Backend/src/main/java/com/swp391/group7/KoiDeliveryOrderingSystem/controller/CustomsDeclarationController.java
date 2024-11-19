@@ -61,7 +61,7 @@ public class CustomsDeclarationController {
                 .build());
     }
 
-    @PutMapping("/update/{id}") // Endpoint to update a customs declaration by ID
+    @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse<CustomsDeclarationResponse>> updateCustomDeclaration(
             @PathVariable Integer id,
             @RequestBody CreateCustomsDeclarationRequest request) {
@@ -74,7 +74,7 @@ public class CustomsDeclarationController {
 
     }
 
-    @DeleteMapping("/delete/{id}") // Endpoint to delete a customs declaration by ID
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteCustomDeclaration(@PathVariable Integer id) {
         customsDeclarationService.removeCustomDeclaration(id);
         return ResponseEntity.ok(ApiResponse.<Void>builder()
