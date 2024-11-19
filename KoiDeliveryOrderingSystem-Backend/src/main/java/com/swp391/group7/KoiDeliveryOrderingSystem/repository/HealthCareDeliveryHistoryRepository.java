@@ -13,4 +13,6 @@ public interface HealthCareDeliveryHistoryRepository extends JpaRepository<Healt
     List<HealthCareDeliveryHistory> findByHandoverDocument(HandoverDocument handoverDocument);
 
     Boolean existsByHandoverDocument(HandoverDocument handoverDocument);
+
+    List<HealthCareDeliveryHistory> findByCreateBy(Integer createBy);
 }

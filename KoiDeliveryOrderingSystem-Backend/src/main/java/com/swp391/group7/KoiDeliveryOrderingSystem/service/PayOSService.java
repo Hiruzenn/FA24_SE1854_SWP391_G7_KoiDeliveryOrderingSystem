@@ -130,6 +130,7 @@ public class PayOSService {
                 .orderId(payment.getOrders().getId())
                 .amount(payment.getAmount())
                 .method(payment.getPaymentMethod())
+                .paymentDate(payment.getPaymentDate())
                 .status(payment.getPaymentStatus())
                 .build();
     }

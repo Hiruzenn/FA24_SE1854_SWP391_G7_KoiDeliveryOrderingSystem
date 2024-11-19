@@ -3,8 +3,11 @@ package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.PaymentStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.dashboard.CustomerDashboardResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.dashboard.DeliveryStaffDashboardResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.dashboard.ManagerDashboardResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.dashboard.SaleStaffDashboardResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.*;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,14 @@ public class DashboardService {
     private FishProfileRepository fishProfileRepository;
     @Autowired
     private PaymentRepository paymentRepository;
+    @Autowired
+    private HandoverDocumentRepository handoverDocumentRepository;
+    @Autowired
+    private CheckingKoiHealthRepository checkingKoiHealthRepository;
+    @Autowired
+    private PackageRepository packageRepository;
+    @Autowired
+    private HealthCareDeliveryHistoryRepository healthCareDeliveryHistoryRepository;
 
     public ManagerDashboardResponse manager() {
         Integer totalUser = userRepository.findAll().stream().toList().size();
@@ -75,6 +86,36 @@ public class DashboardService {
                 .totalPaid(totalPaid)
                 .totalReport(totalReport)
                 .totalFeedback(totalFeedback)
+                .build();
+    }
+
+    public DeliveryStaffDashboardResponse deliveryStaff() {
+        Users users = accountUtils.getCurrentUser();
+        Integer totalHandover = handoverDocumentRepository.findByUsers(users).size();
+        Integer totalCheckingKoi = checkingKoiHealthRepository.findByCreateBy(users.getId()).size();
+        Integer totalPackage = packageRepository.findByCreateBy(users.getId()).size();
+        Integer totalDeliveryHistory = healthCareDeliveryHistoryRepository.findByCreateBy(users.getId()).size();
+        Double totalDistanceDelivered = handoverDocumentRepository.findByUsers(users)
+                .stream().mapToDouble((handover -> orderRepository.findByHandoverDocuments(handover)
+                        .stream().mapToDouble(Orders::getDistance).sum())).sum();
+        return DeliveryStaffDashboardResponse.builder()
+                .totalHandover(totalHandover)
+                .totalCheckingKoi(totalCheckingKoi)
+                .totalPackage(totalPackage)
+                .totalDeliveryHistory(totalDeliveryHistory)
+                .totalDistanceDelivered(totalDistanceDelivered)
+                .build();
+    }
+
+    public SaleStaffDashboardResponse saleStaff() {
+        Users users = accountUtils.getCurrentUser();
+        Double totalPayment = paymentRepository.findByPaymentStatus(PaymentStatusEnum.PAID).stream().mapToDouble(Payment::getAmount).sum();
+        Integer totalHandover = handoverDocumentRepository.findByCreateBy(users.getId()).size();
+        Integer totalReportAnswered = reportRepository.findAll().stream().filter(report -> report.getAnswer() != null).toList().size();
+        return SaleStaffDashboardResponse.builder()
+                .totalPayment(totalPayment)
+                .totalHandoverDocument(totalHandover)
+                .totalReportAnswered(totalReportAnswered)
                 .build();
     }
 }
