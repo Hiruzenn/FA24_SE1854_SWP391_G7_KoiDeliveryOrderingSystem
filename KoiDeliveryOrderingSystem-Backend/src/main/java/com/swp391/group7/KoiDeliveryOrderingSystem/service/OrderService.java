@@ -105,6 +105,11 @@ public class OrderService {
         return convertOrderToResponse(orders);
     }
 
+    public List<OrderResponse> viewAll() {
+        List<Orders> orders = orderRepository.findAll();
+        return convertToListOrderResponse(orders);
+    }
+
     public List<OrderResponse> viewAvailableOrder() {
         List<Orders> orders = orderRepository.findByStatus(OrderStatusEnum.AVAILABLE);
         return convertToListOrderResponse(orders);

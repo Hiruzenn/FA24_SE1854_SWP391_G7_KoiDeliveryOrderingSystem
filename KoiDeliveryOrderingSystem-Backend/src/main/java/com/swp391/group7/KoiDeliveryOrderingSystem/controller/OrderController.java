@@ -57,6 +57,16 @@ public class OrderController {
                 .build());
     }
 
+    @GetMapping("view-all")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> viewAll() {
+        var result = orderService.viewAll();
+        return ResponseEntity.ok(ApiResponse.<List<OrderResponse>>builder()
+                .code(200)
+                .message("Order Available List")
+                .result(result)
+                .build());
+    }
+
     @GetMapping("view-order-available")
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getAvailableOrders() {
         var result = orderService.viewAvailableOrder();
