@@ -51,6 +51,9 @@ public class HandoverDocumentService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         Orders orders = orderRepository.findByIdAndStatus(request.getOrderId(), OrderStatusEnum.AVAILABLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        if (handoverDocumentRepository.existsByOrders(orders)) {
+            throw new AppException(ErrorCode.HANDOVER_EXISTED);
+        }
         HandoverDocument handoverDocument = HandoverDocument.builder()
                 .handoverNo(generateHandoverNo())
                 .users(customer)
