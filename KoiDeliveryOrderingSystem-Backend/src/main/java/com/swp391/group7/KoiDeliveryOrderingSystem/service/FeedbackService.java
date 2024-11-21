@@ -77,6 +77,7 @@ public class FeedbackService {
                 .id(feedback.getId())
                 .customerId(feedback.getUsers().getId())
                 .orderId(feedback.getOrders().getId())
+                .rating(feedback.getRating())
                 .feedbackDescription(feedback.getFeedbackDescription())
                 .build();
     }
