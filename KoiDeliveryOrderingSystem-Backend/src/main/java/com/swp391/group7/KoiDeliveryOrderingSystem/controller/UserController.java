@@ -49,6 +49,16 @@ public class UserController {
                 .build());
     }
 
+    @PutMapping("edit-user/{userId}")
+    public ResponseEntity<ApiResponse<UserResponse>> editUser(@PathVariable("userId") Integer userId, @RequestBody UpdateProfileRequest request) {
+        var result = userService.editProfile(userId, request);
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+                .code(200)
+                .message("Edit Profile Successfully")
+                .result(result)
+                .build());
+    }
+
     @GetMapping("view-all")
     public ResponseEntity<ApiResponse<List<UserResponse>>> viewAll() {
         var result = userService.getAllUsers();

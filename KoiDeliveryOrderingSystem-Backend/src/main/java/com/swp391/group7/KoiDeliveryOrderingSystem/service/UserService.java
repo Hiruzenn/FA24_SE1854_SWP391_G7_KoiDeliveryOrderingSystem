@@ -64,6 +64,18 @@ public class UserService {
         return convertToUserResponse(users);
     }
 
+    public UserResponse editProfile(Integer userId, UpdateProfileRequest request) {
+        Users users = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        users.setName(request.getName());
+        users.setAddress(request.getAddress());
+        users.setAvatar(request.getAvatar());
+        users.setPhone(request.getPhone());
+        users.setUpdateAt(LocalDateTime.now());
+        users.setUpdateBy(users.getId());
+        userRepository.save(users);
+        return convertToUserResponse(users);
+    }
+
     public List<UserResponse> getAllUsers() {
         List<Users> users = userRepository.findAll();
         return convertToListUserResponse(users);
