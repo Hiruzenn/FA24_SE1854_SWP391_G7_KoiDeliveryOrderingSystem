@@ -108,7 +108,10 @@ public class AuthService {
             users.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
             usersRepository.save(users);
         } else {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+            throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
+        }
+        if(changePasswordRequest.getOldPassword().equals(changePasswordRequest.getNewPassword())){
+            throw new AppException(ErrorCode.DUPLICATE_PASSWORD);
         }
         return "Password changed successfully";
     }
