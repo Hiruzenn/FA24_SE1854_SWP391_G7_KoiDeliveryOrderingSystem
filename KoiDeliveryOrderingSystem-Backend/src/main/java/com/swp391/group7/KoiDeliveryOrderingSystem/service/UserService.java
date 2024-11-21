@@ -86,7 +86,10 @@ public class UserService {
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Role role = roleRepository.findById(request.getRoleId()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+        Role role = roleRepository.findByName(request.getRole());
+        if (role == null) {
+            throw new AppException(ErrorCode.ROLE_NOT_EXISTED);
+        }
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Users createUser = Users.builder()
