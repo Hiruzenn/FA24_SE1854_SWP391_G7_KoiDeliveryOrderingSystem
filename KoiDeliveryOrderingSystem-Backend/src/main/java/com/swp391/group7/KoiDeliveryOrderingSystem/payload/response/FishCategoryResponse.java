@@ -14,6 +14,7 @@ public class FishCategoryResponse {
     private int id;
     private String fishCategoryName;
     private String fishCategoryDescription;
+    private Float price;
     private LocalDateTime createAt;
     private Integer createBy;
     private LocalDateTime updateAt;

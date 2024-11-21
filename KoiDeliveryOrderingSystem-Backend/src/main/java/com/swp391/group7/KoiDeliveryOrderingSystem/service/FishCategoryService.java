@@ -84,6 +84,7 @@ public class FishCategoryService {
                 .id(fishCategory.getId())
                 .fishCategoryName(fishCategory.getName())
                 .fishCategoryDescription(fishCategory.getDescription())
+                .price(fishCategory.getPrice())
                 .createAt(fishCategory.getCreateAt())
                 .createBy(fishCategory.getCreateBy())
                 .updateAt(fishCategory.getUpdateAt())
