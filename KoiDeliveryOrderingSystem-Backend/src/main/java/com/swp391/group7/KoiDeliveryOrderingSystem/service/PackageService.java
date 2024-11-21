@@ -67,6 +67,9 @@ public class PackageService {
         if (!handoverDocumentRepository.existsByOrders(orders)) {
             throw new AppException(ErrorCode.REQUIRED_HANDOVER_DOCUMENT);
         }
+        if (packageRepository.existsByOrders(orders)) {
+            throw new AppException(ErrorCode.PACKAGE_EXISTED);
+        }
         Package packages = Package.builder()
                 .orders(orders)
                 .packageNo(generatePackageNo())

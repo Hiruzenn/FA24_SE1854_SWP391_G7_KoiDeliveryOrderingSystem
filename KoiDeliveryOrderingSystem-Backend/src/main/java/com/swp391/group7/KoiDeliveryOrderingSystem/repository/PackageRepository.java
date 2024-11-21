@@ -18,4 +18,6 @@ public interface PackageRepository extends JpaRepository<Package, Integer> {
     Optional<Package> findByOrders(Orders order);
 
     List<Package> findByCreateBy(Integer createBy);
+
+    Boolean existsByOrders(Orders order);
 }

@@ -48,8 +48,9 @@ public enum ErrorCode {
     HEALTH_SERVICE_CATEGORY_IN_USE(1040, "Health Service Category in user"),
     INVALID_OLD_PASSWORD(1041, "Invalid old password"),
     DUPLICATE_PASSWORD(1042, "New password should different Old Password"),
-    INVALID_PASSWORD_FORMAT(1043, "password must be at least 6 characters long and contain at least one letter and one number")
-    ;
+    INVALID_PASSWORD_FORMAT(1043, "password must be at least 6 characters long and contain at least one letter and one number"),
+    HANDOVER_EXISTED(1044, "Handover document already exists"),
+    PACKAGE_EXISTED(1045, "Package already exists");
 
     private final int code;
     private final String message;
