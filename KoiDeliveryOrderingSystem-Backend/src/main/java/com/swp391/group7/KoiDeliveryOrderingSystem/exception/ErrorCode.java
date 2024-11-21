@@ -45,7 +45,10 @@ public enum ErrorCode {
     NOT_DELETE_PACKED(1037, "Can't deleted package with status packed"),
     PACKAGE_FISH_HEALTHY(1038, "Only create package when all fish is HEALTHY"),
     DELIVERY_METHOD_IN_USE(1039, "Delivery method in use"),
-    HEALTH_SERVICE_CATEGORY_IN_USE(1040, "Health Service Category in user")
+    HEALTH_SERVICE_CATEGORY_IN_USE(1040, "Health Service Category in user"),
+    INVALID_OLD_PASSWORD(1041, "Invalid old password"),
+    DUPLICATE_PASSWORD(1042, "New password should different Old Password"),
+    INVALID_PASSWORD_FORMAT(1043, "password must be at least 6 characters long and contain at least one letter and one number")
     ;
 
     private final int code;

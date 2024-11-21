@@ -108,7 +108,10 @@ public class AuthService {
             users.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
             usersRepository.save(users);
         } else {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+            throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
+        }
+        if(changePasswordRequest.getOldPassword().equals(changePasswordRequest.getNewPassword())){
+            throw new AppException(ErrorCode.DUPLICATE_PASSWORD);
         }
         return "Password changed successfully";
     }
@@ -208,6 +211,10 @@ public class AuthService {
 
     public void resetPassword(String token, String newPassword, String confirmPassword) throws MessagingException {
         Users users = validateToken(token);
+        String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$";
+        if (newPassword == null || !newPassword.matches(passwordPattern)) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD_FORMAT); // Tạo mã lỗi phù hợp
+        }
         if (!newPassword.equals(confirmPassword)) {
 
             throw new AppException(ErrorCode.INVALID_REPEAT_PASSWORD);
