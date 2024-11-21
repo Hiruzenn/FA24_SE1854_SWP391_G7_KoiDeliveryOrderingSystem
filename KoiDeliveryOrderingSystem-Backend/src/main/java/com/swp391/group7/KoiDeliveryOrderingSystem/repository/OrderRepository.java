@@ -28,5 +28,5 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 
     boolean existsByDeliveryMethod(DeliveryMethod deliveryMethod);
 
-    List<Orders> findByHandoverDocuments(HandoverDocument handoverDocument);
+    Optional<Orders> findByHandoverDocuments(HandoverDocument handoverDocument);
 }

@@ -73,15 +73,14 @@ public class HandoverDocumentService {
         return convertToHandoverDocumentResponse(handoverDocument);
     }
 
-    public HandoverDocumentResponse update(Integer orderId, UpdateHandoverDocumentRequest request) {
+    public HandoverDocumentResponse update(Integer handoverDocumentId, UpdateHandoverDocumentRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.IN_PROGRESS)
-                .orElseThrow(() -> new AppException(ErrorCode.PACK_ORDER_BEFORE));
-        HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
+        HandoverDocument handoverDocument = handoverDocumentRepository.findById(handoverDocumentId)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+        Orders orders = orderRepository.findByHandoverDocuments(handoverDocument).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         Boolean checkHealthCareDeliveryHistory = healthCareDeliveryHistoryRepository.existsByHandoverDocument(handoverDocument);
         if (!checkHealthCareDeliveryHistory) {
             throw new AppException(ErrorCode.NEED_DELIVERY_HISTORY);
