@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @RestController
@@ -77,15 +78,16 @@ public class AuthController {
     @PostMapping("reset-password")
     public ModelAndView resetPassword(@RequestParam("token") String token,
                                       @RequestParam("newPassword") String newPassword,
-                                      @RequestParam("confirmPassword") String confirmPassword) throws MessagingException {
+                                      @RequestParam("confirmPassword") String confirmPassword,
+                                      RedirectAttributes redirectAttributes) throws MessagingException {
         ModelAndView modelAndView = new ModelAndView();
         try {
             authService.resetPassword(token, newPassword, confirmPassword);
             modelAndView.setViewName("ResetPasswordSuccess");
 
         } catch (AppException ex) {
-            modelAndView.setViewName("ResetPassword");
-            modelAndView.addObject("errorMessage", ex.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            modelAndView.setViewName("redirect:/auth/reset-password?token=" + token);
         }
         return modelAndView;
     }
