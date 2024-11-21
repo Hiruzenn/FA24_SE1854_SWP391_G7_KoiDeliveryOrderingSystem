@@ -6,7 +6,9 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.ApiResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.UserResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +42,7 @@ public class UserController {
     }
 
     @PutMapping("update-profile")
-    public ResponseEntity<ApiResponse<UserResponse>> updateProfile(@RequestBody UpdateProfileRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> updateProfile(@Valid @RequestBody UpdateProfileRequest request) {
         var result = userService.updateProfile(request);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .code(200)
@@ -80,7 +82,7 @@ public class UserController {
     }
 
     @PostMapping("create-user")
-    public ResponseEntity<ApiResponse<UserResponse>> createUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> createUser(@Valid @RequestBody CreateUserRequest request) {
         var result = userService.createUser(request);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .code(200)
