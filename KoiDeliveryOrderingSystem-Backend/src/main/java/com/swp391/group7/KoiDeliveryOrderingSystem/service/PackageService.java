@@ -98,6 +98,7 @@ public class PackageService {
             orders.setEstimateDeliveryDate(LocalDateTime.now());
             orders.setStatus(OrderStatusEnum.IN_PROGRESS);
         }
+        packages.setPackageDescription(request.getDescription());
         packages.setPackageStatus(request.getPackageStatus());
         packages.setImage(request.getImage());
         packages.setUpdateAt(LocalDateTime.now());
