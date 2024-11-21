@@ -57,14 +57,12 @@ public class HealthCareDeliveryHistoryService {
         return convertToListHealthCareDeliveryHistoryResponse(healthCareDeliveryHistories);
     }
 
-    public HealthCareDeliveryHistoryResponse create(Integer orderId, CreateHealthCareDeliveryHistoryRequest request) {
+    public HealthCareDeliveryHistoryResponse create(Integer handoverDocumentId, CreateHealthCareDeliveryHistoryRequest request) {
         Users users = accountUtils.getCurrentUser();
         if (users == null) {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
-        Orders orders = orderRepository.findByIdAndStatus(orderId, OrderStatusEnum.IN_PROGRESS)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        HandoverDocument handoverDocument = handoverDocumentRepository.findByOrders(orders)
+        HandoverDocument handoverDocument = handoverDocumentRepository.findById(handoverDocumentId)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
         HealthCareDeliveryHistory healthCareDeliveryHistory = HealthCareDeliveryHistory.builder()
                 .handoverDocument(handoverDocument)

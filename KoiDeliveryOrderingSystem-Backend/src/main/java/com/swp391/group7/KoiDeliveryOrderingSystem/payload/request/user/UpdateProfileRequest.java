@@ -18,7 +18,6 @@ public class UpdateProfileRequest {
     @NotBlank(message = "address is required")
     private String address;
 
-    @NotBlank(message = "avatar is required")
     private String avatar;
 
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")

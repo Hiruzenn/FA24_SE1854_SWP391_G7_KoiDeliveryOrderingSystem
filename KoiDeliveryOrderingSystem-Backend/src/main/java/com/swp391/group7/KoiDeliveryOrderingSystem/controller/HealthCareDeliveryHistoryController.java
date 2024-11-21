@@ -7,7 +7,6 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.service.HealthCareDeliveryHis
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,11 +51,11 @@ public class HealthCareDeliveryHistoryController {
                 .build());
     }
 
-    @PostMapping("create/{orderId}")
+    @PostMapping("create/{handoverDocumentId}")
     public ResponseEntity<ApiResponse<HealthCareDeliveryHistoryResponse>> createHealthCareDeliveryHistory(
-            @PathVariable("orderId") Integer orderId,
+            @PathVariable("handoverDocumentId") Integer handoverDocumentId,
             @RequestBody CreateHealthCareDeliveryHistoryRequest request) {
-        var result = healthCareDeliveryHistoryService.create(orderId, request);
+        var result = healthCareDeliveryHistoryService.create(handoverDocumentId, request);
         return ResponseEntity.ok(ApiResponse.<HealthCareDeliveryHistoryResponse>builder()
                 .code(200)
                 .message("Healthcare delivery history created successfully")
