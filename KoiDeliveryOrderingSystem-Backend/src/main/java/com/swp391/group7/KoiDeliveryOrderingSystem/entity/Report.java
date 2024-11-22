@@ -33,6 +33,6 @@ public class Report {
     @Column(name = "description", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String description;
 
-    @Column(name = "answer")
+    @Column(name = "answer", columnDefinition = "NVARCHAR(255)")
     private String answer;
 }
