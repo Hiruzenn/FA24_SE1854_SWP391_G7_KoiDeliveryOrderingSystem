@@ -8,8 +8,8 @@ import lombok.*;
 @Builder
 public class FeedbackResponse {
     private Integer id;
-    private Integer customerId;
-    private Integer orderId;
+    private String customerId;
+    private String orderId;
     private Integer rating;
     private String feedbackDescription;
 }

@@ -130,8 +130,8 @@ public class ReportService {
     public ReportResponse convertToReportResponse(Report report) {
         return ReportResponse.builder()
                 .id(report.getId())
-                .orderId(report.getOrders().getId())
-                .userId(report.getUsers().getId())
+                .orderId(report.getOrders().getOrderCode())
+                .userId(report.getUsers().getEmail())
                 .title(report.getTitle())
                 .description(report.getDescription())
                 .answer(report.getAnswer())

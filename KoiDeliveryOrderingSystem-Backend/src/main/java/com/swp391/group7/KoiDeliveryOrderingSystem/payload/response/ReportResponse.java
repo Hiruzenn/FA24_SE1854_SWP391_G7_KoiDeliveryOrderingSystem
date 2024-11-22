@@ -9,8 +9,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReportResponse {
     private Integer id;
-    private Integer userId;
-    private Integer orderId;
+    private String userId;
+    private String orderId;
     private String title;
     private String description;
     private String answer;

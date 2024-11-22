@@ -75,8 +75,8 @@ public class FeedbackService {
     public FeedbackResponse convertToFeedbackResponse(Feedback feedback) {
         return FeedbackResponse.builder()
                 .id(feedback.getId())
-                .customerId(feedback.getUsers().getId())
-                .orderId(feedback.getOrders().getId())
+                .customerId(feedback.getUsers().getEmail())
+                .orderId(feedback.getOrders().getOrderCode())
                 .rating(feedback.getRating())
                 .feedbackDescription(feedback.getFeedbackDescription())
                 .build();
