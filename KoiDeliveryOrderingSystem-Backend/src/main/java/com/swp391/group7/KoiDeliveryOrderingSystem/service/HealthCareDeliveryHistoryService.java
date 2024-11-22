@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.HandoverStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.HandoverDocument;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
@@ -64,6 +65,9 @@ public class HealthCareDeliveryHistoryService {
         }
         HandoverDocument handoverDocument = handoverDocumentRepository.findById(handoverDocumentId)
                 .orElseThrow(() -> new AppException(ErrorCode.HANDOVER_DOCUMENT_NOT_FOUND));
+        if(handoverDocument.getHandoverStatus() == HandoverStatusEnum.PENDING){
+            throw new AppException(ErrorCode.PACKED_ORDER_BEFORE_DELIVERY);
+        }
         HealthCareDeliveryHistory healthCareDeliveryHistory = HealthCareDeliveryHistory.builder()
                 .handoverDocument(handoverDocument)
                 .route(request.getRoute())

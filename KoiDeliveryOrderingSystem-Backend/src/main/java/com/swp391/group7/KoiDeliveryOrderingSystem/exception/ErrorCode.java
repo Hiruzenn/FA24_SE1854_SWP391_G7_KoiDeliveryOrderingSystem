@@ -49,7 +49,9 @@ public enum ErrorCode {
     INVALID_PASSWORD_FORMAT(1043, "Mật khẩu phải có ít nhất 6 ký tự, bao gồm ít nhất một chữ cái và một số"),
     HANDOVER_EXISTED(1044, "Biên bản bàn giao đã tồn tại"),
     PACKAGE_EXISTED(1045, "Gói hàng đã tồn tại"),
-    FISH_CATEGORY_IN_USE(1046,"Loại cá đang được sử dụng")
+    FISH_CATEGORY_IN_USE(1046, "Loại cá đang được sử dụng"),
+    BLOCK_USER_HAVE_ORDER(1047, "Không thể chặn tài khoản đang có đơn hàng trên hệ thống"),
+    PACKED_ORDER_BEFORE_DELIVERY(1048,"Đóng gói đơn hàng hoàn tất trước khi vận chuyển")
     ;
 
     private final int code;

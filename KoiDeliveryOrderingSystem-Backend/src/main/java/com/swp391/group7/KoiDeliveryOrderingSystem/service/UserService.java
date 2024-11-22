@@ -1,6 +1,8 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.service;
 
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.CustomerStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Enum.OrderStatusEnum;
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Role;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Users;
 import com.swp391.group7.KoiDeliveryOrderingSystem.exception.AppException;
@@ -8,6 +10,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.exception.ErrorCode;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.user.CreateUserRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.user.UpdateProfileRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.UserResponse;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.OrderRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.RoleRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.UserRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
@@ -34,6 +37,8 @@ public class UserService {
     private AccountUtils accountUtils;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
     public UserResponse getCustomerProfile() {
         Users users = accountUtils.getCurrentUser();
@@ -115,6 +120,11 @@ public class UserService {
             throw new AppException(ErrorCode.NOT_LOGIN);
         }
         Users usersManagement = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        List<Orders> checkOrder = orderRepository.findByUsers(usersManagement).stream()
+                .filter(orders1 -> orders1.getStatus() != OrderStatusEnum.COMPLETED && orders1.getStatus() != OrderStatusEnum.NOT_AVAILABLE).toList();
+        if (!checkOrder.isEmpty()) {
+            throw new AppException(ErrorCode.BLOCK_USER_HAVE_ORDER);
+        }
         if (usersManagement.getCustomerStatus() == CustomerStatusEnum.VERIFIED) {
             usersManagement.setCustomerStatus(CustomerStatusEnum.UNVERIFIED);
         } else if (usersManagement.getCustomerStatus() == CustomerStatusEnum.UNVERIFIED) {
