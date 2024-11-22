@@ -8,6 +8,7 @@ import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishcategory.
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.request.fishcategory.UpdateFishCategoryRequest;
 import com.swp391.group7.KoiDeliveryOrderingSystem.payload.response.FishCategoryResponse;
 import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishCategoryRepository;
+import com.swp391.group7.KoiDeliveryOrderingSystem.repository.FishProfileRepository;
 import com.swp391.group7.KoiDeliveryOrderingSystem.utils.AccountUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class FishCategoryService {
     private FishCategoryRepository fishCategoryRepository;
     @Autowired
     private AccountUtils accountUtils;
+    @Autowired
+    private FishProfileRepository fishProfileRepository;
 
     public FishCategoryResponse createFishCategory(CreateFishCategoryRequest request) {
         Users users = accountUtils.getCurrentUser();
@@ -76,6 +79,10 @@ public class FishCategoryService {
         }
         FishCategory fishCategory = fishCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FISH_CATEGORY_NOT_FOUND));
+        boolean isFishCategoryInUse = fishProfileRepository.existsByFishCategory(fishCategory);
+        if (isFishCategoryInUse) {
+            throw new AppException(ErrorCode.FISH_CATEGORY_IN_USE);
+        }
         fishCategoryRepository.delete(fishCategory);
     }
 

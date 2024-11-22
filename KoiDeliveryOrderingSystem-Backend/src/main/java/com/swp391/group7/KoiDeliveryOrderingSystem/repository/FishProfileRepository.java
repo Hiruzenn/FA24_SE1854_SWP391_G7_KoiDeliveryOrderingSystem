@@ -1,5 +1,6 @@
 package com.swp391.group7.KoiDeliveryOrderingSystem.repository;
 
+import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishCategory;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.FishProfile;
 import com.swp391.group7.KoiDeliveryOrderingSystem.entity.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ public interface FishProfileRepository extends JpaRepository<FishProfile, Intege
     List<FishProfile> findByOrders(Orders order);
 
     List<FishProfile> findByCreateBy(Integer createBy);
+
+    boolean existsByFishCategory(FishCategory fishCategory);
 }

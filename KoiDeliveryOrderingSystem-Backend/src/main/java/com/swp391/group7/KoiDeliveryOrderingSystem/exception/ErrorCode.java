@@ -48,7 +48,9 @@ public enum ErrorCode {
     DUPLICATE_PASSWORD(1042, "Mật khẩu mới phải khác mật khẩu cũ"),
     INVALID_PASSWORD_FORMAT(1043, "Mật khẩu phải có ít nhất 6 ký tự, bao gồm ít nhất một chữ cái và một số"),
     HANDOVER_EXISTED(1044, "Biên bản bàn giao đã tồn tại"),
-    PACKAGE_EXISTED(1045, "Gói hàng đã tồn tại");
+    PACKAGE_EXISTED(1045, "Gói hàng đã tồn tại"),
+    FISH_CATEGORY_IN_USE(1046,"Loại cá đang được sử dụng")
+    ;
 
     private final int code;
     private final String message;
